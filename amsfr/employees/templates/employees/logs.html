@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee</title>
+</head>
+<body>
+    <h1>EMPLOYEE PAGE</h1>
+    <a href="{% url 'home' %}">Dashboard</a>
+    <a href="{% url 'attendance' %}">Attendance</a>
+
+    <br>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>EmployeeID</th>
+                <th>IN AM</th>
+                <th>OUT AM</th>
+                <th>IN PM</th>
+                <th>OUT PM</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{log.id}}</td>
+                <td>{{log.employee_id}}</td>
+
+                {% if not log.in_am %}
+                <td>None</td>
+                {% else %}
+                <td>{{log.in_am|time:"h:i:s A"}}</td>
+                {% endif %}
+
+                {% if not log.out_am %}
+                <td>None</td>
+                {% else %}
+                <td>{{log.out_am|time:"h:i:s A"}}</td>
+                {% endif %}
+                
+                {% if not log.in_pm %}
+                <td>None</td>
+                {% else %}
+                <td>{{log.in_pm|time:"h:i:s A"}}</td>
+                {% endif %}
+                
+                {% if not log.out_pm %}
+                <td>None</td>
+                {% else %}
+                <td>{{log.out_pm|time:"h:i:s A"}}</td>
+                {% endif %}
+                
+                <td>
+                    {% comment %} <a href="#">update</a>
+                    <a href="#">delete</a> {% endcomment %}
+                    <a href="#">soon</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

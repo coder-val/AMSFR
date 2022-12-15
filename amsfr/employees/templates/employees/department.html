@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department</title>
+</head>
+<body>
+    <h1>DEPARTMENT PAGE</h1>
+    <a href="{% url 'home' %}">Dashboard</a>
+    <a href="{% url 'create_dept' %}">Create Department</a>
+
+    <br>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for department in departments %}
+            <tr>
+                <td>{{department.id}}</td>
+                <td>{{department.name}}</td>
+                <td>
+                    <a href="{% url 'update_dept' department.id %}">update</a>
+                    <a href="{% url 'delete_dept' department.id %}">delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

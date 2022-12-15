@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule</title>
+</head>
+<body>
+    <h1>SCHEDULE PAGE</h1>
+    <a href="{% url 'home' %}">Dashboard</a>
+    <a href="{% url 'create_sched' %}">Create Schedule</a>
+
+    <br>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>In AM</th>
+                <th>Out AM</th>
+                <th>In PM</th>
+                <th>Out PM</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for schedule in schedules %}
+            <tr>
+                <td>{{schedule.id}}</td>
+                <td>{{schedule.name}}</td>
+                <td>{{schedule.in_am|time:"h:i A"}}</td>
+                <td>{{schedule.out_am|time:"h:i A"}}</td>
+                <td>{{schedule.in_pm|time:"h:i A"}}</td>
+                <td>{{schedule.out_pm|time:"h:i A"}}</td>
+                <td>
+                    <a href="{% url 'update_sched' schedule.id %}">update</a>
+                    <a href="{% url 'delete_sched' schedule.id %}">delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

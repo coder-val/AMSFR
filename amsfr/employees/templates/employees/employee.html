@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee</title>
+</head>
+<body>
+    <h1>EMPLOYEE PAGE</h1>
+    <a href="{% url 'home' %}">Dashboard</a>
+    <a href="{% url 'create_emp' %}">Register Employee</a>
+
+    <br>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Lastname</th>
+                <th>Firstname</th>
+                <th>Middlename</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td>{{employee.id}}</td>
+                <td>{{employee.lastname}}</td>
+                <td>{{employee.firstname}}</td>
+                <td>{{employee.middlename}}</td>
+                <td>{{employee.department}}</td>
+                <td>{{employee.designation}}</td>
+                
+                <td>
+                    <a href="{% url 'update_emp' employee.id %}">update</a>
+                    <a href="{% url 'delete_emp' employee.id %}">delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

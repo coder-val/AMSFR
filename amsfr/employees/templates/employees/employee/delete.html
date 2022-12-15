@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Employee</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>Are you sure you want to delete employee <strong>{{employee}}: {{employee.firstname}} {{employee.lastname}}?</strong></p>
+        <button type="submit" value="delete">Delete</button>
+        <button><a href="{% url 'employee' %}">Go Back</a></button>
+    </form>
+</body>
+</html>
