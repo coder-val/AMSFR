@@ -260,6 +260,7 @@ def attendance(request):
 def in_am(request):
     context = {}
     template = 'employees/attendance.html'
+    
     if face_recog(1) is False:
         messages.warning(request, "NO REGISTERED IMAGES YET!")
         return render(request, template, context)

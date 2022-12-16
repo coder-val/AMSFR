@@ -1,0 +1,14 @@
+from .models import Attendance
+import datetime
+
+def mark_attendance(option, name):
+    if option == 1:
+        markAttendance = Attendance(employee_id = name, in_am = datetime.datetime.now().time(), date = datetime.datetime.now().date())
+        checkID = Attendance.objects.filter(employee_id = name, date = datetime.datetime.now().date())
+        if not checkID.exists():
+            markAttendance.save()
+    elif option == 2:
+        getID = Attendance.objects.filter(employee_id = name, date = datetime.datetime.now().date()).values('id')[0]['id']
+        if Attendance.objects.filter(id=getID, out_am__isnull=True):
+            # print(getID)
+            Attendance.objects.filter(id=getID).update(out_am=datetime.datetime.now().time())
