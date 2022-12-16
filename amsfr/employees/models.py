@@ -25,6 +25,7 @@ class Schedule(models.Model):
     out_am = models.TimeField()
     in_pm = models.TimeField()
     out_pm = models.TimeField()
+    is_active = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'schedules'

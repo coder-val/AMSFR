@@ -21,3 +21,4 @@ class ScheduleForm(ModelForm):
     class Meta:
         model = Schedule
         fields = '__all__'
+        exclude = ['is_active']

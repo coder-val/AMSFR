@@ -1,5 +1,15 @@
-from .models import Attendance
+from .models import Attendance, Schedule
 import datetime
+
+def check_sched():
+    check = Schedule.objects.filter(is_active=True)
+    if check.count() == 0:
+        return False
+
+def checkpoint_am():
+    # now = datetime.datetime.now().time()
+    pass
+
 
 def mark_attendance(option, name):
     if option == 1:

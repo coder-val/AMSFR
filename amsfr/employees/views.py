@@ -7,6 +7,7 @@ from django.core.files.storage import default_storage
 from django.conf import settings
 from django.contrib import messages
 from .faceRecognition import *
+from .attendance import check_sched
 import datetime as dt
 import shutil, os
 
@@ -114,6 +115,11 @@ def delete_desig(request, pk):
     return render(request, template, {'designation': designation})
 
 # SCHEDULE
+def activate(request, pk):
+    Schedule.objects.filter(id=pk).update(is_active=True)
+    Schedule.objects.filter(is_active=True).exclude(id=pk).update(is_active=False)
+    return redirect(schedule)
+
 def schedule(request):
     schedules = Schedule.objects.all()
     context = {'schedules': schedules}
@@ -260,7 +266,11 @@ def attendance(request):
 def in_am(request):
     context = {}
     template = 'employees/attendance.html'
-    
+
+    if check_sched() is False:
+        messages.warning(request, "NO SCHEDULE YET!")
+        return render(request, template, context)
+
     if face_recog(1) is False:
         messages.warning(request, "NO REGISTERED IMAGES YET!")
         return render(request, template, context)
