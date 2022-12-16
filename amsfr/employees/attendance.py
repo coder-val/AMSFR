@@ -8,8 +8,11 @@ def check_sched():
 
 def checkpoint_am():
     now = datetime.datetime.now().time()
+    start = now.replace(hour=6, minute=0, second=0, microsecond=0)
     sched = Schedule.objects.get(is_active=True)
-    if now > sched.in_pm:
+    if now > start and now < sched.in_pm:
+        return True
+    else:
         return False
 
 

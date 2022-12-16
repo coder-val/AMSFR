@@ -144,9 +144,7 @@ def face_recog(option):
         cv2.resizeWindow('Attendance Check', 1280, 720)
         cv2.imshow('Attendance Check', img)
         # cv2.waitKey(1)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-        elif cv2.waitKey(1) & 0xFF == ord('Q'):
+        if cv2.waitKey(1) & 0xFF == ord('\x1B'):
             break
 
     cap.release()

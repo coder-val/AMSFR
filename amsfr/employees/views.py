@@ -21,13 +21,11 @@ def convert_time(time):
 
 # Create your views here.
 def home(request):
-    now = datetime.datetime.now().time()
-    print(now)
-    sched = Schedule.objects.get(is_active=True)
-    if now > sched.in_pm:
-        print("YES")
-    else:
-        print("NO")
+    # now = datetime.datetime.now().time()
+    # edited = now.replace(hour=8, minute=0, second=0, microsecond=0)
+    # print(now)
+    # print(edited)
+
     context = {}
     template = "employees/home.html"
     return render(request, template, context)
@@ -297,7 +295,7 @@ def out_am(request):
         return redirect('attendance')
     
     if checkpoint_am() is False:
-        messages.warning(request, "TIME IN NOT IN RANGE!")
+        messages.warning(request, "TIME OUT NOT IN RANGE!")
         return redirect('attendance')
 
     if face_recog(2) is False:
