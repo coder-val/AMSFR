@@ -7,8 +7,10 @@ def check_sched():
         return False
 
 def checkpoint_am():
-    # now = datetime.datetime.now().time()
-    pass
+    now = datetime.datetime.now().time()
+    sched = Schedule.objects.get(is_active=True)
+    if now > sched.in_pm:
+        return False
 
 
 def mark_attendance(option, name):

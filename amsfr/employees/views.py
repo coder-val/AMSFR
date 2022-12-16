@@ -7,7 +7,7 @@ from django.core.files.storage import default_storage
 from django.conf import settings
 from django.contrib import messages
 from .faceRecognition import *
-from .attendance import check_sched
+from .attendance import *
 import datetime as dt
 import shutil, os
 
@@ -21,6 +21,13 @@ def convert_time(time):
 
 # Create your views here.
 def home(request):
+    now = datetime.datetime.now().time()
+    print(now)
+    sched = Schedule.objects.get(is_active=True)
+    if now > sched.in_pm:
+        print("YES")
+    else:
+        print("NO")
     context = {}
     template = "employees/home.html"
     return render(request, template, context)
@@ -268,21 +275,34 @@ def in_am(request):
     template = 'employees/attendance.html'
 
     if check_sched() is False:
-        messages.warning(request, "NO SCHEDULE YET!")
-        return render(request, template, context)
+        messages.warning(request, "NO ACTIVE SCHEDULE YET!")
+        return redirect('attendance')
+    
+    if checkpoint_am() is False:
+        messages.warning(request, "TIME IN NOT IN RANGE!")
+        return redirect('attendance')
 
     if face_recog(1) is False:
         messages.warning(request, "NO REGISTERED IMAGES YET!")
-        return render(request, template, context)
+        return redirect('attendance')
     else:
         return redirect('attendance')
     
 def out_am(request):
     context = {}
     template = 'employees/attendance.html'
+
+    if check_sched() is False:
+        messages.warning(request, "NO ACTIVE SCHEDULE YET!")
+        return redirect('attendance')
+    
+    if checkpoint_am() is False:
+        messages.warning(request, "TIME IN NOT IN RANGE!")
+        return redirect('attendance')
+
     if face_recog(2) is False:
         messages.warning(request, "NO REGISTERED IMAGES YET!")
-        return render(request, template, context)
+        return redirect('attendance')
     else:
         return redirect('attendance')
 
