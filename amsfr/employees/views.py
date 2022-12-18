@@ -10,6 +10,8 @@ from .faceRecognition import *
 from .attendance import *
 import datetime as dt
 import shutil, os
+from workalendar.asia import Philippines
+import pandas as pd
 
 def convert_time(time):
     if time >= dt.time(1,0,0) and time < dt.time(11,59,59):
@@ -21,10 +23,13 @@ def convert_time(time):
 
 # Create your views here.
 def home(request):
-    # now = datetime.datetime.now().time()
-    # edited = now.replace(hour=8, minute=0, second=0, microsecond=0)
-    # print(now)
-    # print(edited)
+
+    ph_calendar = Philippines()
+
+    # ehem = pd.DataFrame(ph_calendar.holidays(2022), columns=["date", "holiday"])
+    # print(ehem)
+    ehem = ph_calendar.holidays(2022)
+    print(ehem)
 
     context = {}
     template = "employees/home.html"
@@ -342,6 +347,7 @@ def out_pm(request):
 
 def monitor(request):
     logs = Attendance.objects.all()
+    print(logs)
     context = {'logs': logs}
     template = 'employees/logs.html'
     return render(request, template, context)
