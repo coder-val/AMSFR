@@ -31,6 +31,8 @@ urlpatterns = [
     path('attendance/', attendance, name='attendance'),
     path('attendance/in_am', in_am, name='in_am'),
     path('attendance/out_am', out_am, name='out_am'),
+    path('attendance/in_pm', in_pm, name='in_pm'),
+    path('attendance/out_pm', out_pm, name='out_pm'),
     path('attendance/monitor', monitor, name='monitor'),
 ]
 

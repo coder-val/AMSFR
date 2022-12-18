@@ -112,9 +112,9 @@ def face_recog(option):
         imgS = cv2.resize(img,(0,0), None, 0.25,0.25)
         imS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
 
-        if option == 1:
+        if option == 1 or option == 3:
             cv2.putText(img, "TIME IN", (10,60), cv2.FONT_HERSHEY_COMPLEX, 2, (0,255,0), 3)
-        elif option == 2:
+        elif option == 2 or option == 4:
             cv2.putText(img, "TIME OUT", (10,60), cv2.FONT_HERSHEY_COMPLEX, 2, (0,255,0), 3)
 
         facesCurFrame = face_recognition.face_locations(imgS)
@@ -140,9 +140,15 @@ def face_recog(option):
 
             else:
                 cv2.putText(img, "unknown", (x1+6, y2-6), cv2.FONT_HERSHEY_COMPLEX, .5, (255,255,255), 1)
-        cv2.namedWindow('Attendance Check', cv2.WINDOW_FULLSCREEN)
-        cv2.resizeWindow('Attendance Check', 1280, 720)
-        cv2.imshow('Attendance Check', img)
+
+        if option == 1 or option == 2:
+            windowName = "Attendance Check (AM)"
+        elif option == 3 or option == 4:
+            windowName = "Attendance Check (PM)"
+            
+        cv2.namedWindow(windowName, cv2.WINDOW_FULLSCREEN)
+        cv2.resizeWindow(windowName, 1280, 720)
+        cv2.imshow(windowName, img)
         # cv2.waitKey(1)
         if cv2.waitKey(1) & 0xFF == ord('\x1B'):
             break

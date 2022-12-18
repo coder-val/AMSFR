@@ -276,7 +276,7 @@ def in_am(request):
         messages.warning(request, "NO ACTIVE SCHEDULE YET!")
         return redirect('attendance')
     
-    if checkpoint_am() is False:
+    if checkpoint_in_am() is False:
         messages.warning(request, "TIME IN NOT IN RANGE!")
         return redirect('attendance')
 
@@ -294,11 +294,47 @@ def out_am(request):
         messages.warning(request, "NO ACTIVE SCHEDULE YET!")
         return redirect('attendance')
     
-    if checkpoint_am() is False:
+    if checkpoint_out_am() is False:
         messages.warning(request, "TIME OUT NOT IN RANGE!")
         return redirect('attendance')
 
     if face_recog(2) is False:
+        messages.warning(request, "NO REGISTERED IMAGES YET!")
+        return redirect('attendance')
+    else:
+        return redirect('attendance')
+
+def in_pm(request):
+    context = {}
+    template = 'employees/attendance.html'
+
+    if check_sched() is False:
+        messages.warning(request, "NO ACTIVE SCHEDULE YET!")
+        return redirect('attendance')
+
+    if checkpoint_in_pm() is False:
+        messages.warning(request, "TIME IN NOT IN RANGE!")
+        return redirect('attendance')
+
+    if face_recog(3) is False:
+        messages.warning(request, "NO REGISTERED IMAGES YET!")
+        return redirect('attendance')
+    else:
+        return redirect('attendance')
+
+def out_pm(request):
+    context = {}
+    template = 'employees/attendance.html'
+
+    if check_sched() is False:
+        messages.warning(request, "NO ACTIVE SCHEDULE YET!")
+        return redirect('attendance')
+
+    if checkpoint_out_pm() is False:
+        messages.warning(request, "TIME IN NOT IN RANGE!")
+        return redirect('attendance')
+
+    if face_recog(4) is False:
         messages.warning(request, "NO REGISTERED IMAGES YET!")
         return redirect('attendance')
     else:

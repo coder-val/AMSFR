@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee</title>
+    {% comment %} <meta http-equiv="refresh" content="3"> {% endcomment %}
+    <title>Monitor</title>
 </head>
 <body>
-    <h1>EMPLOYEE PAGE</h1>
+    <h1>EMPLOYEE LOGS</h1>
     <a href="{% url 'home' %}">Dashboard</a>
     <a href="{% url 'attendance' %}">Attendance</a>
 
     <br>
     <br>
 
-    <table>
+    <table style='text-align:center'>
         <thead>
             <tr>
                 <th>ID</th>
@@ -23,6 +24,7 @@
                 <th>OUT AM</th>
                 <th>IN PM</th>
                 <th>OUT PM</th>
+                <th>Date</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -33,28 +35,30 @@
                 <td>{{log.employee_id}}</td>
 
                 {% if not log.in_am %}
-                <td>None</td>
+                <td>~</td>
                 {% else %}
                 <td>{{log.in_am|time:"h:i:s A"}}</td>
                 {% endif %}
 
                 {% if not log.out_am %}
-                <td>None</td>
+                <td>~</td>
                 {% else %}
                 <td>{{log.out_am|time:"h:i:s A"}}</td>
                 {% endif %}
                 
                 {% if not log.in_pm %}
-                <td>None</td>
+                <td>~</td>
                 {% else %}
                 <td>{{log.in_pm|time:"h:i:s A"}}</td>
                 {% endif %}
                 
                 {% if not log.out_pm %}
-                <td>None</td>
+                <td>~</td>
                 {% else %}
                 <td>{{log.out_pm|time:"h:i:s A"}}</td>
                 {% endif %}
+
+                <td> {{log.date|date:"Y-m-d"}} </td>
                 
                 <td>
                     {% comment %} <a href="#">update</a>
