@@ -23,14 +23,6 @@ def convert_time(time):
 
 # Create your views here.
 def home(request):
-
-    ph_calendar = Philippines()
-
-    # ehem = pd.DataFrame(ph_calendar.holidays(2022), columns=["date", "holiday"])
-    # print(ehem)
-    ehem = ph_calendar.holidays(2022)
-    print(ehem)
-
     context = {}
     template = "employees/home.html"
     return render(request, template, context)
@@ -267,6 +259,37 @@ def delete_emp(request, pk):
     
     return render(request, template, {'employee': employee})
 
+# HOLIDAY
+def holiday(request):
+    holidays = Holiday.objects.all()
+    context = {'holidays': holidays}
+    template = 'employees/holiday.html'
+    return render(request, template, context)
+
+def import_holidays(request):
+    ph_calendar = Philippines()
+    # ehem = pd.DataFrame(ph_calendar.holidays(2022), columns=["date", "holiday"])
+    # print(ehem)
+    holiday_list = ph_calendar.holidays(2022)
+    holidays = [Holiday(date=x[0], holiday=x[1]) for x in holiday_list if not Holiday.objects.filter(holiday=x[1]).exists()]
+    Holiday.objects.bulk_create(holidays)
+    messages.success(request, "Holidays imported successfully!")
+    return redirect('holiday')
+
+def create_holiday(request):
+    context = {}
+    # form = HolidayForm()
+    template = 'employees/holiday/create.html'
+
+    if request.method == 'POST':
+        holiday = request.POST['holiday']
+        date = request.POST['date']
+        Holiday.objects.create(holiday=holiday, date=date)
+        messages.success(request, "Holiday added successfully!")
+        return redirect('holiday')
+    
+    # context = {'form': form}
+    return render(request, template, context)
 # ATTENDANCE
 def attendance(request):
     context = {}

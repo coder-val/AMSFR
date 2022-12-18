@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holidays</title>
+</head>
+<body>
+    <h1>HOLIDAYS</h1>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <a href="{% url 'home' %}">Dashboard</a>
+    <a href="{% url 'import_holidays' %}">Import from a library</a>
+    <a href="{% url 'create_holiday' %}">ADD HOLIDAY</a>
+
+    <br>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                {% comment %} <th>ID</th> {% endcomment %}
+                <th>Holiday</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for holiday in holidays %}
+            <tr>
+                {% comment %} <td>{{schedule.id}}</td> {% endcomment %}
+                <td>{{holiday.holiday}}</td>
+                <td style='text-align: center'>{{holiday.date|date:"m-d-Y"}}</td>
+                <td style='text-align: center'>
+                    <a href="#">soon</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
