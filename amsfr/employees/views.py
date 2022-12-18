@@ -27,7 +27,7 @@ def home(request):
     template = "employees/home.html"
     return render(request, template, context)
 
-# DEPARTMENT
+# DEPARTMENT ################################################################
 def department(request):
     departments = Department.objects.all()
     context = {'departments': departments}
@@ -71,7 +71,7 @@ def delete_dept(request, pk):
     
     return render(request, template, {'department': department})
 
-# DESIGNATION
+# DESIGNATION ################################################################
 def designation(request):
     designations = Designation.objects.all()
     context = {'designations': designations}
@@ -116,7 +116,7 @@ def delete_desig(request, pk):
     
     return render(request, template, {'designation': designation})
 
-# SCHEDULE
+# SCHEDULE #####################################################################
 def activate(request, pk):
     Schedule.objects.filter(id=pk).update(is_active=True)
     Schedule.objects.filter(is_active=True).exclude(id=pk).update(is_active=False)
@@ -181,7 +181,7 @@ def delete_sched(request, pk):
         
         return render(request, template, {'schedule': schedule})
 
-# EMPLOYEE
+# EMPLOYEE ##################################################################
 def employee(request):
     employees = Employee.objects.all()
     context = {'employees': employees}
@@ -254,12 +254,14 @@ def delete_emp(request, pk):
     template = 'employees/employee/delete.html'
 
     if request.method == 'POST':
+        if os.path.isfile(os.path.join(settings.MEDIA_ROOT, employee.id_picture.name)):
+            os.remove(os.path.join(settings.MEDIA_ROOT, employee.id_picture.name))
         employee.delete()
         return redirect('employee')
     
     return render(request, template, {'employee': employee})
 
-# HOLIDAY
+# HOLIDAY ###############################################################
 def holiday(request):
     holidays = Holiday.objects.all()
     context = {'holidays': holidays}
@@ -290,7 +292,7 @@ def create_holiday(request):
     
     # context = {'form': form}
     return render(request, template, context)
-# ATTENDANCE
+# ATTENDANCE #############################################################
 def attendance(request):
     context = {}
     template = 'employees/attendance.html'
@@ -359,7 +361,7 @@ def out_pm(request):
         return redirect('attendance')
 
     if checkpoint_out_pm() is False:
-        messages.warning(request, "TIME IN NOT IN RANGE!")
+        messages.warning(request, "TIME OUT NOT IN RANGE!")
         return redirect('attendance')
 
     if face_recog(4) is False:
