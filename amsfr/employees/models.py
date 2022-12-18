@@ -62,3 +62,6 @@ class Attendance(models.Model):
 class Holiday(models.Model):
     date = models.DateField(null=True, blank=True)
     holiday = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'holidays'
