@@ -40,6 +40,7 @@ class Employee(models.Model):
     middlename = models.CharField(max_length=30)
     department = models.ForeignKey(Department, models.SET_NULL, blank=True, null=True)
     designation = models.ForeignKey(Designation, models.SET_NULL, blank=True, null=True)
+    reportsTo = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)
     id_picture = models.ImageField()
 
     class Meta:
