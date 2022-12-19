@@ -130,12 +130,12 @@ def schedule(request):
 
 def create_sched(request):
     context = {}
-    form = ScheduleForm()
+    # form = ScheduleForm()
     template = 'employees/schedule/create.html'
 
     if request.method == 'POST':
-        form = ScheduleForm(request.POST)
-        if form.is_valid():
+        # form = ScheduleForm(request.POST)
+        # if form.is_valid():
             # name = form.cleaned_data['name']
             # in_am = form.cleaned_data['in_am']
             # out_am = form.cleaned_data['out_am']
@@ -143,10 +143,17 @@ def create_sched(request):
             # out_pm = convert_time(form.cleaned_data['out_pm'])
             # sched = Schedule(name = name, in_am = in_am, out_am = out_am, in_pm = in_pm, out_pm = out_pm)
             # sched.save()
-            form.save()
-            return redirect('schedule')
+            # form.save()
+            name = request.POST['name']
+            in_am = request.POST['in_am']
+            out_am = request.POST['out_am']
+            in_pm = request.POST['in_pm']
+            out_pm = request.POST['out_pm']
+            Schedule.objects.create(name=name,in_am=in_am,out_am=out_am,in_pm=in_pm,out_pm=out_pm)
+            messages.success(request, "Schedule created successfully!")
+            return redirect('create_sched')
 
-    context = {'form' : form}
+    # context = {'form' : form}
     return render(request, template, context)
 
 def update_sched(request, pk):

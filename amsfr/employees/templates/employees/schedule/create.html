@@ -9,10 +9,22 @@
 <body>
     <h1>CREATE SCHEDULE</h1>
 
-    <form action="" method="post">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form action="{% url 'create_sched' %}" method="post">
         {% csrf_token %}
-        {{ form.as_p}}
-        <button type="submit" value="submit">Register</button>
+        <p><label for="name">Name: </label><input type="text" name="name" id="name" required></p>   
+        <p><label for="in_am">IN AM: </label><input type="time" name="in_am" id="in_am" value="07:00" required></p>
+        <p><label for="out_am">OUT AM: </label><input type="time" name="out_am" id="out_am" value="12:00" required></p>
+        <p><label for="in_am">IN PM: </label><input type="time" name="in_pm" id="in_pm" value="13:00" required></p>
+        <p><label for="in_am">OUT PM: </label><input type="time" name="out_pm" id="out_pm" value="16:00" required></p>
+        <button type="submit" value="submit">Add</button>
         <button><a href="{% url 'schedule' %}">Back</a></button>
     </form>
     
