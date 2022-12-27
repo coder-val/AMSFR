@@ -382,11 +382,11 @@ def monitor(request):
     # ehe = logs.values_list('reference', flat=True).exclude(reference=None)
     # absents = Employee.objects.exclude(id__in = ehe)
     # context = {'logs': logs, 'absents': absents}
+    context = {}
+    template = 'employees/logs.html'
 
     in_am = Schedule.objects.filter(is_active=True).values()[0]['in_am']
-    out_am = Schedule.objects.filter(is_active=True).values()[0]['out_am']
     in_pm = Schedule.objects.filter(is_active=True).values()[0]['in_pm']
-    out_pm = Schedule.objects.filter(is_active=True).values()[0]['out_pm']
 
     now = dt.datetime.now().time()
     cut_off = now.replace(hour=23, minute=59, second=59, microsecond=0)
@@ -394,10 +394,10 @@ def monitor(request):
     if now >= in_am and now < in_pm:
         insides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=True, date=dt.datetime.now().date())
         outsides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=False, date=dt.datetime.now().date()) | Attendance.objects.filter(in_am__isnull=True, out_am__isnull=False, date=dt.datetime.now().date())
+        context = {'insides':insides, 'outsides':outsides}
     elif now >= in_pm and dt.datetime.now().time() < cut_off:
         insides = Attendance.objects.filter(in_pm__isnull=False, out_pm__isnull=True, date=dt.datetime.now().date())
         outsides = Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=False, out_pm__isnull=False, date=dt.datetime.now().date()) | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=True, date=dt.datetime.now().date()) | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=False, date=dt.datetime.now().date()) | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=False, out_pm__isnull=False, date=dt.datetime.now().date())
-    context = {'insides':insides, 'outsides':outsides}
-    template = 'employees/logs.html'
+        context = {'insides':insides, 'outsides':outsides}
 
     return render(request, template, context)
