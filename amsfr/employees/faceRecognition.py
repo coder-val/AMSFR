@@ -131,7 +131,8 @@ def face_recog(option):
             y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
 
             if matches[matchesIndex] and (faceDis[matchesIndex] < 0.5):
-                name = classNames[matchesIndex].upper()
+                # name = classNames[matchesIndex].upper()
+                name = classNames[matchesIndex]
                 print(name)
                 cv2.rectangle(img,(x1, y1), (x2, y2+50), (0, 255, 0), 2)
                 cv2.rectangle(img,(x1, y2), (x2, y2+50), (0, 255, 0), cv2.FILLED)

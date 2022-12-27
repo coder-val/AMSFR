@@ -1,4 +1,4 @@
-from .models import Attendance, Schedule
+from .models import Attendance, Schedule, Employee
 import datetime
 
 def check_sched():
@@ -41,25 +41,25 @@ def checkpoint_out_pm():
 
 def mark_attendance(option, name):
     if option == 1:
-        markAttendance = Attendance(employee_id = name, in_am = datetime.datetime.now().time(), date = datetime.datetime.now().date())
+        markAttendance = Attendance(reference = Employee.objects.get(id=name), employee_id = name, in_am = datetime.datetime.now().time(), date = datetime.datetime.now().date())
         checkID = Attendance.objects.filter(employee_id = name, date = datetime.datetime.now().date())
         if not checkID.exists():
             markAttendance.save()
     elif option == 2:
         checkID = Attendance.objects.filter(employee_id = name, date = datetime.datetime.now().date())
         if not checkID.exists():
-            Attendance.objects.create(employee_id = name, out_am = datetime.datetime.now().time(), date = datetime.datetime.now().date())
+            Attendance.objects.create(reference = Employee.objects.get(id=name), employee_id = name, out_am = datetime.datetime.now().time(), date = datetime.datetime.now().date())
         else:
             Attendance.objects.filter(employee_id = name, out_am__isnull=True, date = datetime.datetime.now().date()).update(out_am=datetime.datetime.now().time())
     elif option == 3:
         checkID = Attendance.objects.filter(employee_id = name, date = datetime.datetime.now().date())
         if not checkID.exists():
-            Attendance.objects.create(employee_id = name, in_pm = datetime.datetime.now().time(), date = datetime.datetime.now().date())
+            Attendance.objects.create(reference = Employee.objects.get(id=name), employee_id = name, in_pm = datetime.datetime.now().time(), date = datetime.datetime.now().date())
         else:
             Attendance.objects.filter(employee_id = name, in_pm__isnull=True, date = datetime.datetime.now().date()).update(in_pm=datetime.datetime.now().time())
     elif option == 4:
         checkID = Attendance.objects.filter(employee_id = name, date = datetime.datetime.now().date())
         if not checkID.exists():
-            Attendance.objects.create(employee_id = name, out_pm = datetime.datetime.now().time(), date = datetime.datetime.now().date())
+            Attendance.objects.create(reference = Employee.objects.get(id=name), employee_id = name, out_pm = datetime.datetime.now().time(), date = datetime.datetime.now().date())
         else:
             Attendance.objects.filter(employee_id = name, out_pm__isnull=True, date = datetime.datetime.now().date()).update(out_pm=datetime.datetime.now().time())

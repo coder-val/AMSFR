@@ -379,7 +379,6 @@ def out_pm(request):
 
 def monitor(request):
     logs = Attendance.objects.all()
-    print(logs)
     context = {'logs': logs}
     template = 'employees/logs.html'
     return render(request, template, context)

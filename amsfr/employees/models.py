@@ -50,6 +50,7 @@ class Employee(models.Model):
         return self.id
     
 class Attendance(models.Model):
+    reference = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True)
     employee_id = models.CharField(max_length=30)
     in_am = models.TimeField(null=True, blank=True)
     out_am = models.TimeField(null=True, blank=True)

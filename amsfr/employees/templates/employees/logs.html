@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,6 +19,7 @@
     <table style='text-align:center'>
         <thead>
             <tr>
+                <th>IMG</th>
                 <th>ID</th>
                 <th>EmployeeID</th>
                 <th>IN AM</th>
@@ -31,6 +33,13 @@
         <tbody>
             {% for log in logs %}
             <tr>
+                <td>
+                    {% if log.reference.id_picture.url %}
+                    <img src="{{log.reference.id_picture.url}}" alt="" width="40">
+                    {% else %}
+                    <img src="{% static 'default.png' %}" alt="" width="40">
+                    {% endif %}
+                </td>
                 <td>{{log.id}}</td>
                 <td>{{log.employee_id}}</td>
 
