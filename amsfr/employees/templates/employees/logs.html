@@ -16,7 +16,29 @@
     <br>
     <br>
 
-    <table style='text-align:center'>
+    <h2>IN</h2>
+
+    <div style="display: flex; gap: 1rem;">
+        {% for inside in insides%}
+        <div>
+            <img src="{{inside.reference.id_picture.url}}" onerror="this.onerror=null; this.src='{% static 'default.png' %}'" alt="" width="120">
+            <p style="text-align: center;">{{inside.employee_id}}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2>OUT</h2>
+
+    <div style="display: flex; gap: 1rem;">
+        {% for outside in outsides%}
+        <div>
+            <img src="{{outside.reference.id_picture.url}}" onerror="this.onerror=null; this.src='{% static 'default.png' %}'" alt="" width="120">
+            <p style="text-align: center;">{{outside.employee_id}}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% comment %} <table style='text-align:center'>
         <thead>
             <tr>
                 <th>IMG</th>
@@ -70,13 +92,11 @@
                 <td> {{log.date|date:"Y-m-d"}} </td>
                 
                 <td>
-                    {% comment %} <a href="#">update</a>
-                    <a href="#">delete</a> {% endcomment %}
                     <a href="#">soon</a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
-    </table>
+    </table> {% endcomment %}
 </body>
 </html>
