@@ -277,9 +277,10 @@ def holiday(request):
 
 def import_holidays(request):
     ph_calendar = Philippines()
+    year = dt.datetime.now().year
     # ehem = pd.DataFrame(ph_calendar.holidays(2022), columns=["date", "holiday"])
     # print(ehem)
-    holiday_list = ph_calendar.holidays(2022)
+    holiday_list = ph_calendar.holidays(year)
     holidays = [Holiday(date=x[0], holiday=x[1]) for x in holiday_list if not Holiday.objects.filter(holiday=x[1]).exists()]
     Holiday.objects.bulk_create(holidays)
     messages.success(request, "Holidays imported successfully!")
@@ -401,3 +402,6 @@ def monitor(request):
         context = {'insides':insides, 'outsides':outsides}
 
     return render(request, template, context)
+
+def dtr_employee(request):
+    pass

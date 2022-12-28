@@ -148,7 +148,7 @@ def face_recog(option):
             windowName = "Attendance Check (PM)"
             
         cv2.namedWindow(windowName, cv2.WINDOW_FULLSCREEN)
-        cv2.resizeWindow(windowName, 1280, 720)
+        # cv2.resizeWindow(windowName, 1280, 720)
         cv2.imshow(windowName, img)
         # cv2.waitKey(1)
         if cv2.waitKey(1) & 0xFF == ord('\x1B'):
