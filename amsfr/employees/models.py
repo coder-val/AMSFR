@@ -57,6 +57,7 @@ class Attendance(models.Model):
     in_pm = models.TimeField(null=True, blank=True)
     out_pm = models.TimeField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
+    remarks = models.CharField(null=True, blank=True, max_length=1)
 
     class Meta:
         db_table = 'attendance'
