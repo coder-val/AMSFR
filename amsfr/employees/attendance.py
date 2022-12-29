@@ -40,26 +40,49 @@ def checkpoint_out_pm():
         return False
 
 def mark_attendance(option, name):
+    time_now = datetime.datetime.now().time()
+    dt_time_now = datetime.timedelta(hours=time_now.hour, minutes=time_now.minute, seconds=time_now.second, microseconds=time_now.microsecond)
+    date_now = datetime.datetime.now().date()
+    sched = Schedule.objects.get(is_active=True)
+    
     if option == 1:
-        markAttendance = Attendance(reference = Employee.objects.get(id=name), employee_id = name, in_am = datetime.datetime.now().time(), date = datetime.datetime.now().date())
-        checkID = Attendance.objects.filter(employee_id = name, date = datetime.datetime.now().date())
+        am_in = datetime.timedelta(hours=sched.in_am.hour, minutes=sched.in_am.minute, seconds=sched.in_am.second, microseconds=sched.in_am.microsecond)
+        threshold = datetime.timedelta(minutes=30)
+        if dt_time_now <= (am_in+threshold):
+            remarks = 'P'
+        else:
+            remarks = 'L'
+
+        markAttendance = Attendance(reference = Employee.objects.get(id=name), employee_id = name, in_am = time_now, date = date_now, remarks = remarks)
+        checkID = Attendance.objects.filter(employee_id = name, date = date_now)
         if not checkID.exists():
             markAttendance.save()
+
     elif option == 2:
-        checkID = Attendance.objects.filter(employee_id = name, date = datetime.datetime.now().date())
+        remarks = 'L'
+        checkID = Attendance.objects.filter(employee_id = name, date = date_now)
         if not checkID.exists():
-            Attendance.objects.create(reference = Employee.objects.get(id=name), employee_id = name, out_am = datetime.datetime.now().time(), date = datetime.datetime.now().date())
+            Attendance.objects.create(reference = Employee.objects.get(id=name), employee_id = name, out_am = time_now, date = date_now, remarks = remarks)
         else:
-            Attendance.objects.filter(employee_id = name, out_am__isnull=True, date = datetime.datetime.now().date()).update(out_am=datetime.datetime.now().time())
+            Attendance.objects.filter(employee_id = name, out_am__isnull=True, date = date_now).update(out_am=time_now)
+
     elif option == 3:
-        checkID = Attendance.objects.filter(employee_id = name, date = datetime.datetime.now().date())
-        if not checkID.exists():
-            Attendance.objects.create(reference = Employee.objects.get(id=name), employee_id = name, in_pm = datetime.datetime.now().time(), date = datetime.datetime.now().date())
+        pm_in = datetime.timedelta(hours=sched.in_pm.hour, minutes=sched.in_pm.minute, seconds=sched.in_pm.second, microseconds=sched.in_pm.microsecond)
+        threshold = datetime.timedelta(minutes=30)
+        if dt_time_now <= (pm_in+threshold):
+            remarks = 'P'
         else:
-            Attendance.objects.filter(employee_id = name, in_pm__isnull=True, date = datetime.datetime.now().date()).update(in_pm=datetime.datetime.now().time())
+            remarks = 'L'
+
+        checkID = Attendance.objects.filter(employee_id = name, date = date_now)
+        if not checkID.exists():
+            Attendance.objects.create(reference = Employee.objects.get(id=name), employee_id = name, in_pm = time_now, date = date_now, remarks = remarks)
+        else:
+            Attendance.objects.filter(employee_id = name, in_pm__isnull = True, date = date_now).update(in_pm = time_now)
     elif option == 4:
-        checkID = Attendance.objects.filter(employee_id = name, date = datetime.datetime.now().date())
+        remarks = 'L'
+        checkID = Attendance.objects.filter(employee_id = name, date = date_now)
         if not checkID.exists():
-            Attendance.objects.create(reference = Employee.objects.get(id=name), employee_id = name, out_pm = datetime.datetime.now().time(), date = datetime.datetime.now().date())
+            Attendance.objects.create(reference = Employee.objects.get(id=name), employee_id = name, out_pm = time_now, date = date_now, remarks = remarks)
         else:
-            Attendance.objects.filter(employee_id = name, out_pm__isnull=True, date = datetime.datetime.now().date()).update(out_pm=datetime.datetime.now().time())
+            Attendance.objects.filter(employee_id = name, out_pm__isnull=True, date = date_now).update(out_pm=time_now)
