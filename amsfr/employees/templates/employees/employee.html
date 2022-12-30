@@ -17,6 +17,7 @@
     <table>
         <thead>
             <tr>
+                <th>PIC</th>
                 <th>ID</th>
                 <th>Lastname</th>
                 <th>Firstname</th>
@@ -30,6 +31,7 @@
         <tbody>
             {% for employee in employees %}
             <tr>
+                <td><img src="{{employee.id_picture.url}}" alt="" width='40'></td>
                 <td>{{employee.id}}</td>
                 <td>{{employee.lastname}}</td>
                 <td>{{employee.firstname}}</td>

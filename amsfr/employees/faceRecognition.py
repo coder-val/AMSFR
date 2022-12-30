@@ -5,7 +5,7 @@ from django.contrib import messages
 from .attendance import mark_attendance
 import dlib
 
-cam = 1
+cam = 0
 
 def findEncodings(images):
     encodeList = []
@@ -98,9 +98,10 @@ def face_recog(option):
     # print(dlib.DLIB_USE_CUDA)
 
     cap = cv2.VideoCapture(cam, cv2.CAP_DSHOW)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-    cap.set(cv2.CAP_PROP_FPS, 60)
+    ### FOR WEBCAM USER ###
+    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    # cap.set(cv2.CAP_PROP_FPS, 60)
 
     while True:
 

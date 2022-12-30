@@ -190,7 +190,7 @@ def delete_sched(request, pk):
 
 # EMPLOYEE ##################################################################
 def employee(request):
-    employees = Employee.objects.all()
+    employees = Employee.objects.all().order_by('lastname')
     context = {'employees': employees}
     template = "employees/employee.html"
     return render(request, template, context)
