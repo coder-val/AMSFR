@@ -80,7 +80,6 @@ WSGI_APPLICATION = 'amsfr.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': BASE_DIR / 'db.sqlite3',
         'NAME': 'amsfr_db',
         'USER': 'root',
         'PASSWORD': '',
