@@ -389,16 +389,17 @@ def monitor(request):
     in_am = Schedule.objects.filter(is_active=True).values()[0]['in_am']
     in_pm = Schedule.objects.filter(is_active=True).values()[0]['in_pm']
 
-    now = dt.datetime.now().time()
-    cut_off = now.replace(hour=23, minute=59, second=59, microsecond=0)
+    now_time = dt.datetime.now().time()
+    now_date = dt.datetime.now().date()
+    cut_off = now_time.replace(hour=23, minute=59, second=59, microsecond=0)
 
-    if now >= in_am and now < in_pm:
-        insides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=True, date=dt.datetime.now().date())
-        outsides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=False, date=dt.datetime.now().date()) | Attendance.objects.filter(in_am__isnull=True, out_am__isnull=False, date=dt.datetime.now().date())
+    if now_time >= in_am and now_time < in_pm:
+        insides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=True, date=now_date)
+        outsides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=False, date=now_date) | Attendance.objects.filter(in_am__isnull=True, out_am__isnull=False, date=now_date)
         context = {'insides':insides, 'outsides':outsides}
-    elif now >= in_pm and dt.datetime.now().time() < cut_off:
-        insides = Attendance.objects.filter(in_pm__isnull=False, out_pm__isnull=True, date=dt.datetime.now().date())
-        outsides = Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=False, out_pm__isnull=False, date=dt.datetime.now().date()) | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=True, date=dt.datetime.now().date()) | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=False, date=dt.datetime.now().date()) | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=False, out_pm__isnull=False, date=dt.datetime.now().date())
+    elif now_time >= in_pm and now_time < cut_off:
+        insides = Attendance.objects.filter(in_pm__isnull=False, out_pm__isnull=True, date=now_date)
+        outsides = Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=False, out_pm__isnull=False, date=now_date) | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=True, date=now_date) | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=False, date=now_date) | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=False, out_pm__isnull=False, date=now_date) | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=True, out_pm__isnull=False, date=now_date)
         context = {'insides':insides, 'outsides':outsides}
 
     return render(request, template, context)
