@@ -3,8 +3,9 @@ from django.conf import settings
 from .models import Attendance
 from django.contrib import messages
 from .attendance import mark_attendance
+import dlib
 
-cam = 0
+cam = 1
 
 def findEncodings(images):
     encodeList = []
@@ -94,8 +95,12 @@ def face_recog(option):
 
     encodeListKnown = findEncodings(images)
     print('Encoding Complete')
+    # print(dlib.DLIB_USE_CUDA)
 
-    cap = cv2.VideoCapture(cam)
+    cap = cv2.VideoCapture(cam, cv2.CAP_DSHOW)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    cap.set(cv2.CAP_PROP_FPS, 60)
 
     while True:
 
@@ -103,26 +108,33 @@ def face_recog(option):
             # print("NO IMAGES YET!")
             
             return False
-            break
-
 
         success, img = cap.read()
-        cv2.putText(img, datetime.datetime.now().time().strftime("%I:%M:%S%p"), (10,120), cv2.FONT_HERSHEY_COMPLEX, 2, (255,255,255), 1)
-        
-        imgS = cv2.resize(img,(0,0), None, 0.25,0.25)
-        imS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
+        img = cv2.flip(img, 1)
+
+        if option == 1 or option == 2:
+            windowName = "Attendance Check (AM)"
+        elif option == 3 or option == 4:
+            windowName = "Attendance Check (PM)"
+
+        cv2.namedWindow(windowName, cv2.WINDOW_FULLSCREEN)
+        cv2.setWindowProperty(windowName, cv2.WND_PROP_TOPMOST, 1)
 
         if option == 1 or option == 3:
             cv2.putText(img, "TIME IN", (10,60), cv2.FONT_HERSHEY_COMPLEX, 2, (0,255,0), 3)
         elif option == 2 or option == 4:
             cv2.putText(img, "TIME OUT", (10,60), cv2.FONT_HERSHEY_COMPLEX, 2, (0,255,0), 3)
+        
+        cv2.putText(img, datetime.datetime.now().time().strftime("%I:%M:%S%p"), (10,120), cv2.FONT_HERSHEY_COMPLEX, 2, (255,255,255), 3)
+
+        imgS = cv2.resize(img,(0,0), None, 0.25,0.25)
+        imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
 
         facesCurFrame = face_recognition.face_locations(imgS)
         encodesCurFrame = face_recognition.face_encodings(imgS, facesCurFrame)
 
-
         for encodeFace, faceLoc in zip(encodesCurFrame, facesCurFrame):
-            matches = face_recognition.compare_faces(encodeListKnown, encodeFace)
+            matches = face_recognition.compare_faces(encodeListKnown, encodeFace, 0.99)
             faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)
             # print(faceDis) #///////////////////
             matchesIndex = np.argmin(faceDis)
@@ -133,25 +145,20 @@ def face_recog(option):
             if matches[matchesIndex] and (faceDis[matchesIndex] < 0.5):
                 # name = classNames[matchesIndex].upper()
                 name = classNames[matchesIndex]
-                print(name)
-                cv2.rectangle(img,(x1, y1), (x2, y2+50), (0, 255, 0), 2)
-                cv2.rectangle(img,(x1, y2), (x2, y2+50), (0, 255, 0), cv2.FILLED)
-                cv2.putText(img, name, (x1+6, y2+40), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 2)
+                # print(name)
+                # cv2.rectangle(img,(x1, y1), (x2, y2+50), (0, 255, 0), 2)
+                # cv2.rectangle(img,(x1, y2), (x2, y2+50), (0, 255, 0), cv2.FILLED)
+                cv2.putText(img, name, (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0,255,0), 3)
                 mark_attendance(option, name)
 
             else:
-                cv2.putText(img, "unknown", (x1+6, y2-6), cv2.FONT_HERSHEY_COMPLEX, .5, (255,255,255), 1)
+                cv2.putText(img, "unknown", (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (255,255,255), 3)
 
-        if option == 1 or option == 2:
-            windowName = "Attendance Check (AM)"
-        elif option == 3 or option == 4:
-            windowName = "Attendance Check (PM)"
-            
-        cv2.namedWindow(windowName, cv2.WINDOW_FULLSCREEN)
-        # cv2.resizeWindow(windowName, 1280, 720)
         cv2.imshow(windowName, img)
         # cv2.waitKey(1)
         if cv2.waitKey(1) & 0xFF == ord('\x1B'):
+            break
+        if cv2.getWindowProperty(windowName, cv2.WND_PROP_VISIBLE) <1:
             break
 
     cap.release()
