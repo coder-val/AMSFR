@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'utilities/icon.png' %}" type="image/x-icon">
+    <link type="text/css" rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}" media="screen,projection">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="https://kit.fontawesome.com/4db0e106e1.js" crossorigin="anonymous"></script>
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    {% include "nav-bar.html" %}
+    {% include "side-nav.html" %}
+    <header>
+        <div style="padding-left: 90px;">
+            <blockquote style="margin-left: 2.5rem;">
+            <h3 style="font-weight: bold">{% block heading %}{% endblock heading %}</h3>
+        </blockquote>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            {% block content %}{% endblock content %}
+        </div>
+    </main>
+    <footer class="page-footer white" style="">
+        <div class="white">
+            <div class="container center-align">
+                <p style="color: black">AWITIZED COMPANY © 2023</p>
+            </div>
+        </div>
+    </footer>
+    <script type="text/javascript" src="{% static 'materialize/js/materialize.min.js' %}"></script>
+    <script>
+        function currentTime() {
+            let date = new Date(); 
+            let hh = date.getHours();
+            let mm = date.getMinutes();
+            let ss = date.getSeconds();
+            let mo = date.getMonth() + 1;
+            let dd = date.getDate();
+            let yyyy = date.getFullYear();
+            let session = "AM";
+          
+            if(hh === 0){
+                hh = 12;
+            }
+            if(hh > 12){
+                hh = hh - 12;
+                session = "PM";
+             }
+          
+             hh = (hh < 10) ? "0" + hh : hh;
+             mm = (mm < 10) ? "0" + mm : mm;
+             ss = (ss < 10) ? "0" + ss : ss;
+             mo = (mo < 10) ? "0" + mo : mo;
+             dd = (dd < 10) ? "0" + dd : dd;
+              
+             let time = date.toDateString().slice(0,3).toUpperCase() + " | " + hh + ":" + mm + ":" + ss + " " + session + " | " + mo + "•" + dd + "•" + yyyy;
+          
+            document.getElementById("clock").innerText = time; 
+            let t = setTimeout(function(){ currentTime() }, 1000);
+        }
+          
+        currentTime();
+    </script>
+</body>
+</html>

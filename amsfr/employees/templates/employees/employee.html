@@ -1,20 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee</title>
-</head>
-<body>
-    <h1>EMPLOYEE PAGE</h1>
-    <a href="{% url 'home' %}">Dashboard</a>
-    <a href="{% url 'create_emp' %}">Register Employee</a>
+{% extends 'base.html' %}
+{% load static %}
 
-    <br>
-    <br>
+{% block title %}Employee{% endblock title %}
+{% block heading %}Employee{% endblock heading %}
 
-    <table>
+{% block content %}
+<div class="row">
+    <a class="waves-effect waves-light btn purple accent-3 right" href="{% url 'create_emp' %}">register</a>
+</div>
+<div class="row">
+    <table class="highlight centered hoverable">
         <thead>
             <tr>
                 <th>PIC</th>
@@ -28,25 +23,89 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="collapsible">
             {% for employee in employees %}
-            <tr>
-                <td><img src="{{employee.id_picture.url}}" alt="" width='40'></td>
+            <tr class=".collapsible-header">
+                <td><img class="circle" src="{% if employee.id_picture %}{{employee.id_picture.url}}{% endif %}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width='60'></td>
                 <td>{{employee.id}}</td>
                 <td>{{employee.lastname}}</td>
                 <td>{{employee.firstname}}</td>
                 <td>{{employee.middlename}}</td>
+                {% if employee.department %}
                 <td>{{employee.department}}</td>
+                {% else %}
+                <td>n/a</td>
+                {% endif %}
+                {% if employee.designation %}
                 <td>{{employee.designation}}</td>
+                {% else %}
+                <td>n/a</td>
+                {% endif %}
+                {% if employee.reportsTo %}
                 <td>{{employee.reportsTo}}</td>
-                
+                {% else %}
+                <td>n/a</td>
+                {% endif %}
                 <td>
-                    <a href="{% url 'update_emp' employee.id %}">update</a>
-                    <a href="{% url 'delete_emp' employee.id %}">delete</a>
+                    <a href="{% url 'update_emp' employee.id %}" class="btn-floating waves-effect waves-light amber accent-4 tooltipped-l" data-position="left" data-tooltip="edit" alt="edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="{% url 'delete_emp' employee.id %}" class="btn-floating waves-effect waves-light red tooltipped-r" data-position="right" data-tooltip="delete" alt="delete"><i class="fa-solid fa-trash"></i></a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+</div>
+<div class="row">
+    <div class="center-align" style="position:relative">
+        <ul class="pagination">
+
+            {% if employees.has_previous %}
+            <li class="waves-effect"><a href="?page={{employees.previous_page_number}}"><i class="material-icons">chevron_left</i></a></li>
+            {% else %}
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+            {% endif %}
+
+            {% for i in employees.paginator.page_range %}
+            {% if employees.number == i %}
+            <li class="active purple accent-3"><a href="#!">{{i}}</a></li>
+            {% else %}
+            <li class="waves-effect"><a href="?page={{i}}">{{i}}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if employees.has_next %}
+            <li class="waves-effect"><a href="?page={{employees.next_page_number}}"><i class="material-icons">chevron_right</i></a></li>
+            {% else %}
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <ul class="collapsible">
+        <li>
+            <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
+            <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+        </li>
+        <li>
+            <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
+            <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+        </li>
+        <li>
+            <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+            <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+        </li>
+    </ul>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems_l = document.querySelectorAll('.tooltipped-l');
+        var elems_r = document.querySelectorAll('.tooltipped-r');
+        var elems_col = document.querySelectorAll('.collapsible');
+        var instance_l = M.Tooltip.init(elems_l);
+        var instance_r = M.Tooltip.init(elems_r);
+        var instance_col = M.Collapsible.init(elems_col);
+      });
+</script>
+{% endblock content %}

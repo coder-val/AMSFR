@@ -1,0 +1,26 @@
+{% block nav %}
+<div class="navibar">
+    <ul>
+        <li><a href="{% url 'attendance' %}" class="nav-link f waves-effect waves-light">
+            <i class="fas fa-solid fa-clock"></i>
+            <span class="nav-item">Attendance</span>
+        </a></li>
+        <li><a href="{% url 'employee' %}" class="nav-link waves-effect waves-light">
+            <i class="fas fa-solid fa-users"></i>
+            <span class="nav-item">Employees</span>
+        </a></li>
+        <li><a href="{% url 'department' %}" class="nav-link waves-effect waves-light">
+            <i class="fas fa-solid fa-building"></i>
+            <span class="nav-item">Departments</span>
+        </a></li>
+        <li><a href="{% url 'designation' %}" class="nav-link waves-effect waves-light">
+            <i class="fas fa-solid fa-briefcase"></i>
+            <span class="nav-item">Designations</span>
+        </a></li>
+        <li><a href="#" class="nav-link waves-effect waves-light">
+            <i class="fas fa-solid fa-gear"></i>
+            <span class="nav-item">Settings</span>
+        </a></li>
+    </ul>
+</div>
+{% endblock nav %}

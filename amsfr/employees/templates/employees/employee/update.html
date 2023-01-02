@@ -1,19 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Employee</title>
-</head>
-<body>
-    <h1>UPDATE EMPLOYEE</h1>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Update Employee{% endblock title %}
+{% block heading %}Update Employee{% endblock heading %}
 
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p}}
-        <button type="submit" value="submit">Update</button> <button><a href="{% url 'employee' %}">Back</a></button>
-    </form>
-
-</body>
-</html>
+{% block content %}
+<div class="container">
+    <div class="row">
+        <form class="col s12" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="input-field col s4">
+                    {{form.id.label_tag}}
+                    {{form.id}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    {{form.lastname.errors}}
+                    {{form.lastname.label_tag}}
+                    {{form.lastname}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.firstname.errors}}
+                    {{form.firstname.label_tag}}
+                    {{form.firstname}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.middlename.errors}}
+                    {{form.middlename.label_tag}}
+                    {{form.middlename}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    {{form.department.errors}}
+                    {{form.department}}
+                    {{form.department.label_tag}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.designation.errors}}
+                    {{form.designation}}
+                    {{form.designation.label_tag}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.reportsTo.errors}}
+                    {{form.reportsTo}}
+                    {{form.reportsTo.label_tag}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <label style="position:absolute; top: -45px" for={{form.id_picture.id_for_label}}>{{form.id_picture.label}}:</label>
+                    {{form.id_picture.errors}}
+                    {{form.id_picture}}
+                </div>
+            </div>
+            <div class="row">
+                <button class="right btn waves-effect waves-light green accent-4" type="submit" name="action">Submit</button>
+                <a href="{% url 'employee' %}" class="right btn waves-effect waves-light purple accent-3" style="margin-right: .5rem">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
+        {% if messages %}
+            {% for message in messages %}
+                M.toast({html: '{{message}}'})
+                {% if message.tags == 'success' %}
+                    document.querySelector('.toast').classList.add('green', 'accent-4')
+                {% elif message.tags == 'warning'%}
+                    document.querySelector('.toast').classList.add('amber', 'accent-4')
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% if form.id.errors %}
+            {% for message in form.id.errors %}
+                M.toast({html: '{{message}}'})
+                document.querySelector('.toast').classList.add('red')
+            {% endfor %}
+        {% endif %}
+    });
+    const inputs = document.querySelectorAll('input');
+    for (const input of inputs) {
+        input.classList.add('validate')
+    }
+    const id = document.getElementById('{{form.id.id_for_label}}')
+    id.setAttribute('readonly', '')
+    id.removeAttribute('required')
+</script>
+{% endblock content %}

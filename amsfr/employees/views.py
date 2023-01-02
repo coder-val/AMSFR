@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
+from django.core.paginator import Paginator
 from .models import *
 from .forms import *
 from datetime import timedelta
@@ -191,7 +192,10 @@ def delete_sched(request, pk):
 # EMPLOYEE ##################################################################
 def employee(request):
     employees = Employee.objects.all().order_by('lastname')
-    context = {'employees': employees}
+    p = Paginator(employees, 10)
+    page_number = request.GET.get('page')
+    p_employees = p.get_page(page_number)
+    context = {'employees': p_employees}
     template = "employees/employee.html"
     return render(request, template, context)
 
@@ -209,6 +213,7 @@ def create_emp(request):
             middlename = form.cleaned_data['middlename']
             department = form.cleaned_data['department']
             designation = form.cleaned_data['designation']
+            reportsTo = form.cleaned_data['reportsTo']
             id_picture = request.FILES['id_picture']
 
             file_name = default_storage.save(id_picture.name, id_picture)
@@ -217,21 +222,22 @@ def create_emp(request):
             image_checking = os.path.join(path_to_unregistered, file_name)
 
             if os.path.isfile(image_checking):
-                messages.warning(request, "IMAGE ALREADY USED!")
+                os.remove(image_path)
+                messages.warning(request, "ID picture already used!")
                 return render(request, template, {'form':form})
 
             shutil.move(image_path, path_to_unregistered)
 
             if checkIfExist(image_checking) is True:
-                messages.warning(request, "EMPLOYEE ALREADY REGISTERED!")
+                messages.warning(request, "Employee already registered!")
                 return render(request, template, {'form':form})
             
             else:
-                register = Employee(id = id, lastname = lastname, firstname = firstname, middlename = middlename, department = department, designation = designation, id_picture = f'registered/{id}.jpg')
+                register = Employee(id = id, lastname = lastname, firstname = firstname, middlename = middlename, department = department, designation = designation, reportsTo = reportsTo, id_picture = f'registered/{id}.jpg')
                 register.save()
                 new_image_path = os.path.join(settings.MEDIA_ROOT, f'registered/{id}.jpg')
                 os.rename(image_checking, new_image_path)
-                messages.success(request, "EMPLOYEE REGISTERED SUCCESSFULLY!")
+                messages.success(request, "Employee registered successfully!")
                 form = EmployeeForm()
                 return render(request, template, {'form':form})
 
@@ -251,7 +257,8 @@ def update_emp(request, pk):
         form = EmployeeForm(request.POST, instance=employee)
         if form.is_valid():
             form.save()
-            return redirect('employee')
+            messages.success(request, f"Employee {pk} updated successfully!")
+            return redirect('update_emp', pk)
     
     context = {'form': form}
     return render(request, template, context)
