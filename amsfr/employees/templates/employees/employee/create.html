@@ -63,26 +63,7 @@
     </div>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems);
-        {% if messages %}
-            {% for message in messages %}
-                M.toast({html: '{{message}}'})
-                {% if message.tags == 'success' %}
-                    document.querySelector('.toast').classList.add('green', 'accent-4')
-                {% elif message.tags == 'warning'%}
-                    document.querySelector('.toast').classList.add('amber', 'accent-4')
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-        {% if form.id.errors %}
-            {% for message in form.id.errors %}
-                M.toast({html: '{{message}}'})
-                document.querySelector('.toast').classList.add('red')
-            {% endfor %}
-        {% endif %}
-    });
+    
     const inputs = document.querySelectorAll('input');
     for (const input of inputs) {
         input.classList.add('validate')

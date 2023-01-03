@@ -8,32 +8,35 @@
     <link rel="shortcut icon" href="{% static 'utilities/icon.png' %}" type="image/x-icon">
     <link type="text/css" rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}" media="screen,projection">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <script src="https://kit.fontawesome.com/4db0e106e1.js" crossorigin="anonymous"></script>
     <title>{% block title %}{% endblock title %}</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+          }
+        
+        main {
+            flex: 1 0 auto;
+          }
+    </style>
 </head>
 <body>
     {% include "nav-bar.html" %}
-    {% include "side-nav.html" %}
-
-    <!-- Modal Structure -->
-    <div id="logout-modal" class="modal" style="max-width: 500px">
-        <div class="modal-content">
-        <h5>Are you sure you want to logout?</h5>
-        </div>
-        <div class="modal-footer">
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="modal-close waves-effect waves-green btn-flat purple accent-3" style="font-size: 1rem; color: white;" autofocus>YES</button>
-            </form>
-        </div>
-    </div>
-
     <header>
-        <div style="padding-left: 90px;">
-            <blockquote style="margin-left: 2.5rem;">
-            <h3 style="font-weight: bold">{% block heading %}{% endblock heading %}</h3>
-        </blockquote>
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m8 l7 offset-m2 offset-l2">
+                    <blockquote style="margin-left: 2.5rem;">
+                        <h3 style="font-weight: bold">{% block heading %}{% endblock heading %}</h3>
+                    </blockquote>
+                </div>
+            </div>
         </div>
     </header>
     <main>
@@ -78,28 +81,12 @@
           
             document.getElementById("clock").innerText = time; 
             let t = setTimeout(function(){ currentTime() }, 1000);
-        }
+        } 
         currentTime();
         document.addEventListener('DOMContentLoaded', function() {
-            var modal_elems = document.querySelectorAll('.modal');
-            var instances = M.Modal.init(modal_elems);
-            var select_elems = document.querySelectorAll('select');
-            var instances = M.FormSelect.init(select_elems);
-            {% if messages %}
-                {% for message in messages %}
-                    M.toast({html: '{{message}}'})
-                    {% if message.tags == 'success' %}
-                        document.querySelector('.toast').classList.add('green', 'accent-4')
-                    {% elif message.tags == 'warning'%}
-                        document.querySelector('.toast').classList.add('amber', 'accent-4')
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-            {% if form.id.errors %}
-                {% for message in form.id.errors %}
-                    M.toast({html: '{{message}}'})
-                    document.querySelector('.toast').classList.add('red')
-                {% endfor %}
+            {% if error %}
+            M.toast({html: '{{error}}'})
+            document.querySelector('.toast').classList.add('red')
             {% endif %}
         });
     </script>

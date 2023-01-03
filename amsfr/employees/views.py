@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.core.paginator import Paginator
@@ -23,6 +24,7 @@ def convert_time(time):
     return time
 
 # Create your views here.
+@login_required
 def home(request):
     context = {}
     template = "employees/home.html"

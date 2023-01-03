@@ -11,8 +11,12 @@
         <li id="clock" onload="currentTime()" style="font-size: 2rem"></li>
       </ul>
       <ul class="right hide-on-med-and-down">
-        <li><a href="#">username</a></li>
-        <li><a href="#">Logout</a></li>
+        {% if request.user.is_authenticated %}
+        <li><a href="#!"> {{request.user}} </a></li>
+        <li><a href="#logout-modal" class="waves-effect waves-light btn modal-trigger purple accent-2">Logout</a></li>
+        {% else %}
+        <li><a href="#">Anonymous</a></li>
+        {% endif %}
       </ul>
     </div>
   </nav>

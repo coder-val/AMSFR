@@ -1,0 +1,33 @@
+{% extends 'base-login-out.html' %}
+{% load static %}
+{% block title %}Logout{% endblock title %}
+{% block heading %}Logout{% endblock heading %}
+
+{% block content %}
+<div class="container">
+    {% if error %}
+    <div class="row">
+        <p>{{error}}</p>
+    </div>
+    {% endif %}
+    <div class="row">
+        {% if request.user.is_authenticated %}
+        <div class="col s12">
+            <div class="row center-align">
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <h5>Are you sure you want to logout?</h5>
+                    <button class="modal-close waves-effect waves-green btn-flat purple accent-3" style="font-size: 1rem; color: white;">YES</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="col s12">
+            <div class="row center-align">
+                <p>Already logged out. Go to <a href="{% url 'login' %}">Login.</a></p>
+            </div>
+        </div>
+        {% endif %}  
+    </div>
+</div>
+{% endblock content %}
