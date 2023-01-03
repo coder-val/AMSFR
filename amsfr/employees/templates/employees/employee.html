@@ -23,9 +23,9 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody class="collapsible">
+        </tbody>
             {% for employee in employees %}
-            <tr class=".collapsible-header">
+            <tr>
                 <td><img class="circle" src="{% if employee.id_picture %}{{employee.id_picture.url}}{% endif %}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width='60'></td>
                 <td>{{employee.id}}</td>
                 <td>{{employee.lastname}}</td>
@@ -58,44 +58,31 @@
 <div class="row">
     <div class="center-align" style="position:relative">
         <ul class="pagination">
+            {% if employees %}
+                {% if employees.has_previous %}
+                <li class="waves-effect"><a href="?page={{employees.previous_page_number}}"><i class="material-icons">chevron_left</i></a></li>
+                {% else %}
+                <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                {% endif %}
 
-            {% if employees.has_previous %}
-            <li class="waves-effect"><a href="?page={{employees.previous_page_number}}"><i class="material-icons">chevron_left</i></a></li>
-            {% else %}
-            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-            {% endif %}
+                {% for i in employees.paginator.page_range %}
+                {% if employees.number == i %}
+                <li class="active purple accent-3"><a href="#!">{{i}}</a></li>
+                {% else %}
+                <li class="waves-effect"><a href="?page={{i}}">{{i}}</a></li>
+                {% endif %}
+                {% endfor %}
 
-            {% for i in employees.paginator.page_range %}
-            {% if employees.number == i %}
-            <li class="active purple accent-3"><a href="#!">{{i}}</a></li>
+                {% if employees.has_next %}
+                <li class="waves-effect"><a href="?page={{employees.next_page_number}}"><i class="material-icons">chevron_right</i></a></li>
+                {% else %}
+                <li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                {% endif %}
             {% else %}
-            <li class="waves-effect"><a href="?page={{i}}">{{i}}</a></li>
-            {% endif %}
-            {% endfor %}
-
-            {% if employees.has_next %}
-            <li class="waves-effect"><a href="?page={{employees.next_page_number}}"><i class="material-icons">chevron_right</i></a></li>
-            {% else %}
-            <li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+            <p>No records yet.</p>
             {% endif %}
         </ul>
     </div>
-</div>
-<div class="row">
-    <ul class="collapsible">
-        <li>
-            <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
-            <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-        </li>
-        <li>
-            <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
-            <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-        </li>
-        <li>
-            <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
-            <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-        </li>
-    </ul>
 </div>
 
 <script>
