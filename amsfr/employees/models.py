@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Department(models.Model):
@@ -34,14 +35,34 @@ class Schedule(models.Model):
         return self.name
     
 class Employee(models.Model):
+    GENDER_CHOICES = [
+        ('M', 'MALE'),
+        ('F', 'FEMALE'),
+    ]
+    # account info
+    user = models.ForeignKey(User, on_delete=models.CASCADE)#
+    firstname = models.CharField(max_length=30)#
+    middlename = models.CharField(max_length=30)#
+    lastname = models.CharField(max_length=30)#
+    email = models.EmailField(blank=True, null=True)#
+    created = models.DateTimeField(auto_now_add=True)#
+
+    # personal info
+    birth_date = models.DateField(blank=True, null=True)#
+    gender = models.CharField(choices=GENDER_CHOICES, max_length=6, blank=True, null=True)#
+    mobile_number = models.CharField(max_length=11, blank=True, null=True)#
+    barangay = models.CharField(max_length=30, blank=True, null=True)#
+    municipality = models.CharField(max_length=30, blank=True, null=True)#
+    province = models.CharField(max_length=30, blank=True, null=True)#
+
+    # primary info
     id = models.CharField(primary_key=True, max_length=30)
-    lastname = models.CharField(max_length=30)
-    firstname = models.CharField(max_length=30)
-    middlename = models.CharField(max_length=30)
-    department = models.ForeignKey(Department, models.SET_NULL, blank=True, null=True)
-    designation = models.ForeignKey(Designation, models.SET_NULL, blank=True, null=True)
-    reportsTo = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)
-    id_picture = models.ImageField()
+    biometric_id = models.ImageField()
+    department = models.ForeignKey(Department, models.SET_NULL, blank=True, null=True)#
+    designation = models.ForeignKey(Designation, models.SET_NULL, blank=True, null=True)#
+    # reportsTo = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)# SETTINGS
+    date_employed = models.DateField(blank=True, null=True)
+    # employment_status = models.CharField(max_length=8, default="active")
 
     class Meta:
         db_table = 'employees'

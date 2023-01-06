@@ -14,6 +14,7 @@ import datetime as dt
 import shutil, os
 from workalendar.asia import Philippines
 import pandas as pd
+from django.contrib.auth.models import User
 
 def convert_time(time):
     if time >= dt.time(1,0,0) and time < dt.time(11,59,59):
@@ -28,6 +29,29 @@ def convert_time(time):
 def home(request):
     context = {}
     template = "employees/home.html"
+
+    # emp_user = User.objects.filter(pk=12)[0].username
+    # # haha = emp_user.employee_set.all()
+    # print(emp_user)
+    
+    # print(emp_user.employee_set.all().filter(lastname="Cabitac").values_list())
+
+    # toggle = True
+
+    # school_id = "400392"
+    # dtn = dt.datetime.now().strftime("%Y")
+    # year = dtn[2:len(dtn)]
+    # id_prefix = f'{school_id}-{year}-'
+    # print(id_prefix)
+
+    # id = User.objects.get(id=2)
+    # id.delete()
+
+    # user = User.objects.create_user(f'{id_prefix}001', "", f'{id_prefix}001')
+    # user.save()
+    # emp = Employee.objects.create(user = user, id=id_prefix+"001", firstname = "Val", middlename = "Caccam", lastname = "Cabitac", gender="M", biometric_id = "awit.jpg")
+    # emp.save()
+
     return render(request, template, context)
 
 # DEPARTMENT ################################################################
@@ -210,15 +234,26 @@ def create_emp(request):
         form = EmployeeForm(request.POST, request.FILES)
         if form.is_valid():
             id = form.cleaned_data['id']
+            biometric_id = request.FILES['biometric_id']
             lastname = form.cleaned_data['lastname']
             firstname = form.cleaned_data['firstname']
             middlename = form.cleaned_data['middlename']
+            email = form.cleaned_data['email']
+            birth_date = form.cleaned_data['birth_date']
+            gender = form.cleaned_data['gender']
+            mobile_number = form.cleaned_data['mobile_number']
+            barangay = form.cleaned_data['barangay']
+            municipality = form.cleaned_data['municipality']
+            province = form.cleaned_data['province']
+            date_employed = form.cleaned_data['date_employed']
             department = form.cleaned_data['department']
             designation = form.cleaned_data['designation']
-            reportsTo = form.cleaned_data['reportsTo']
-            id_picture = request.FILES['id_picture']
+            # reportsTo = form.cleaned_data['reportsTo']
 
-            file_name = default_storage.save(id_picture.name, id_picture)
+            user = User.objects.create_user(id, email, id)
+            user.save()
+
+            file_name = default_storage.save(biometric_id.name, biometric_id)
             image_path = os.path.join(settings.MEDIA_ROOT, file_name)
             path_to_unregistered = os.path.join(settings.MEDIA_ROOT, "unregistered")
             image_checking = os.path.join(path_to_unregistered, file_name)
@@ -231,11 +266,13 @@ def create_emp(request):
             shutil.move(image_path, path_to_unregistered)
 
             if checkIfExist(image_checking) is True:
+                os.remove(image_checking)
                 messages.warning(request, "Employee already registered!")
                 return render(request, template, {'form':form})
             
             else:
-                register = Employee(id = id, lastname = lastname, firstname = firstname, middlename = middlename, department = department, designation = designation, reportsTo = reportsTo, id_picture = f'registered/{id}.jpg')
+                
+                register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, email = email, birth_date = birth_date, gender = gender, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, department = department, designation = designation, biometric_id = f'registered/{id}.jpg')
                 register.save()
                 new_image_path = os.path.join(settings.MEDIA_ROOT, f'registered/{id}.jpg')
                 os.rename(image_checking, new_image_path)
@@ -248,6 +285,13 @@ def create_emp(request):
             # return redirect('employee')
 
     context = {'form' : form}
+    return render(request, template, context)
+
+def view_emp(request, pk):
+    emp_details = Employee.objects.filter(id=pk)
+    id = emp_details[0].id
+    context = {'emp_details': emp_details, 'emp_id':id}
+    template = 'employees/employee/view.html'
     return render(request, template, context)
 
 def update_emp(request, pk):
@@ -266,16 +310,19 @@ def update_emp(request, pk):
     return render(request, template, context)
 
 def delete_emp(request, pk):
-    employee = Employee.objects.get(id=pk)
+    emp_id = Employee.objects.get(id=pk)
+    emp_user = User.objects.get(username=emp_id)
+    print(emp_user)
     template = 'employees/employee/delete.html'
 
     if request.method == 'POST':
-        if os.path.isfile(os.path.join(settings.MEDIA_ROOT, employee.id_picture.name)):
-            os.remove(os.path.join(settings.MEDIA_ROOT, employee.id_picture.name))
-        employee.delete()
+        if os.path.isfile(os.path.join(settings.MEDIA_ROOT, emp_id.biometric_id.name)):
+            os.remove(os.path.join(settings.MEDIA_ROOT, emp_id.biometric_id.name))
+        # employee.delete()
+        emp_user.delete()
         return redirect('employee')
     
-    return render(request, template, {'employee': employee})
+    return render(request, template, {'employee': emp_id})
 
 # HOLIDAY ###############################################################
 def holiday(request):

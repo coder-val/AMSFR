@@ -9,45 +9,40 @@
     <a class="waves-effect waves-light btn purple accent-3 right" href="{% url 'create_emp' %}">register</a>
 </div>
 <div class="row">
-    <table class="highlight centered hoverable">
+    <table class="highlight centered hoverable responsive-table">
         <thead>
             <tr>
                 <th>PIC</th>
                 <th>ID</th>
-                <th>Lastname</th>
-                <th>Firstname</th>
-                <th>Middlename</th>
+                <th>Name</th>
+                <th>Contact</th>
                 <th>Department</th>
                 <th>Designation</th>
-                <th>ReportsTo</th>
                 <th>Action</th>
             </tr>
         </thead>
         </tbody>
             {% for employee in employees %}
             <tr>
-                <td><img class="circle" src="{% if employee.id_picture %}{{employee.id_picture.url}}{% endif %}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width='60'></td>
-                <td>{{employee.id}}</td>
-                <td>{{employee.lastname}}</td>
-                <td>{{employee.firstname}}</td>
-                <td>{{employee.middlename}}</td>
+                <td><img class="circle" src="{% if employee.biometric_id %}{{employee.biometric_id.url}}{% endif %}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width='60'></td>
+                <td>{{employee.id|cut:"400392-"}}</td>
+                <td>{{employee.lastname}}, {{employee.firstname}} {{employee.middlename}}</td>
+                {% if employee.mobile_number %}
+                <td>{{employee.mobile_number}}</td>{% else %}
+                <td>~</td>{% endif %}
                 {% if employee.department %}
                 <td>{{employee.department}}</td>
                 {% else %}
-                <td>n/a</td>
+                <td>~</td>
                 {% endif %}
                 {% if employee.designation %}
                 <td>{{employee.designation}}</td>
                 {% else %}
-                <td>n/a</td>
-                {% endif %}
-                {% if employee.reportsTo %}
-                <td>{{employee.reportsTo}}</td>
-                {% else %}
-                <td>n/a</td>
+                <td>~</td>
                 {% endif %}
                 <td>
-                    <a href="{% url 'update_emp' employee.id %}" class="btn-floating waves-effect waves-light amber accent-4 tooltipped-l" data-position="left" data-tooltip="edit" alt="edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="{% url 'view_emp' employee.id %}" class="btn-floating waves-effect waves-light light-blue accent-3 tooltipped-l" data-position="left" data-tooltip="view" alt="view"><i class="fa-solid fa-eye"></i></a>
+                    <a href="{% url 'update_emp' employee.id %}" class="btn-floating waves-effect waves-light amber accent-4 tooltipped-b" data-position="bottom" data-tooltip="edit" alt="edit"><i class="fa-solid fa-pen-to-square"></i></a>
                     <a href="{% url 'delete_emp' employee.id %}" class="btn-floating waves-effect waves-light red tooltipped-r" data-position="right" data-tooltip="delete" alt="delete"><i class="fa-solid fa-trash"></i></a>
                 </td>
             </tr>
@@ -67,7 +62,7 @@
 
                 {% for i in employees.paginator.page_range %}
                 {% if employees.number == i %}
-                <li class="active purple accent-3"><a href="#!">{{i}}</a></li>
+                <li class="active purple accent-3 waves-effect waves-light"><a href="#!">{{i}}</a></li>
                 {% else %}
                 <li class="waves-effect"><a href="?page={{i}}">{{i}}</a></li>
                 {% endif %}
@@ -89,9 +84,11 @@
     document.addEventListener('DOMContentLoaded', function() {
         var elems_l = document.querySelectorAll('.tooltipped-l');
         var elems_r = document.querySelectorAll('.tooltipped-r');
+        var elems_b = document.querySelectorAll('.tooltipped-b');
         var elems_col = document.querySelectorAll('.collapsible');
         var instance_l = M.Tooltip.init(elems_l);
         var instance_r = M.Tooltip.init(elems_r);
+        var instance_b = M.Tooltip.init(elems_b);
         var instance_col = M.Collapsible.init(elems_col);
       });
 </script>

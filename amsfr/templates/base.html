@@ -32,7 +32,7 @@
     <header>
         <div style="padding-left: 90px;">
             <blockquote style="margin-left: 2.5rem;">
-            <h3 style="font-weight: bold">{% block heading %}{% endblock heading %}</h3>
+            <h4 style="font-weight: bold">{% block heading %}{% endblock heading %}</h4>
         </blockquote>
         </div>
     </header>
@@ -85,6 +85,12 @@
             var instances = M.Modal.init(modal_elems);
             var select_elems = document.querySelectorAll('select');
             var instances = M.FormSelect.init(select_elems);
+            var datepicker_elems = document.querySelectorAll('.datepicker');
+            var instances = M.Datepicker.init(datepicker_elems);
+            var elem_ex = document.querySelectorAll('.collapsible.popout');
+            var instance = M.Collapsible.init(elem_ex, {accordion: false});
+            var actionbtn_elems = document.querySelectorAll('.fixed-action-btn');
+            var instances = M.FloatingActionButton.init(actionbtn_elems);
             {% if messages %}
                 {% for message in messages %}
                     M.toast({html: '{{message}}'})

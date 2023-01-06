@@ -33,26 +33,75 @@
             </div>
             <div class="row">
                 <div class="input-field col s4">
-                    {{form.department.errors}}
-                    {{form.department}}
-                    {{form.department.label_tag}}
+                    {{form.birth_date.errors}}
+                    {{form.birth_date.label_tag}}
+                    {{form.birth_date}}
                 </div>
                 <div class="input-field col s4">
-                    {{form.designation.errors}}
-                    {{form.designation}}
-                    {{form.designation.label_tag}}
+                    {{form.email.errors}}
+                    {{form.email.label_tag}}
+                    {{form.email}}
                 </div>
                 <div class="input-field col s4">
-                    {{form.reportsTo.errors}}
-                    {{form.reportsTo}}
-                    {{form.reportsTo.label_tag}}
+                    {{form.mobile_number.errors}}
+                    {{form.mobile_number.label_tag}}
+                    {{form.mobile_number}}
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s12">
-                    <label style="position:absolute; top: -45px" for={{form.id_picture.id_for_label}}>{{form.id_picture.label}}:</label>
-                    {{form.id_picture.errors}}
-                    {{form.id_picture}}
+                <div class="input-field col s4">
+                    {{form.barangay.errors}}
+                    {{form.barangay.label_tag}}
+                    {{form.barangay}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.municipality.errors}}
+                    {{form.municipality.label_tag}}
+                    {{form.municipality}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.province.errors}}
+                    {{form.province.label_tag}}
+                    {{form.province}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <label style="position:absolute; top: -33px" for={{form.gender.id_for_label}}>{{form.gender.label}}:</label>
+                    {{form.gender.errors}}
+                    {{form.gender}}
+                </div>
+                <div class="input-field col s4">
+                    <label style="position:absolute; top: -33px" for={{form.department.id_for_label}}>{{form.department.label}}:</label>
+                    {{form.department.errors}}
+                    {{form.department}}
+                </div>
+                <div class="input-field col s4">
+                    <label style="position:absolute; top: -33px" for={{form.designation.id_for_label}}>{{form.designation.label}}:</label>
+                    {{form.designation.errors}}
+                    {{form.designation}}
+                </div>
+            </div>
+            <div class="row">
+                {% comment %} <div class="input-field col s12">
+                    <label style="position:absolute; top: -45px" for={{form.biometric_id.id_for_label}}>{{form.biometric_id.label}}:</label>
+                    {{form.biometric_id.errors}}
+                    {{form.biometric_id}}
+                </div> {% endcomment %}
+                <div class="file-field input-field col s8">
+                    {{form.biometric_id.errors}}
+                    <div class="btn">
+                        <span>{{form.biometric_id.label}}</span>
+                        {{form.biometric_id}}
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" required>
+                    </div>
+                </div>
+                <div class="input-field col s4">
+                    {{form.date_employed.errors}}
+                    {{form.date_employed.label_tag}}
+                    {{form.date_employed}}
                 </div>
             </div>
             <div class="row">
@@ -63,10 +112,17 @@
     </div>
 </div>
 <script>
-    
     const inputs = document.querySelectorAll('input');
+    const datepkr = document.getElementById('id_birth_date');
+    const datemp = document.getElementById('id_date_employed');
+    const id = document.getElementById('id_id');
+    
     for (const input of inputs) {
         input.classList.add('validate')
     }
+    id.minLength = 13
+    id.setAttribute('value', '400392-22-')
+    datepkr.classList.add('datepicker')
+    datemp.classList.add('datepicker')
 </script>
 {% endblock content %}
