@@ -17,6 +17,11 @@ class EmployeeForm(ModelForm):
         fields = '__all__'
         exclude = ['user']
 
+class EmployeeImageForm(ModelForm):
+    class Meta:
+        model = Employee
+        fields = ['biometric_id']
+
 class ScheduleForm(ModelForm):
     class Meta:
         model = Schedule

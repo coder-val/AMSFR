@@ -1,39 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Department</title>
-</head>
-<body>
-    <h1>DEPARTMENT PAGE</h1>
-    <a href="{% url 'home' %}">Dashboard</a>
-    <a href="{% url 'create_dept' %}">Create Department</a>
+{% extends 'base.html' %}
+{% load static %}
 
-    <br>
-    <br>
-
-    <table>
+{% block title %}Department{% endblock title %}
+{% block heading %}Department{% endblock heading %}
+    
+{% block content %}
+<div class="row">
+    <table class="highlight centered hoverable responsive-table">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>NO</th>
                 <th>Name</th>
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
+        </tbody>
             {% for department in departments %}
             <tr>
-                <td>{{department.id}}</td>
+                <td>{{forloop.counter}}</td>
                 <td>{{department.name}}</td>
                 <td>
-                    <a href="{% url 'update_dept' department.id %}">update</a>
-                    <a href="{% url 'delete_dept' department.id %}">delete</a>
+                    <a href="{% url 'update_dept' department.id %}" class="btn-floating waves-effect waves-light amber accent-4 tooltipped-b" data-position="left" data-tooltip="edit" alt="edit"><i class="material-icons">edit</i></a>
+                    <a href="{% url 'delete_dept' department.id %}" class="btn-floating waves-effect waves-light red tooltipped-r" data-position="right" data-tooltip="delete" alt="delete"><i class="material-icons">delete</i></a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+</div>
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'create_dept' %}" data-position="left" data-tooltip="create">
+      <i class="large material-icons">add</i>
+    </a>
+</div>
+{% endblock content %}

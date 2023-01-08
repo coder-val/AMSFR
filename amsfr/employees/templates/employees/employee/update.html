@@ -100,17 +100,14 @@
                 </div>
             </div>
             <div class="row">
-                <button class="right btn waves-effect waves-light green accent-4" type="submit" name="action">Submit</button>
+                <a href="{% url 'update_photo' employee_id %}" class="left btn waves-effect waves-light light-blue accent-3" style="margin-right: .5rem">Image Update</a>
+                <button class="right btn waves-effect waves-light green accent-4" type="submit" name="action">Update</button>
                 <a href="{% url 'employee' %}" class="right btn waves-effect waves-light purple accent-3" style="margin-right: .5rem">Back</a>
             </div>
         </form>
     </div>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems);
-    });
     const id = document.getElementById('{{form.id.id_for_label}}')
     const datepkr = document.getElementById('id_birth_date');
     const datemp = document.getElementById('id_date_employed');
@@ -124,5 +121,6 @@
     for (const input of inputs) {
         input.classList.add('validate')
     }
+    id.classList.remove('validate')
 </script>
 {% endblock content %}

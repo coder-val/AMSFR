@@ -6,8 +6,13 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <form class="col s12" method="post" enctype="multipart/form-data">
+        <form class="col s12" onsubmit="validateForm()" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            <div class="">
+                <blockquote>
+                    <span><b>Note: ID is permanent and can not be changed in the future.</b></span>
+                </blockquote>
+            </div>
             <div class="row">
                 <div class="input-field col s4">
                     {{form.id.label_tag}}
@@ -82,6 +87,11 @@
                     {{form.designation}}
                 </div>
             </div>
+            <div class="">
+                <blockquote>
+                    <span><b>Note: Image must be clear and in 1 : 1 ratio [square].</b></span>
+                </blockquote>
+            </div>
             <div class="row">
                 {% comment %} <div class="input-field col s12">
                     <label style="position:absolute; top: -45px" for={{form.biometric_id.id_for_label}}>{{form.biometric_id.label}}:</label>
@@ -90,7 +100,7 @@
                 </div> {% endcomment %}
                 <div class="file-field input-field col s8">
                     {{form.biometric_id.errors}}
-                    <div class="btn">
+                    <div class="btn purple accent-3">
                         <span>{{form.biometric_id.label}}</span>
                         {{form.biometric_id}}
                     </div>
@@ -105,24 +115,33 @@
                 </div>
             </div>
             <div class="row">
-                <button class="right btn waves-effect waves-light green accent-4" type="submit" name="action">Submit</button>
+                <button class="right btn waves-effect waves-light green accent-4" type="submit" name="action">Register</button>
                 <a href="{% url 'employee' %}" class="right btn waves-effect waves-light purple accent-3" style="margin-right: .5rem">Back</a>
             </div>
         </form>
     </div>
+</div>
+<div id="progressBarr" class="progress purple lighten-3" style="display:none">
+    <div class="indeterminate purple accent-3"></div>
 </div>
 <script>
     const inputs = document.querySelectorAll('input');
     const datepkr = document.getElementById('id_birth_date');
     const datemp = document.getElementById('id_date_employed');
     const id = document.getElementById('id_id');
+    let date = new Date();
+    let yyyy = date.getFullYear().toString().slice(2);
     
     for (const input of inputs) {
         input.classList.add('validate')
     }
     id.minLength = 13
-    id.setAttribute('value', '400392-22-')
+    id.setAttribute('value', `400392-${yyyy}-`)
     datepkr.classList.add('datepicker')
     datemp.classList.add('datepicker')
+
+    {% comment %} function validateForm() {
+        document.getElementById('progressBarr').style.display = 'block';
+    } {% endcomment %}
 </script>
 {% endblock content %}

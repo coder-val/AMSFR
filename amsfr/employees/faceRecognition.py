@@ -1,9 +1,6 @@
-import cv2, os, numpy as np, face_recognition, time, datetime
+import cv2, os, numpy as np, face_recognition, datetime
 from django.conf import settings
-from .models import Attendance
-from django.contrib import messages
 from .attendance import mark_attendance
-import dlib
 
 cam = 0
 
@@ -15,6 +12,33 @@ def findEncodings(images):
         encodeList.append(encode)
 
     return encodeList
+
+def checkFace(img):
+    image = face_recognition.load_image_file(img)
+    image_loc = face_recognition.face_locations(image)
+    
+    if not image_loc:
+        return False
+    else:
+        return True
+
+def checkImage(unregistered_img, id):
+    registered_path = os.path.join(settings.BASE_DIR, "static/registered")
+    registered_img = os.path.join(registered_path, f'{id}.jpg')
+
+    known_image = face_recognition.load_image_file(registered_img)
+    unknown_image = face_recognition.load_image_file(unregistered_img)
+    result = None
+
+    try:
+        known_encoding = face_recognition.face_encodings(known_image)[0]
+        unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
+
+        result = face_recognition.compare_faces([known_encoding], unknown_encoding)
+        return bool(result[0])
+
+    except:
+        return result
 
 def checkIfExist(image):
     image_path = os.path.join(settings.BASE_DIR, "static/registered")
@@ -36,9 +60,20 @@ def checkIfExist(image):
     # while True:
     result = None
     img = cv2.imread(image)
-    imgS = cv2.resize(img,(0,0), None, 0.50,0.50)
+    imgS = cv2.resize(img,(0,0), None, 1,1)
     imS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
     facesCurFrame = face_recognition.face_locations(imgS)
+
+    if not facesCurFrame:
+        winName = "Checking Image"
+        cv2.namedWindow(winName)
+        cv2.setWindowProperty(winName, cv2.WND_PROP_TOPMOST, 1)
+        cv2.putText(imgS, "NO FACE DETECTED!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 3)
+        cv2.imshow(winName, imgS)
+        cv2.waitKey(3000)
+        cv2.destroyAllWindows()
+        return result
+
     encodesCurFrame = face_recognition.face_encodings(imgS, facesCurFrame)
 
     for encodeFace, faceLoc in zip(encodesCurFrame, facesCurFrame):
@@ -52,16 +87,18 @@ def checkIfExist(image):
             result = False
         
         elif matches[np.argmin(faceDis)] and (faceDis[np.argmin(faceDis)] < 0.5):
-            name = classNames[np.argmin(faceDis)].upper()
+            # name = classNames[np.argmin(faceDis)].upper()
             cv2.putText(imgS, "NO GOOD!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0, 0, 255), 3)
             # print(name)
             # cv2.rectangle(imgS,(x1, y1), (x2, y2+50), (0, 255, 0), 2)
             # cv2.rectangle(imgS,(x1, y2), (x2, y2+50), (0, 255, 0), cv2.FILLED)
             # cv2.putText(imgS, name, (x1+6, y2+40), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 2)
             result = True
+
         else:
             cv2.putText(imgS, "GOOD!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0), 3)
             result = False
+
     winName = "Checking Image"
     cv2.namedWindow(winName)
     cv2.setWindowProperty(winName, cv2.WND_PROP_TOPMOST, 1)

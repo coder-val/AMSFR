@@ -13,8 +13,9 @@ from .attendance import *
 import datetime as dt
 import shutil, os
 from workalendar.asia import Philippines
-import pandas as pd
+# import pandas as pd
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 
 def convert_time(time):
     if time >= dt.time(1,0,0) and time < dt.time(11,59,59):
@@ -69,7 +70,8 @@ def create_dept(request):
         form = DepartmentForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('department')
+            messages.success(request, "Department added successfully!")
+            return redirect('create_dept')
 
     context = {'form' : form}
     return render(request, template, context)
@@ -83,6 +85,7 @@ def update_dept(request, pk):
         form = DepartmentForm(request.POST, instance=department)
         if form.is_valid():
             form.save()
+            messages.success(request, f'Department {department.name} updated successfully!')
             return redirect('department')
     
     context = {'form': form}
@@ -94,6 +97,7 @@ def delete_dept(request, pk):
 
     if request.method == 'POST':
         department.delete()
+        messages.success(request, f'Department {department.name} deleted successfully!')
         return redirect('department')
     
     return render(request, template, {'department': department})
@@ -114,6 +118,7 @@ def create_desig(request):
         form = DesignationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Designation added successfully!")
             return redirect('designation')
 
     context = {'form' : form}
@@ -128,6 +133,7 @@ def update_desig(request, pk):
         form = DesignationForm(request.POST, instance=designation)
         if form.is_valid():
             form.save()
+            messages.success(request, f'Designation {designation.name} updated successfully!')
             return redirect('designation')
     
     context = {'form': form}
@@ -139,6 +145,7 @@ def delete_desig(request, pk):
 
     if request.method == 'POST':
         designation.delete()
+        messages.success(request, f'Designation {designation.name} deleted successfully!')
         return redirect('designation')
     
     return render(request, template, {'designation': designation})
@@ -185,9 +192,10 @@ def create_sched(request):
 
 def update_sched(request, pk):
     context = {}
-    schedule = Schedule.objects.get(id=pk)
-    form = ScheduleForm(instance=schedule)
     template = 'employees/schedule/update.html'
+    schedule = Schedule.objects.get(id=pk)
+
+    form = ScheduleForm(instance=schedule)
     if request.method == 'POST':
         form = ScheduleForm(request.POST, instance=schedule)
         if form.is_valid():
@@ -217,7 +225,7 @@ def delete_sched(request, pk):
 
 # EMPLOYEE ##################################################################
 def employee(request):
-    employees = Employee.objects.all().order_by('lastname')
+    employees = Employee.objects.all().order_by('id')
     p = Paginator(employees, 10)
     page_number = request.GET.get('page')
     p_employees = p.get_page(page_number)
@@ -250,9 +258,6 @@ def create_emp(request):
             designation = form.cleaned_data['designation']
             # reportsTo = form.cleaned_data['reportsTo']
 
-            user = User.objects.create_user(id, email, id)
-            user.save()
-
             file_name = default_storage.save(biometric_id.name, biometric_id)
             image_path = os.path.join(settings.MEDIA_ROOT, file_name)
             path_to_unregistered = os.path.join(settings.MEDIA_ROOT, "unregistered")
@@ -264,27 +269,83 @@ def create_emp(request):
                 return render(request, template, {'form':form})
 
             shutil.move(image_path, path_to_unregistered)
+            test = checkIfExist(image_checking)
 
-            if checkIfExist(image_checking) is True:
+            if test is True:
                 os.remove(image_checking)
                 messages.warning(request, "Employee already registered!")
                 return render(request, template, {'form':form})
-            
-            else:
-                
+            elif test is False:
+                user = User.objects.create_user(id, email, id)
                 register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, email = email, birth_date = birth_date, gender = gender, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, department = department, designation = designation, biometric_id = f'registered/{id}.jpg')
+                user.save()
                 register.save()
                 new_image_path = os.path.join(settings.MEDIA_ROOT, f'registered/{id}.jpg')
                 os.rename(image_checking, new_image_path)
-                messages.success(request, "Employee registered successfully!")
+                messages.success(request, f'Employee {id} registered successfully!')
                 form = EmployeeForm()
                 return render(request, template, {'form':form})
-
+            else:
+                os.remove(image_checking)
+                messages.error(request, "No face detected!")
+                return render(request, template, {'form':form})
 
             # form.save()
             # return redirect('employee')
 
     context = {'form' : form}
+    return render(request, template, context)
+
+def update_photo(request, pk):
+    emp_id = Employee.objects.get(id=pk)
+    emp_details = Employee.objects.filter(id=pk)
+    context = {'employee_id':emp_id, 'emp_details':emp_details}
+    template = 'employees/employee/update_photo.html'
+
+    if request.method == 'POST':
+        biometric_id = request.FILES['biometric_id']
+        cbox = request.POST.get('cbox')
+
+        file_name = default_storage.save(biometric_id.name, biometric_id)
+        image_path = os.path.join(settings.MEDIA_ROOT, file_name)
+        path_to_unregistered = os.path.join(settings.MEDIA_ROOT, "unregistered")
+        path_to_registered = os.path.join(settings.MEDIA_ROOT, "registered")
+        image_checking = os.path.join(path_to_unregistered, file_name)
+
+        shutil.move(image_path, path_to_unregistered)
+
+        registered_image = os.path.join(path_to_registered, f'{pk}.jpg')
+        if cbox is None:
+            result = checkFace(image_checking)
+
+            if result is True:
+                os.replace(image_checking, registered_image)
+                messages.success(request, "Image updated successfully!")
+                return redirect('view_emp', pk)
+
+            else:
+                messages.error(request, "No face detected!")
+                os.remove(image_checking)
+        
+        else:
+            result = checkImage(image_checking, pk)
+            
+            if result is False:
+                print("IMAGE NOT THE SAME")
+                messages.warning(request, "Unknown face detected!")
+                os.remove(image_checking)
+
+            elif result is True:
+                print("IMAGE GOOD")
+                messages.success(request, "Image updated successfully!")
+                os.replace(image_checking, registered_image)
+                return redirect('view_emp', pk)
+
+            else:
+                print("NO FACE PROMISE")
+                messages.error(request, "No face detected!")
+                os.remove(image_checking)
+
     return render(request, template, context)
 
 def view_emp(request, pk):
@@ -295,24 +356,32 @@ def view_emp(request, pk):
     return render(request, template, context)
 
 def update_emp(request, pk):
-    context = {}
-    employee = Employee.objects.get(id=pk)
+    emp_id = Employee.objects.get(id=pk)
+    context = {'employee_id':emp_id}
+    try:
+        employee = Employee.objects.get(id=pk)
+    except ObjectDoesNotExist:
+        return redirect('employee')
+
     form = EmployeeForm(instance=employee)
     template = 'employees/employee/update.html'
     if request.method == 'POST':
         form = EmployeeForm(request.POST, instance=employee)
         if form.is_valid():
+            # id = Employee.objects.filter(id=pk)[0].id
+            # user = User.objects.get(username=id)
+            # user.username = form.cleaned_data['id']
             form.save()
+            # user.save()
             messages.success(request, f"Employee {pk} updated successfully!")
             return redirect('update_emp', pk)
     
-    context = {'form': form}
+    context = {'form': form, 'employee_id':emp_id}
     return render(request, template, context)
 
 def delete_emp(request, pk):
     emp_id = Employee.objects.get(id=pk)
     emp_user = User.objects.get(username=emp_id)
-    print(emp_user)
     template = 'employees/employee/delete.html'
 
     if request.method == 'POST':
@@ -320,6 +389,7 @@ def delete_emp(request, pk):
             os.remove(os.path.join(settings.MEDIA_ROOT, emp_id.biometric_id.name))
         # employee.delete()
         emp_user.delete()
+        messages.success(request, f'Employee {emp_id} deleted successfully!')
         return redirect('employee')
     
     return render(request, template, {'employee': emp_id})

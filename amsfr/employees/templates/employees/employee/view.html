@@ -8,18 +8,18 @@
     <div class="row">
         
         <div class="col s12 center">
-            <img style="border: 3px solid" class="circle hoverable" src="{% if employee.biometric_id %}{{employee.biometric_id.url}}{% endif %}" alt="" width="200">
+            <img style="border: 3px solid" class="circle hoverable" src="{{employee.biometric_id.url}}" alt="" width="200">
         </div>
         
     </div>
 
     <div class="row">
-        <div class="col l6">
+        <div class="col s12 m6 l6">
             <div class="row">
-                <div class="col l12">
+                <div class="col s12 m12 l12">
                     <ul class="collapsible popout">
                         <li class="active">
-                            <div class="collapsible-header" style="font-size:1.5rem">Account Information</div>
+                            <div class="collapsible-header" style="font-size:1.5rem"><b>Account Information</b></div>
                             <div class="collapsible-body">
                                 <table>
                                     <tbody>
@@ -51,22 +51,59 @@
                 </div>
             </div>
         </div>
-        <div class="col l6">
+        <div class="col s12 m6 l6">
             <div class="row">
-                <div class="col l12">
+                <div class="col s12 m12 l12">
+                    <ul class="collapsible popout">
+                        <li class="active">
+                            <div class="collapsible-header" style="font-size:1.5rem;"><b>Primary Information</b></div>
+                            <div class="collapsible-body">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td class="right"><b>Biometric ID: </b></td>
+                                            <td> {{employee.biometric_id|cut:"registered/"}} </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="right"><b>Department: </b></td>
+                                            <td> {{employee.department}} </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="right"><b>Designation: </b></td>
+                                            <td> {{employee.designation}} </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="right"><b>Date Employed: </b></td>
+                                            <td> {{employee.date_employed}} </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="right"><b>Date Registered: </b></td>
+                                            <td> {{employee.created|date:"m-d-Y"}} </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m6 l6">
+            <div class="row">
+                <div class="col s12 m12 l12">
                     <ul class="collapsible popout">
                         <li>
-                            <div class="collapsible-header" style="font-size:1.5rem;">Personal Information</div>
+                            <div class="collapsible-header" style="font-size:1.5rem;"><b>Personal Information</b></div>
                             <div class="collapsible-body">
                                 <table>
                                     <tbody>
                                         <tr>
                                             <td class="right"><b>Date of Birth: </b></td>
-                                            <td> {{employee.birth_date|date:"m-d-Y"}} </td>
+                                            <td> {% if employee.birth_date is Null %} None {% else %} {{employee.birth_date|date:"m-d-Y"}} {% endif %} </td>
                                         </tr>
                                         <tr>
                                             <td class="right"><b>Gender: </b></td>
-                                            <td> {% if employee.gender == 'F' %} Female {% elif employee.gender == 'M' %} Male {% endif %} </td>
+                                            <td> {% if employee.gender == 'F' %} Female {% elif employee.gender == 'M' %} Male {% else %} None {% endif %} </td>
                                         </tr>
                                         <tr>
                                             <td class="right"><b>Mobile Number: </b></td>
@@ -92,51 +129,17 @@
                 </div>
             </div>
         </div>
-        <div class="col l6">
-            <div class="row">
-                <div class="col l12">
-                    <ul class="collapsible popout">
-                        <li>
-                            <div class="collapsible-header" style="font-size:1.5rem;">Primary Information</div>
-                            <div class="collapsible-body">
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td class="right"><b>Biometric ID: </b></td>
-                                            <td> {{employee.biometric_id|cut:"registered/"}} </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="right"><b>Department: </b></td>
-                                            <td> {{employee.department}} </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="right"><b>Designation: </b></td>
-                                            <td> {{employee.designation}} </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="right"><b>Date Employed: </b></td>
-                                            <td> {{employee.date_employed}} </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="fixed-action-btn">
-        <a class="btn-floating btn-large red waves-effect waves-light" href="{% url 'employee' %}">
+        <a class="pulse btn-floating btn-large purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'employee' %}" data-position="left" data-tooltip="back">
           <i class="large material-icons">arrow_back</i>
         </a>
-        {% comment %} <ul>
-          <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
-          <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
-          <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-          <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
-        </ul> {% endcomment %}
+        <ul>
+          <li><a class="btn-floating red tooltipped-l" data-position="left" data-tooltip="delete" href="{% url 'delete_emp' employee.id %}"><i class="material-icons">delete</i></a></li>
+          <li><a class="btn-floating amber accent-4 tooltipped-l" data-position="left" data-tooltip="edit" href="{% url 'update_emp' employee.id %}"><i class="material-icons">edit</i></a></li>
+          <li><a class="btn-floating blue tooltipped-l" data-position="left" data-tooltip="update photo" href="{% url 'update_photo' employee.id %}"><i class="material-icons">add_photo_alternate</i></a></li>
+        </ul> 
     </div>
 {% endfor %}
 {% endblock content %}

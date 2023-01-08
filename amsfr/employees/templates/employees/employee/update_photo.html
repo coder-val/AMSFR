@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Employee{% endblock title %}
+{% block heading %}Employee{% endblock heading %}
+
+{% block content %}
+<div class="row">
+        
+    <div class="col s12 center">
+        {% comment %} <div class="row">
+            {% for employee in emp_details %}
+            <div class="col s6">
+                <img style="border: 3px solid" class="circle hoverable" src="{% if employee.biometric_id %}{{employee.biometric_id.url}}{% endif %}" alt="" width="200">
+            </div>
+            {% endfor %}
+            <div class="col s6" id="display_img_div" style="display:none">
+                <img style="border: 3px solid" class="circle hoverable" src="" alt="" width="200" id="display_img">
+            </div>
+        </div> {% endcomment %}
+        <div style="display:flex; align-items:center; justify-content:center; gap: 1rem">
+            <div>
+                {% for employee in emp_details %}
+                <img style="border: 3px solid" class="circle hoverable" src="{% if employee.biometric_id %}{{employee.biometric_id.url}}{% endif %}" alt="" width="200" style="display: block">
+                {% endfor %}
+            </div>
+            <span class="material-icons display_img1" style="display:none">double_arrow</span>
+            <div class="display_img2" style="display:none">
+                <img style="border: 3px solid" class="circle hoverable" src="{% static 'unregistered/default.png' %}" alt="" width="200" id="display_img">
+            </div>
+        </div>
+        
+    </div>
+    
+</div>
+<div class="row">
+    <form action="" onsubmit="validateForm()" method="post" enctype="multipart/form-data" class="col s12">
+        {% csrf_token %}
+        <div class="">
+            <blockquote>
+                <span><b>Note: Image must be clear and in 1 : 1 ratio [square].</b></span>
+            </blockquote>
+        </div>
+        <div class="row">
+            <div class="file-field input-field col s12">
+                <div class="btn purple accent-3">
+                    <span>biometric id: </span>
+                    <input type="file" name="biometric_id" accept="image/*" required="" id="id_biometric_id" class="validate">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text" required>
+                </div>
+            </div>
+        </div>
+        <div class="">
+            <blockquote>
+                <span><b>Note: if unchecked, make sure that the image is the real employee.<br>Otherwise, the system will not recognize faces properly.</b></span>
+            </blockquote>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <label for="cbox">
+                    <input type="checkbox" name="cbox" id="cbox" value="True" checked>
+                    <span>Compare to registered face</span>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 center">
+                <a href="{% url 'view_emp' employee_id %}" class="center-align btn waves-effect waves-light purple accent-3" style="margin-right: .5rem">Back</a>
+                <button class="btn waves-effect waves-light green accent-4" type="submit" name="action">Update</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="progressBarr" class="progress purple lighten-3" style="display:none">
+    <div class="indeterminate purple accent-3"></div>
+</div>
+<script>
+    const imgInput = document.getElementById("id_biometric_id")
+    const displayImg = document.getElementById("display_img")
+    const displayImgDiv1 = document.querySelector(".display_img1")
+    const displayImgDiv2 = document.querySelector(".display_img2")
+
+    imgInput.addEventListener('change',(event)=>{
+    const imgObject = event.target.files[0]
+    if(imgObject){
+        displayImgDiv1.style.display = "block"
+        displayImgDiv2.style.display = "block"
+        displayImg.src = URL.createObjectURL(imgObject)}
+    else{
+        displayImgDiv1.style.display = "none"
+        displayImgDiv2.style.display = "none"}
+    })
+    
+</script>
+{% endblock content %}

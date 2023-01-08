@@ -5,9 +5,9 @@
 {% block heading %}Employee{% endblock heading %}
 
 {% block content %}
-<div class="row">
+{% comment %} <div class="row">
     <a class="waves-effect waves-light btn purple accent-3 right" href="{% url 'create_emp' %}">register</a>
-</div>
+</div> {% endcomment %}
 <div class="row">
     <table class="highlight centered hoverable responsive-table">
         <thead>
@@ -25,7 +25,7 @@
             {% for employee in employees %}
             <tr>
                 <td><img class="circle" src="{% if employee.biometric_id %}{{employee.biometric_id.url}}{% endif %}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width='60'></td>
-                <td>{{employee.id|cut:"400392-"}}</td>
+                <td><a href="{% url 'view_emp' employee.id %}">{{employee.id|cut:"400392-"}}</a></td>
                 <td>{{employee.lastname}}, {{employee.firstname}} {{employee.middlename}}</td>
                 {% if employee.mobile_number %}
                 <td>{{employee.mobile_number}}</td>{% else %}
@@ -41,9 +41,9 @@
                 <td>~</td>
                 {% endif %}
                 <td>
-                    <a href="{% url 'view_emp' employee.id %}" class="btn-floating waves-effect waves-light light-blue accent-3 tooltipped-l" data-position="left" data-tooltip="view" alt="view"><i class="fa-solid fa-eye"></i></a>
-                    <a href="{% url 'update_emp' employee.id %}" class="btn-floating waves-effect waves-light amber accent-4 tooltipped-b" data-position="bottom" data-tooltip="edit" alt="edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <a href="{% url 'delete_emp' employee.id %}" class="btn-floating waves-effect waves-light red tooltipped-r" data-position="right" data-tooltip="delete" alt="delete"><i class="fa-solid fa-trash"></i></a>
+                    <a href="{% url 'view_emp' employee.id %}" class="btn-floating waves-effect waves-light light-blue accent-3 tooltipped-l" data-position="left" data-tooltip="view" alt="view"><i class="material-icons">visibility</i></a>
+                    <a href="{% url 'update_emp' employee.id %}" class="btn-floating waves-effect waves-light amber accent-4 tooltipped-b" data-position="bottom" data-tooltip="edit" alt="edit"><i class="material-icons">edit</i></a>
+                    <a href="{% url 'delete_emp' employee.id %}" class="btn-floating waves-effect waves-light red tooltipped-r" data-position="right" data-tooltip="delete" alt="delete"><i class="material-icons">delete</i></a>
                 </td>
             </tr>
             {% endfor %}
@@ -80,16 +80,9 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var elems_l = document.querySelectorAll('.tooltipped-l');
-        var elems_r = document.querySelectorAll('.tooltipped-r');
-        var elems_b = document.querySelectorAll('.tooltipped-b');
-        var elems_col = document.querySelectorAll('.collapsible');
-        var instance_l = M.Tooltip.init(elems_l);
-        var instance_r = M.Tooltip.init(elems_r);
-        var instance_b = M.Tooltip.init(elems_b);
-        var instance_col = M.Collapsible.init(elems_col);
-      });
-</script>
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'create_emp' %}" data-position="left" data-tooltip="register">
+      <i class="large material-icons">add</i>
+    </a>
+</div>
 {% endblock content %}
