@@ -25,6 +25,7 @@ def logout_user(request):
     template = "accounts/logout.html"
     if request.method == 'POST':
         logout(request)
+        messages.success(request, "Logout successfully!")
         return redirect('login')
     # return redirect('login')
     return render(request, template, context)
