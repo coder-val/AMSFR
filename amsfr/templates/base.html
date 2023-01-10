@@ -96,6 +96,7 @@
             var elems_l = document.querySelectorAll('.tooltipped-l');
             var elems_r = document.querySelectorAll('.tooltipped-r');
             var elems_b = document.querySelectorAll('.tooltipped-b');
+            var elems_t = document.querySelectorAll('.tooltipped-t');
             var instances = M.Modal.init(modal_elems);
             var instances = M.FormSelect.init(select_elems);
             var instances = M.Datepicker.init(datepicker_elems,{yearRange: 100, minDate:date_prev, maxDate:date_now});
@@ -108,6 +109,7 @@
             var instance_l = M.Tooltip.init(elems_l);
             var instance_r = M.Tooltip.init(elems_r);
             var instance_b = M.Tooltip.init(elems_b);
+            var instance_t = M.Tooltip.init(elems_t);
             {% if messages %}
                 {% for message in messages %}
                     M.toast({html: '{{message}}'})

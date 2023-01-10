@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Employee Logs{% endblock title %}
+{% block heading %}Employee Logs{% endblock heading %}
+
+{% block content %}
+{% comment %} <div class="row">
+    <a class="waves-effect waves-light btn purple accent-3 right" href="{% url 'create_emp' %}">register</a>
+</div> {% endcomment %}
+<div class="row">
+    <table class="highlight centered hoverable responsive-table">
+        <thead>
+            <tr>
+                <th>PIC</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>AM IN</th>
+                <th>AM OUT</th>
+                <th>PM IN</th>
+                <th>PM OUT</th>
+                <th>REMARKS</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        </tbody>
+            {% for employee in attendance %}
+            <tr>
+                <td><img class="circle" src="{{employee.reference.biometric_id.url}}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width='60'></td>
+                <td><a href="#!">{{employee.employee_id|cut:"400392-"}}</a></td>
+                <td>{{employee.reference.lastname}}, {{employee.reference.firstname}} {{employee.reference.middlename}}</td>
+                {% if employee.in_am %}
+                <td>{{employee.in_am|time:"h:i:s A"}}</td>
+                {% else %}
+                <td>~</td>{% endif %}
+                {% if employee.out_am %}
+                <td>{{employee.out_am|time:"h:i:s A"}}</td>
+                {% else %}
+                <td>~</td>{% endif %}
+                {% if employee.in_pm %}
+                <td>{{employee.in_pm|time:"h:i:s A"}}</td>
+                {% else %}
+                <td>~</td>{% endif %}
+                {% if employee.out_pm %}
+                <td>{{employee.out_pm|time:"h:i:s A"}}</td>
+                {% else %}
+                <td>~</td>{% endif %}
+                <td>{{employee.remarks}}</td>
+                <td>soon</td>
+                {% comment %} <td>
+                    <a href="{% url 'view_emp' employee.id %}" class="btn-floating waves-effect waves-light light-blue accent-3 tooltipped-l" data-position="left" data-tooltip="view" alt="view"><i class="material-icons">visibility</i></a>
+                    <a href="{% url 'update_emp' employee.id %}" class="btn-floating waves-effect waves-light amber accent-4 tooltipped-b" data-position="bottom" data-tooltip="edit" alt="edit"><i class="material-icons">edit</i></a>
+                    <a href="{% url 'delete_emp' employee.id %}" class="btn-floating waves-effect waves-light red tooltipped-r" data-position="right" data-tooltip="delete" alt="delete"><i class="material-icons">delete</i></a>
+                </td> {% endcomment %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% comment %} <div class="row">
+    <div class="center-align" style="position:relative">
+        <ul class="pagination">
+            {% if employees %}
+                {% if employees.has_previous %}
+                <li class="waves-effect"><a href="?page={{employees.previous_page_number}}"><i class="material-icons">chevron_left</i></a></li>
+                {% else %}
+                <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                {% endif %}
+
+                {% for i in employees.paginator.page_range %}
+                {% if employees.number == i %}
+                <li class="active purple accent-3 waves-effect waves-light"><a href="#!">{{i}}</a></li>
+                {% else %}
+                <li class="waves-effect"><a href="?page={{i}}">{{i}}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if employees.has_next %}
+                <li class="waves-effect"><a href="?page={{employees.next_page_number}}"><i class="material-icons">chevron_right</i></a></li>
+                {% else %}
+                <li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                {% endif %}
+            {% else %}
+            <p>No records yet.</p>
+            {% endif %}
+        </ul>
+    </div>
+</div> {% endcomment %}
+
+{% comment %} <div class="fixed-action-btn">
+    <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'create_emp' %}" data-position="left" data-tooltip="register">
+      <i class="large material-icons">add</i>
+    </a>
+</div> {% endcomment %}
+{% endblock content %}

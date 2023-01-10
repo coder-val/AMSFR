@@ -27,6 +27,9 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if not designations %}
+    <p class="center">No entries yet.</p>
+    {% endif %}
 </div>
 <div class="fixed-action-btn">
     <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'create_desig' %}" data-position="left" data-tooltip="create">

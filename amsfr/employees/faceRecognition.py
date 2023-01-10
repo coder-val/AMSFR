@@ -2,7 +2,7 @@ import cv2, os, numpy as np, face_recognition, datetime
 from django.conf import settings
 from .attendance import mark_attendance
 
-cam = 1
+cam = 0
 
 def findEncodings(images):
     encodeList = []

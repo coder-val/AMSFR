@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Attendance{% endblock title %}
+{% block heading %}Attendance{% endblock heading %}
+
+{% block content %}
+<div class="row">
+    <div class="col s12 l12 offset-l2" style="margin-bottom: 2rem">
+        <blockquote>
+            <span><b>Attendance threshold: <span style="text-decoration: underline; color: red">30 MINUTES</span></b></span>
+        </blockquote>
+    </div>
+    <div class="col s12 center">
+        <a style="margin-bottom:1rem" href="{% url 'in_am' %}" class="waves-effect waves-light btn-large green accent-4 tooltipped-t" data-position="top" data-tooltip="{{in_am|time:'h:i A'}}" alt="in_am"><i class="material-icons left">center_focus_strong</i>AM IN</a>
+        <a style="margin-bottom:1rem" href="{% url 'out_am' %}" class="waves-effect waves-light btn-large green accent-4 tooltipped-t" data-position="top" data-tooltip="{{out_am|time:'h:i A'}}" alt="out_am"><i class="material-icons left">center_focus_strong</i>AM OUT</a>
+        <a style="margin-bottom:1rem" href="{% url 'in_pm' %}" class="waves-effect waves-light btn-large green accent-4 tooltipped-t" data-position="top" data-tooltip="{{in_pm|time:'h:i A'}}" alt="in_pm"><i class="material-icons left">center_focus_strong</i>PM IN</a>
+        <a style="margin-bottom:1rem" href="{% url 'out_pm' %}" class="waves-effect waves-light btn-large green accent-4 tooltipped-t" data-position="top" data-tooltip="{{out_pm|time:'h:i A'}}" alt="out_pm"><i class="material-icons left">center_focus_strong</i>PM OUT</a>
+    </div>
+    <div class="col s12 center">
+        <a style="margin-bottom:1rem" href="{% url 'logs_today' %}" target = "_blank" class="waves-effect waves-light btn-large purple accent-2"><i class="material-icons left">dvr</i>LOGS TODAY</a>
+        <a style="margin-bottom:1rem" href="{% url 'full_logs_today' %}" target = "_blank" class="waves-effect waves-light btn-large purple accent-2"><i class="material-icons left">dvr</i>FULL LOGS TODAY</a>
+    </div>
+</div>
+{% endblock content %}

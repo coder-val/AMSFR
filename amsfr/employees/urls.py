@@ -40,7 +40,8 @@ urlpatterns = [
     path('attendance/out_am', out_am, name='out_am'),
     path('attendance/in_pm', in_pm, name='in_pm'),
     path('attendance/out_pm', out_pm, name='out_pm'),
-    path('attendance/monitor', monitor, name='monitor'),
+    path('attendance/logs_today', logs_today, name='logs_today'),
+    path('attendance/full_logs_today', full_logs_today, name="full_logs_today"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

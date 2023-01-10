@@ -188,6 +188,11 @@ def create_sched(request):
             except:
                 messages.error(request, "Invalid time formats!")
                 return render(request, template, context)
+            
+            if Schedule.objects.filter(name=request.POST['name']).exists():
+                messages.error(request, "Schedule already exist!")
+                return render(request, template, context)
+            
             Schedule.objects.create(name=request.POST['name'],in_am=in_am,out_am=out_am,in_pm=in_pm,out_pm=out_pm)
             messages.success(request, "Schedule created successfully!")
             return redirect('schedule')
@@ -206,10 +211,10 @@ def update_sched(request, pk):
         out_am = dt.datetime.strptime(request.POST['out_am'], '%I:%M %p').time()
         in_pm = dt.datetime.strptime(request.POST['in_pm'], '%I:%M %p').time()
         out_pm = dt.datetime.strptime(request.POST['out_pm'], '%I:%M %p').time()
-        if Schedule.objects.filter(name=request.POST['name']).exists():
-            Schedule.objects.filter(id=pk).update(in_am=in_am,out_am=out_am,in_pm=in_pm,out_pm=out_pm)
-        else:
-            Schedule.objects.filter(id=pk).update(name=request.POST['name'],in_am=in_am,out_am=out_am,in_pm=in_pm,out_pm=out_pm)
+        # if Schedule.objects.filter(name=request.POST['name']).exists():
+        Schedule.objects.filter(id=pk).update(in_am=in_am,out_am=out_am,in_pm=in_pm,out_pm=out_pm)
+        # else:
+        #     Schedule.objects.filter(id=pk).update(name=request.POST['name'],in_am=in_am,out_am=out_am,in_pm=in_pm,out_pm=out_pm)
         messages.success(request, f'{sched_name} updated successfully!')
         return redirect('schedule')
     
@@ -266,6 +271,9 @@ def create_emp(request):
             image_path = os.path.join(settings.MEDIA_ROOT, file_name)
             path_to_unregistered = os.path.join(settings.MEDIA_ROOT, "unregistered")
             image_checking = os.path.join(path_to_unregistered, file_name)
+
+            if not os.path.exists(os.path.join(settings.MEDIA_ROOT, 'registered')):
+                    os.mkdir(os.path.join(settings.MEDIA_ROOT, 'registered'))
 
             if os.path.isfile(image_checking):
                 os.remove(image_path)
@@ -326,7 +334,7 @@ def update_emp(request, pk):
             form.save()
             # user.save()
             messages.success(request, f"Employee {pk} updated successfully!")
-            return redirect('update_emp', pk)
+            return redirect('employee')
     
     context = {'form': form, 'employee_id':emp_id}
     return render(request, template, context)
@@ -433,7 +441,12 @@ def create_holiday(request):
 # ATTENDANCE #############################################################
 def attendance(request):
     context = {}
-    template = 'employees/attendance.html'
+    in_am = Schedule.objects.filter(is_active=True).values()[0]['in_am']
+    out_am = Schedule.objects.filter(is_active=True).values()[0]['out_am']
+    in_pm = Schedule.objects.filter(is_active=True).values()[0]['in_pm']
+    out_pm = Schedule.objects.filter(is_active=True).values()[0]['out_pm']
+    template = 'employees/attendance/attendance.html'
+    context = {'in_am':in_am, 'out_am':out_am, 'in_pm':in_pm, 'out_pm':out_pm}
     return render(request, template, context)
 
 def in_am(request):
@@ -508,13 +521,13 @@ def out_pm(request):
     else:
         return redirect('attendance')
 
-def monitor(request):
+def logs_today(request):
     # logs = Attendance.objects.all()
     # ehe = logs.values_list('reference', flat=True).exclude(reference=None)
     # absents = Employee.objects.exclude(id__in = ehe)
     # context = {'logs': logs, 'absents': absents}
     context = {}
-    template = 'employees/logs.html'
+    template = 'employees/attendance/logs_today.html'
 
     in_am = Schedule.objects.filter(is_active=True).values()[0]['in_am']
     in_pm = Schedule.objects.filter(is_active=True).values()[0]['in_pm']
@@ -526,12 +539,19 @@ def monitor(request):
     if now_time >= in_am and now_time < in_pm:
         insides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=True, date=now_date)
         outsides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=False, date=now_date) | Attendance.objects.filter(in_am__isnull=True, out_am__isnull=False, date=now_date)
-        context = {'insides':insides, 'outsides':outsides}
+        context = {'insides':insides, 'outsides':outsides, 'in_am':in_am, 'out_am':out_am, 'in_pm':in_pm, 'out_pm':out_pm}
     elif now_time >= in_pm and now_time < cut_off:
         insides = Attendance.objects.filter(in_pm__isnull=False, out_pm__isnull=True, date=now_date)
         outsides = Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=False, out_pm__isnull=False, date=now_date) | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=True, date=now_date) | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=False, date=now_date) | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=False, out_pm__isnull=False, date=now_date) | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=True, out_pm__isnull=False, date=now_date)
-        context = {'insides':insides, 'outsides':outsides}
+        context = {'insides':insides, 'outsides':outsides, 'in_am':in_am, 'out_am':out_am, 'in_pm':in_pm, 'out_pm':out_pm}
 
+    return render(request, template, context)
+
+def full_logs_today(request):
+    full_attendance_today = Attendance.objects.all().order_by('employee_id')
+    # print(full_attendance_today[0].reference.username)
+    context = {'attendance':full_attendance_today}
+    template = "employees/attendance/full_logs_today.html"
     return render(request, template, context)
 
 def dtr_employee(request):
