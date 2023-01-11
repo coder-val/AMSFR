@@ -9,7 +9,7 @@
     <link type="text/css" rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}" media="screen,projection">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <script src="https://kit.fontawesome.com/4db0e106e1.js" crossorigin="anonymous"></script>
+    <script defer src="https://kit.fontawesome.com/4db0e106e1.js" crossorigin="anonymous"></script>
     <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
@@ -24,16 +24,16 @@
         <div class="modal-footer">
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="modal-close waves-effect waves-green btn-flat purple accent-3" style="font-size: 1rem; color: white;" autofocus>YES</button>
+                <button type="submit" class="modal-close waves-effect waves-green btn purple accent-3" style="font-size: 1rem; color: white;" autofocus><i class="material-icons right">logout</i>LOGOUT</button>
             </form>
         </div>
     </div>
 
     <header>
-        <div style="padding-left: 90px;">
+        <div class="row" style="padding-left: 90px;">
             <blockquote style="margin-left: 2.5rem;">
             <h3 style="font-weight: bold">{% block heading %}{% endblock heading %}</h3>
-        </blockquote>
+            </blockquote>
         </div>
     </header>
     <main>
@@ -82,21 +82,29 @@
         currentTime();
         document.addEventListener('DOMContentLoaded', function() {
             let date_now = new Date();
-            let year_now = date_now.getFullYear();
+            //let year_now = date_now.getFullYear();
             let date_prev = new Date("1900-01-01");
             var modal_elems = document.querySelectorAll('.modal');
-            var instances = M.Modal.init(modal_elems);
             var select_elems = document.querySelectorAll('select');
-            var instances = M.FormSelect.init(select_elems);
             var datepicker_elems = document.querySelectorAll('.datepicker');
-            var instances = M.Datepicker.init(datepicker_elems,{yearRange: 100, minDate:date_prev, maxDate:date_now});
+            var in_am_elem = document.querySelector('.in_am_timepicker');
+            var out_am_elem = document.querySelector('.out_am_timepicker');
+            var in_pm_elem = document.querySelector('.in_pm_timepicker');
+            var out_pm_elem = document.querySelector('.out_pm_timepicker');
             var elem_ex = document.querySelectorAll('.collapsible.popout');
-            var instance = M.Collapsible.init(elem_ex, {accordion: false});
             var actionbtn_elems = document.querySelectorAll('.fixed-action-btn');
-            var instances = M.FloatingActionButton.init(actionbtn_elems);
             var elems_l = document.querySelectorAll('.tooltipped-l');
             var elems_r = document.querySelectorAll('.tooltipped-r');
             var elems_b = document.querySelectorAll('.tooltipped-b');
+            var instances = M.Modal.init(modal_elems);
+            var instances = M.FormSelect.init(select_elems);
+            var instances = M.Datepicker.init(datepicker_elems,{yearRange: 100, minDate:date_prev, maxDate:date_now});
+            var instances = M.Timepicker.init(in_am_elem, {defaultTime: '7:15 AM'});
+            var instances = M.Timepicker.init(out_am_elem, {defaultTime: '11:45 AM'});
+            var instances = M.Timepicker.init(in_pm_elem, {defaultTime: '1:00 PM'});
+            var instances = M.Timepicker.init(out_pm_elem, {defaultTime: '4:30 PM'});
+            var instance = M.Collapsible.init(elem_ex, {accordion: false});
+            var instances = M.FloatingActionButton.init(actionbtn_elems);
             var instance_l = M.Tooltip.init(elems_l);
             var instance_r = M.Tooltip.init(elems_r);
             var instance_b = M.Tooltip.init(elems_b);

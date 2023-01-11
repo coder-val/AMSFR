@@ -59,18 +59,20 @@ def home(request):
 def department(request):
     departments = Department.objects.all()
     context = {'departments': departments}
-    return render(request, 'employees/department.html', context)
+    template = 'employees/department/department.html'
+    return render(request, template, context)
 
 def create_dept(request):
     context = {}
     form = DepartmentForm()
-    template = 'employees/department/create.html'
+    template = 'employees/department/create_dept.html'
 
     if request.method == 'POST':
         form = DepartmentForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Department added successfully!")
+            name = form.cleaned_data['name']
+            messages.success(request, f'{name} added successfully!')
             return redirect('create_dept')
 
     context = {'form' : form}
@@ -79,13 +81,14 @@ def create_dept(request):
 def update_dept(request, pk):
     context = {}
     department = Department.objects.get(id=pk)
+    dept_name = department.name
     form = DepartmentForm(instance=department)
-    template = 'employees/department/update.html'
+    template = 'employees/department/update_dept.html'
     if request.method == 'POST':
         form = DepartmentForm(request.POST, instance=department)
         if form.is_valid():
             form.save()
-            messages.success(request, f'Department {department.name} updated successfully!')
+            messages.success(request, f'{dept_name} updated to {department.name} successfully!')
             return redirect('department')
     
     context = {'form': form}
@@ -93,11 +96,11 @@ def update_dept(request, pk):
 
 def delete_dept(request, pk):
     department = Department.objects.get(id=pk)
-    template = 'employees/department/delete.html'
+    template = 'employees/department/delete_dept.html'
 
     if request.method == 'POST':
         department.delete()
-        messages.success(request, f'Department {department.name} deleted successfully!')
+        messages.success(request, f'{department.name} deleted successfully!')
         return redirect('department')
     
     return render(request, template, {'department': department})
@@ -106,19 +109,20 @@ def delete_dept(request, pk):
 def designation(request):
     designations = Designation.objects.all()
     context = {'designations': designations}
-    template = "employees/designation.html"
+    template = "employees/designation/designation.html"
     return render(request, template, context)
 
 def create_desig(request):
     context = {}
     form = DesignationForm()
-    template = 'employees/designation/create.html'
+    template = 'employees/designation/create_desig.html'
 
     if request.method == 'POST':
         form = DesignationForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Designation added successfully!")
+            name = form.cleaned_data['name']
+            messages.success(request, f'{name} added successfully!')
             return redirect('designation')
 
     context = {'form' : form}
@@ -127,13 +131,14 @@ def create_desig(request):
 def update_desig(request, pk):
     context = {}
     designation = Designation.objects.get(id=pk)
+    desig_name = designation.name
     form = DesignationForm(instance=designation)
-    template = 'employees/designation/update.html'
+    template = 'employees/designation/update_desig.html'
     if request.method == 'POST':
         form = DesignationForm(request.POST, instance=designation)
         if form.is_valid():
             form.save()
-            messages.success(request, f'Designation {designation.name} updated successfully!')
+            messages.success(request, f'{desig_name} updated to {designation.name} successfully!')
             return redirect('designation')
     
     context = {'form': form}
@@ -141,11 +146,11 @@ def update_desig(request, pk):
 
 def delete_desig(request, pk):
     designation = Designation.objects.get(id=pk)
-    template = 'employees/designation/delete.html'
+    template = 'employees/designation/delete_desig.html'
 
     if request.method == 'POST':
         designation.delete()
-        messages.success(request, f'Designation {designation.name} deleted successfully!')
+        messages.success(request, f'{designation.name} deleted successfully!')
         return redirect('designation')
     
     return render(request, template, {'designation': designation})
@@ -154,74 +159,73 @@ def delete_desig(request, pk):
 def activate(request, pk):
     Schedule.objects.filter(id=pk).update(is_active=True)
     Schedule.objects.filter(is_active=True).exclude(id=pk).update(is_active=False)
-    return redirect(schedule)
+    messages.success(request, "activated successfully!")
+    return redirect('schedule')
+
+def deactivate(request, pk):
+    Schedule.objects.filter(id=pk).update(is_active=False)
+    messages.success(request, "deactivated successfully!")
+    return redirect('schedule')
 
 def schedule(request):
-    schedules = Schedule.objects.all()
-    context = {'schedules': schedules}
-    template = "employees/schedule.html"
+    # schedules = Schedule.objects.all()
+    active_sched = Schedule.objects.filter(is_active=True)
+    inactive_sched = Schedule.objects.filter(is_active=False)
+    context = {'active_sched': active_sched, 'inactive_sched':inactive_sched}
+    template = "employees/schedule/schedule.html"
     return render(request, template, context)
 
 def create_sched(request):
     context = {}
-    # form = ScheduleForm()
-    template = 'employees/schedule/create.html'
+    template = 'employees/schedule/create_sched.html'
 
     if request.method == 'POST':
-        # form = ScheduleForm(request.POST)
-        # if form.is_valid():
-            # name = form.cleaned_data['name']
-            # in_am = form.cleaned_data['in_am']
-            # out_am = form.cleaned_data['out_am']
-            # in_pm = convert_time(form.cleaned_data['in_pm'])
-            # out_pm = convert_time(form.cleaned_data['out_pm'])
-            # sched = Schedule(name = name, in_am = in_am, out_am = out_am, in_pm = in_pm, out_pm = out_pm)
-            # sched.save()
-            # form.save()
-            name = request.POST['name']
-            in_am = request.POST['in_am']
-            out_am = request.POST['out_am']
-            in_pm = request.POST['in_pm']
-            out_pm = request.POST['out_pm']
-            Schedule.objects.create(name=name,in_am=in_am,out_am=out_am,in_pm=in_pm,out_pm=out_pm)
+            try:
+                in_am = dt.datetime.strptime(request.POST['in_am'], '%I:%M %p').time()
+                out_am = dt.datetime.strptime(request.POST['out_am'], '%I:%M %p').time()
+                in_pm = dt.datetime.strptime(request.POST['in_pm'], '%I:%M %p').time()
+                out_pm = dt.datetime.strptime(request.POST['out_pm'], '%I:%M %p').time()
+            except:
+                messages.error(request, "Invalid time formats!")
+                return render(request, template, context)
+            Schedule.objects.create(name=request.POST['name'],in_am=in_am,out_am=out_am,in_pm=in_pm,out_pm=out_pm)
             messages.success(request, "Schedule created successfully!")
-            return redirect('create_sched')
+            return redirect('schedule')
 
-    # context = {'form' : form}
     return render(request, template, context)
 
 def update_sched(request, pk):
     context = {}
-    template = 'employees/schedule/update.html'
+    template = 'employees/schedule/update_sched.html'
     schedule = Schedule.objects.get(id=pk)
+    sched_name = schedule.name
+    context = {'schedule':schedule}
 
-    form = ScheduleForm(instance=schedule)
     if request.method == 'POST':
-        form = ScheduleForm(request.POST, instance=schedule)
-        if form.is_valid():
-            form.save()
-            # name = form.cleaned_data['name']
-            # in_am = form.cleaned_data['in_am']
-            # out_am = form.cleaned_data['out_am']
-            # in_pm = convert_time(form.cleaned_data['in_pm'])
-            # out_pm = convert_time(form.cleaned_data['out_pm'])
-            # Schedule.objects.update(name = name, in_am = in_am, out_am = out_am, in_pm = in_pm, out_pm = out_pm)
-            # sched = Schedule(name = name, in_am = in_am, out_am = out_am, in_pm = in_pm, out_pm = out_pm)
-            # sched.save()
-            return redirect('schedule')
+        in_am = dt.datetime.strptime(request.POST['in_am'], '%I:%M %p').time()
+        out_am = dt.datetime.strptime(request.POST['out_am'], '%I:%M %p').time()
+        in_pm = dt.datetime.strptime(request.POST['in_pm'], '%I:%M %p').time()
+        out_pm = dt.datetime.strptime(request.POST['out_pm'], '%I:%M %p').time()
+        if Schedule.objects.filter(name=request.POST['name']).exists():
+            Schedule.objects.filter(id=pk).update(in_am=in_am,out_am=out_am,in_pm=in_pm,out_pm=out_pm)
+        else:
+            Schedule.objects.filter(id=pk).update(name=request.POST['name'],in_am=in_am,out_am=out_am,in_pm=in_pm,out_pm=out_pm)
+        messages.success(request, f'{sched_name} updated successfully!')
+        return redirect('schedule')
     
-    context = {'form': form}
     return render(request, template, context)
 
 def delete_sched(request, pk):
-        schedule = Schedule.objects.get(id=pk)
-        template = 'employees/schedule/delete.html'
+    schedule = Schedule.objects.get(id=pk)
+    sched_name = schedule.name
+    template = 'employees/schedule/delete_sched.html'
 
-        if request.method == 'POST':
-            schedule.delete()
-            return redirect('schedule')
-        
-        return render(request, template, {'schedule': schedule})
+    if request.method == 'POST':
+        schedule.delete()
+        messages.success(request, f'{sched_name} deleted successfully!')
+        return redirect('schedule')
+    
+    return render(request, template, {'schedule': schedule})
 
 # EMPLOYEE ##################################################################
 def employee(request):
@@ -230,13 +234,13 @@ def employee(request):
     page_number = request.GET.get('page')
     p_employees = p.get_page(page_number)
     context = {'employees': p_employees}
-    template = "employees/employee.html"
+    template = "employees/employee/employee.html"
     return render(request, template, context)
 
 def create_emp(request):
     context = {}
     form = EmployeeForm()
-    template = 'employees/employee/create.html'
+    template = 'employees/employee/create_emp.html'
 
     if request.method == 'POST':
         form = EmployeeForm(request.POST, request.FILES)
@@ -296,6 +300,37 @@ def create_emp(request):
     context = {'form' : form}
     return render(request, template, context)
 
+def view_emp(request, pk):
+    emp_details = Employee.objects.filter(id=pk)
+    id = emp_details[0].id
+    context = {'emp_details': emp_details, 'emp_id':id}
+    template = 'employees/employee/view_emp.html'
+    return render(request, template, context)
+
+def update_emp(request, pk):
+    emp_id = Employee.objects.get(id=pk)
+    context = {'employee_id':emp_id}
+    try:
+        employee = Employee.objects.get(id=pk)
+    except ObjectDoesNotExist:
+        return redirect('employee')
+
+    form = EmployeeForm(instance=employee)
+    template = 'employees/employee/update_emp.html'
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST, instance=employee)
+        if form.is_valid():
+            # id = Employee.objects.filter(id=pk)[0].id
+            # user = User.objects.get(username=id)
+            # user.username = form.cleaned_data['id']
+            form.save()
+            # user.save()
+            messages.success(request, f"Employee {pk} updated successfully!")
+            return redirect('update_emp', pk)
+    
+    context = {'form': form, 'employee_id':emp_id}
+    return render(request, template, context)
+
 def update_photo(request, pk):
     emp_id = Employee.objects.get(id=pk)
     emp_details = Employee.objects.filter(id=pk)
@@ -348,41 +383,10 @@ def update_photo(request, pk):
 
     return render(request, template, context)
 
-def view_emp(request, pk):
-    emp_details = Employee.objects.filter(id=pk)
-    id = emp_details[0].id
-    context = {'emp_details': emp_details, 'emp_id':id}
-    template = 'employees/employee/view.html'
-    return render(request, template, context)
-
-def update_emp(request, pk):
-    emp_id = Employee.objects.get(id=pk)
-    context = {'employee_id':emp_id}
-    try:
-        employee = Employee.objects.get(id=pk)
-    except ObjectDoesNotExist:
-        return redirect('employee')
-
-    form = EmployeeForm(instance=employee)
-    template = 'employees/employee/update.html'
-    if request.method == 'POST':
-        form = EmployeeForm(request.POST, instance=employee)
-        if form.is_valid():
-            # id = Employee.objects.filter(id=pk)[0].id
-            # user = User.objects.get(username=id)
-            # user.username = form.cleaned_data['id']
-            form.save()
-            # user.save()
-            messages.success(request, f"Employee {pk} updated successfully!")
-            return redirect('update_emp', pk)
-    
-    context = {'form': form, 'employee_id':emp_id}
-    return render(request, template, context)
-
 def delete_emp(request, pk):
     emp_id = Employee.objects.get(id=pk)
     emp_user = User.objects.get(username=emp_id)
-    template = 'employees/employee/delete.html'
+    template = 'employees/employee/delete_emp.html'
 
     if request.method == 'POST':
         if os.path.isfile(os.path.join(settings.MEDIA_ROOT, emp_id.biometric_id.name)):

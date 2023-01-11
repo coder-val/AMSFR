@@ -4,7 +4,7 @@ from django.core.validators import MinLengthValidator
 
 # Create your models here.
 class Department(models.Model):
-    name = models.CharField(max_length=255, unique=True, verbose_name="department name")
+    name = models.CharField(max_length=50, unique=True, verbose_name="department name")
 
     class Meta:
         db_table = 'departments'
@@ -13,7 +13,7 @@ class Department(models.Model):
         return self.name
 
 class Designation(models.Model):
-    name = models.CharField(max_length=30, unique=True, verbose_name="designation name")
+    name = models.CharField(max_length=150, unique=True, verbose_name="designation name")
 
     class Meta:
         db_table = 'designations'
@@ -22,7 +22,7 @@ class Designation(models.Model):
         return self.name
 
 class Schedule(models.Model):
-    name = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=30, unique=True)
     in_am = models.TimeField()
     out_am = models.TimeField()
     in_pm = models.TimeField()
@@ -41,13 +41,13 @@ class Employee(models.Model):
         ('F', 'FEMALE'),
     ]
 
-    id = models.CharField(primary_key=True, max_length=30, validators=[MinLengthValidator(13, message="ID must be at least 13 characters.")])
+    id = models.CharField(primary_key=True, max_length=14, validators=[MinLengthValidator(13, message="ID must be at least 13 characters.")])
 
     # account info
     user = models.ForeignKey(User, on_delete=models.CASCADE)#
-    firstname = models.CharField(max_length=30)#
-    middlename = models.CharField(max_length=30)#
-    lastname = models.CharField(max_length=30)#
+    firstname = models.CharField(max_length=40)#
+    middlename = models.CharField(max_length=40)#
+    lastname = models.CharField(max_length=40)#
     email = models.EmailField(blank=True, null=True, unique=True)#
     created = models.DateTimeField(auto_now_add=True)#
 

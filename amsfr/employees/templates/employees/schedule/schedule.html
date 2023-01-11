@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Schedule{% endblock title %}
+{% block heading %}Schedule{% endblock heading %}
+
+{% block content %}
+<div class="row">
+    <ul class="collapsible popout">
+        <li class="active">
+            <div class="collapsible-header" style="font-size:1.5rem"><b>ACTIVE</b></div>
+            <div class="collapsible-body">
+                {% if active_sched %}
+                <table class="highlight centered responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>AM IN</th>
+                            <th>AM OUT</th>
+                            <th>PM IN</th>
+                            <th>PM OUT</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for active in active_sched %}
+                        <tr>
+                            <td>{{active.name}}</td>
+                            <td>{{active.in_am|time:"h:i A"}}</td>
+                            <td>{{active.out_am|time:"h:i A"}}</td>
+                            <td>{{active.in_pm|time:"h:i A"}}</td>
+                            <td>{{active.out_pm|time:"h:i A"}}</td>
+                
+                            {% if active.is_active is True %}
+                            <td style="color: green; text-align: center; font-size:1.5rem">&#9679</td>
+                            {% else %}
+                            <td style="color: black; text-align: center; font-size:1.5rem">&#9679</td>
+                            {% endif %}
+                            
+                            <td>
+                                {% if active.is_active is not True %}
+                                <a href="{% url 'activate' active.id %}" class="btn-floating waves-effect waves-light light-blue accent-3 tooltipped-l" data-position="left" data-tooltip="toggle-on" alt="toggle-on"><i class="material-icons">toggle_off</i></a>
+                                {% else %}
+                                <a href="{% url 'deactivate' active.id %}" class="btn-floating waves-effect waves-light light-blue accent-3 tooltipped-l" data-position="left" data-tooltip="toggle-off" alt="toggle-off"><i class="material-icons">toggle_on</i></a>
+                                {% endif %}
+                                <a href="{% url 'update_sched' active.id %}" class="btn-floating waves-effect waves-light amber accent-4 tooltipped-b" data-position="bottom" data-tooltip="edit" alt="edit"><i class="material-icons">edit</i></a>
+                                <a href="{% url 'delete_sched' active.id %}" class="btn-floating waves-effect waves-light red tooltipped-r" data-position="right" data-tooltip="delete" alt="delete"><i class="material-icons">delete</i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="center">No active sched yet.</p>
+                {% endif %}
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <ul class="collapsible popout">
+        <li class="">
+            <div class="collapsible-header" style="font-size:1.5rem"><b>INACTIVE</b></div>
+            <div class="collapsible-body">
+                {% if inactive_sched %}
+                <table class="highlight centered responsive-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>AM IN</th>
+                            <th>AM OUT</th>
+                            <th>PM IN</th>
+                            <th>PM OUT</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inactive in inactive_sched %}
+                        <tr>
+                            <td>{{inactive.name}}</td>
+                            <td>{{inactive.in_am|time:"h:i A"}}</td>
+                            <td>{{inactive.out_am|time:"h:i A"}}</td>
+                            <td>{{inactive.in_pm|time:"h:i A"}}</td>
+                            <td>{{inactive.out_pm|time:"h:i A"}}</td>
+                
+                            {% if inactive.is_active is True %}
+                            <td style="color: green; text-align: center; font-size:1.5rem">&#9679</td>
+                            {% else %}
+                            <td style="color: black; text-align: center; font-size:1.5rem">&#9679</td>
+                            {% endif %}
+                            
+                            <td>
+                                {% if inactive.is_active is not True %}
+                                <a href="{% url 'activate' inactive.id %}" class="btn-floating waves-effect waves-light light-blue accent-3 tooltipped-l" data-position="left" data-tooltip="toggle-on" alt="toggle-on"><i class="material-icons">toggle_off</i></a>
+                                {% else %}
+                                <a href="{% url 'deactivate' inactive.id %}" class="btn-floating waves-effect waves-light light-blue accent-3 tooltipped-l" data-position="left" data-tooltip="toggle-off" alt="toggle-off"><i class="material-icons">toggle_on</i></a>
+                                {% endif %}
+                                <a href="{% url 'update_sched' inactive.id %}" class="btn-floating waves-effect waves-light amber accent-4 tooltipped-b" data-position="bottom" data-tooltip="edit" alt="edit"><i class="material-icons">edit</i></a>
+                                <a href="{% url 'delete_sched' inactive.id %}" class="btn-floating waves-effect waves-light red tooltipped-r" data-position="right" data-tooltip="delete" alt="delete"><i class="material-icons">delete</i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="center">No inactive schedule.</p>
+                {% endif %}
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'create_sched' %}" data-position="left" data-tooltip="add">
+      <i class="large material-icons">add</i>
+    </a>
+</div>
+{% endblock content %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Update Schedule{% endblock title %}
+{% block heading %}Update Schedule{% endblock heading %}
+    
+{% block content %}
+
+<div class="row">
+    <form action="" method="post" class="col s12">
+        {% csrf_token %}
+        <div class="row">
+            <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
+                <label for="name">Name:</label>
+                <input value="{{schedule.name}}" class="validate" type="text" name="name" id="name" required>
+            </div>
+        </div>
+        <div class="col s12 m6 l6 offset-m3 offset-l3">
+            <blockquote>
+                <span><b>12-hour format. [10:30 AM, 02:30 PM]</b></span>
+            </blockquote>
+        </div>
+        <div class="row">
+            <div class="input-field col s12 m3 l3 offset-m3 offset-l3">
+                <label for="in_am">IN AM:</label>
+                <input value="{{schedule.in_am|time:'h:i A'}}" type="text" name="in_am" id="in_am" class="in_am_timepicker validate" required>
+            </div>
+            <div class="input-field col s12 m3 l3">
+                <label for="out_am">OUT AM:</label>
+                <input value="{{schedule.out_am|time:'h:i A'}}" type="text"  name="out_am" id="out_am" class="out_am_timepicker validate" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12 m3 l3 offset-m3 offset-l3">
+                <label for="in_am">IN PM:</label>
+                <input value="{{schedule.in_pm|time:'h:i A'}}" type="text" name="in_pm" id="in_pm" class="in_pm_timepicker validate" required>
+            </div>
+            <div class="input-field col s12 m3 l3">
+                <label for="out_pm">OUT PM:</label>
+                <input value="{{schedule.out_pm|time:'h:i A'}}" type="text"  name="out_pm" id="out_pm" class="out_pm_timepicker validate" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 center">
+                <a href="{% url 'schedule' %}" class=" btn waves-effect waves-light purple accent-3" style="margin-right: .5rem">Back</a>
+                <button class=" btn waves-effect waves-light green accent-4" type="submit" name="action">Update</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock content %}

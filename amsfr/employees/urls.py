@@ -22,6 +22,7 @@ urlpatterns = [
     path('schedule/update/<str:pk>/', update_sched, name='update_sched'),
     path('schedule/delete/<str:pk>/', delete_sched, name='delete_sched'),
     path('schedule/activate/<str:pk>/', activate, name='activate'),
+    path('schedule/deactivate/<str:pk>/', deactivate, name='deactivate'),
 
     path('holiday/', holiday, name='holiday'),
     path('holiday/import_holidays/', import_holidays, name='import_holidays'),

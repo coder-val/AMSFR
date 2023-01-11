@@ -2,7 +2,7 @@ import cv2, os, numpy as np, face_recognition, datetime
 from django.conf import settings
 from .attendance import mark_attendance
 
-cam = 0
+cam = 1
 
 def findEncodings(images):
     encodeList = []
@@ -183,10 +183,9 @@ def face_recog(option):
             if matches[matchesIndex] and (faceDis[matchesIndex] < 0.5):
                 # name = classNames[matchesIndex].upper()
                 name = classNames[matchesIndex]
-                # print(name)
                 # cv2.rectangle(img,(x1, y1), (x2, y2+50), (0, 255, 0), 2)
                 # cv2.rectangle(img,(x1, y2), (x2, y2+50), (0, 255, 0), cv2.FILLED)
-                cv2.putText(img, name, (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0,255,0), 3)
+                cv2.putText(img, name[7:len(name)], (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0,255,0), 3)
                 mark_attendance(option, name)
 
             else:

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Delete Schedule{% endblock title %}
+{% block heading %}Delete Schedule{% endblock heading %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col s12 center">
+            <h5>Are you sure you want to delete schedule <b style="text-transform:uppercase">{{schedule}}?</b></h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 center">
+            <a href="{% url 'schedule' %}" class="btn waves-effect waves-light purple accent-3" style="margin-right: .5rem">Back</a>
+            <button class="btn waves-effect waves-light red" type="submit" name="action">Delete</button>
+        </div>
+    </div>
+</form>
+{% endblock content %}

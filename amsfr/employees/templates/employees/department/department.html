@@ -9,7 +9,7 @@
     <table class="highlight centered hoverable responsive-table">
         <thead>
             <tr>
-                <th>NO</th>
+                <th>#</th>
                 <th>Name</th>
                 <th>Action</th>
             </tr>
@@ -27,6 +27,9 @@
             {% endfor %}
         </tbody>
     </table>
+    {% if not departments %}
+    <p class="center">No entries yet.</p>
+    {% endif %}
 </div>
 <div class="fixed-action-btn">
     <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'create_dept' %}" data-position="left" data-tooltip="create">
