@@ -6,6 +6,9 @@ from django.conf import settings
 urlpatterns = [
 
     path('', home, name='home'),
+    path('test/', test, name='test'),
+
+    path('dashboard/', dashboard, name='dashboard'),
 
     path('department/', department, name='department'),
     path('department/create/', create_dept, name='create_dept'),

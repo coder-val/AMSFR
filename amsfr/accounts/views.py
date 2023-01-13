@@ -17,7 +17,7 @@ def login_user(request):
             return render(request, template, context)
         login(request, user)
         messages.success(request, "Login successfully!")
-        return redirect('home')
+        return redirect('dashboard')
     return render(request, template, context)
 
 def logout_user(request):
@@ -26,7 +26,7 @@ def logout_user(request):
     if request.method == 'POST':
         logout(request)
         messages.success(request, "Logout successfully!")
-        return redirect('login')
+        return redirect('home')
     # return redirect('login')
     return render(request, template, context)
     

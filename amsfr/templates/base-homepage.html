@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'utilities/icon.png' %}" type="image/x-icon">
+    <link type="text/css" rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}" media="screen,projection">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script defer src="https://kit.fontawesome.com/4db0e106e1.js" crossorigin="anonymous"></script>
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    {% include "nav-bar.html" %}
+
+    <!-- Modal Structure -->
+    <div id="logout-modal" class="modal" style="max-width: 500px">
+        <div class="modal-content">
+        <h5>Are you sure you want to logout?</h5>
+        </div>
+        <div class="modal-footer">
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="modal-close waves-effect waves-green btn purple accent-3" style="font-size: 1rem; color: white;" autofocus><i class="material-icons right">logout</i>LOGOUT</button>
+            </form>
+        </div>
+    </div>
+
+    <header>
+        <div class="row" style="padding-left: 90px;">
+            <blockquote style="margin-left: 2.5rem;">
+            <h3 style="font-weight: bold">{% block heading %}{% endblock heading %}</h3>
+            </blockquote>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            {% block content %}{% endblock content %}
+        </div>
+    </main>
+    <footer class="page-footer white" style="">
+        <div class="white">
+            <div class="container center-align">
+                <p style="color: black">SAINT FRANCIS ACADEMY INC © 2023</p>
+            </div>
+        </div>
+    </footer>
+    <script type="text/javascript" src="{% static 'materialize/js/materialize.min.js' %}"></script>
+    <script>
+        function currentTime() {
+            let date = new Date(); 
+            let hh = date.getHours();
+            let mm = date.getMinutes();
+            let ss = date.getSeconds();
+            let mo = date.getMonth() + 1;
+            let dd = date.getDate();
+            let yyyy = date.getFullYear();
+            let session = "AM";
+          
+            if(hh === 0){
+                hh = 12;
+            }
+            if(hh > 12){
+                hh = hh - 12;
+                session = "PM";
+             }
+          
+             hh = (hh < 10) ? "0" + hh : hh;
+             mm = (mm < 10) ? "0" + mm : mm;
+             ss = (ss < 10) ? "0" + ss : ss;
+             mo = (mo < 10) ? "0" + mo : mo;
+             dd = (dd < 10) ? "0" + dd : dd;
+              
+             let time = date.toDateString().slice(0,3).toUpperCase() + " | " + hh + ":" + mm + ":" + ss + " " + session + " | " + mo + "•" + dd + "•" + yyyy;
+          
+            document.getElementById("clock").innerText = time; 
+            let t = setTimeout(function(){ currentTime() }, 1000);
+        }
+        currentTime();
+        document.addEventListener('DOMContentLoaded', function() {
+            let date_now = new Date();
+            //let year_now = date_now.getFullYear();
+            let date_prev = new Date("1900-01-01");
+            var modal_elems = document.querySelectorAll('.modal');
+            var select_elems = document.querySelectorAll('select');
+            var datepicker_elems = document.querySelectorAll('.datepicker');
+            var in_am_elem = document.querySelector('.in_am_timepicker');
+            var out_am_elem = document.querySelector('.out_am_timepicker');
+            var in_pm_elem = document.querySelector('.in_pm_timepicker');
+            var out_pm_elem = document.querySelector('.out_pm_timepicker');
+            var elem_ex = document.querySelectorAll('.collapsible.popout');
+            var actionbtn_elems = document.querySelectorAll('.fixed-action-btn');
+            var elems_l = document.querySelectorAll('.tooltipped-l');
+            var elems_r = document.querySelectorAll('.tooltipped-r');
+            var elems_b = document.querySelectorAll('.tooltipped-b');
+            var elems_t = document.querySelectorAll('.tooltipped-t');
+            var instances = M.Modal.init(modal_elems);
+            var instances = M.FormSelect.init(select_elems);
+            var instances = M.Datepicker.init(datepicker_elems,{yearRange: 100, minDate:date_prev, maxDate:date_now});
+            var instances = M.Timepicker.init(in_am_elem, {defaultTime: '7:15 AM'});
+            var instances = M.Timepicker.init(out_am_elem, {defaultTime: '11:45 AM'});
+            var instances = M.Timepicker.init(in_pm_elem, {defaultTime: '1:00 PM'});
+            var instances = M.Timepicker.init(out_pm_elem, {defaultTime: '4:30 PM'});
+            var instance = M.Collapsible.init(elem_ex, {accordion: false});
+            var instances = M.FloatingActionButton.init(actionbtn_elems);
+            var instance_l = M.Tooltip.init(elems_l);
+            var instance_r = M.Tooltip.init(elems_r);
+            var instance_b = M.Tooltip.init(elems_b);
+            var instance_t = M.Tooltip.init(elems_t);
+            {% if messages %}
+                {% for message in messages %}
+                    M.toast({html: '{{message}}'})
+                    {% if message.tags == 'success' %}
+                        document.querySelector('.toast').classList.add('green', 'accent-4')
+                    {% elif message.tags == 'warning'%}
+                        document.querySelector('.toast').classList.add('amber', 'accent-4')
+                    {% elif message.tags == 'error'%}
+                        document.querySelector('.toast').classList.add('red')
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        M.toast({html: '{{error}}'})
+                        document.querySelector('.toast').classList.add('red')
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        });
+        function validateForm() {
+            document.getElementById('progressBarr').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

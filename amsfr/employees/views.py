@@ -16,6 +16,8 @@ from workalendar.asia import Philippines
 # import pandas as pd
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import StreamingHttpResponse
+from .camera import *
 
 def convert_time(time):
     if time >= dt.time(1,0,0) and time < dt.time(11,59,59):
@@ -26,10 +28,19 @@ def convert_time(time):
     return time
 
 # Create your views here.
-@login_required
 def home(request):
     context = {}
-    template = "employees/home.html"
+    template = "employees/homepage.html"
+    return render(request, template, context)
+
+def test(request):
+    response =  StreamingHttpResponse(gen(VideoCamera()),content_type='multipart/x-mixed-replace; boundary=frame')
+    return response
+
+@login_required
+def dashboard(request):
+    context = {}
+    template = "employees/dashboard.html"
 
     # emp_user = User.objects.filter(pk=12)[0].username
     # # haha = emp_user.employee_set.all()
