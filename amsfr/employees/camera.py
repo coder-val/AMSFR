@@ -3,6 +3,7 @@ import face_recognition
 from django.conf import settings
 from .faceRecognition import findEncodings
 import os, numpy as np
+from .attendance import mark_attendance
 
 class VideoCamera(object):
     def __init__(self):
@@ -15,6 +16,7 @@ class VideoCamera(object):
     
     def get_frame(self, encodeListKnown, classNames):
         success, image = self.video.read()
+        image = cv2.flip(image, 1)
 
         imgS = cv2.resize(image,(0,0), None, 0.25,0.25)
         imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
