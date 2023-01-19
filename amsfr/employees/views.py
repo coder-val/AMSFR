@@ -31,8 +31,12 @@ def convert_time(time):
 def home(request):
     context = {}
     template = "employees/homepage.html"
-    # if not Employee.objects.all().exists():
-    #     return HttpResponse("hakdog")
+
+    employee = Employee.objects.all().exists()
+    sched = Schedule.objects.filter(is_active=True)
+
+    context = {'employee':employee, 'sched':sched}
+    
     return render(request, template, context)
 
 def test(request):

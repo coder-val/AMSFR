@@ -5,10 +5,12 @@ from .faceRecognition import findEncodings
 import os, numpy as np
 from .attendance import mark_attendance
 from .models import Schedule
+import time
 
 class VideoCamera(object):
     def __init__(self):
-        self.video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+        time.sleep(5)
+        self.video = cv2.VideoCapture(0, cv2.CAP_DSHOW)
         # self.video.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         # self.video.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     
