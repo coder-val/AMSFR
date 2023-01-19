@@ -16,7 +16,7 @@ from workalendar.asia import Philippines
 # import pandas as pd
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse, HttpResponse
 from .camera import *
 
 def convert_time(time):
@@ -31,10 +31,12 @@ def convert_time(time):
 def home(request):
     context = {}
     template = "employees/homepage.html"
+    # if not Employee.objects.all().exists():
+    #     return HttpResponse("hakdog")
     return render(request, template, context)
 
 def test(request):
-    response =  StreamingHttpResponse(gen(VideoCamera()),content_type='multipart/x-mixed-replace; boundary=frame')
+    response = StreamingHttpResponse(gen(VideoCamera()),content_type='multipart/x-mixed-replace; boundary=frame')
     return response
 
 @login_required
