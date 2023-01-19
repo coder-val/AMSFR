@@ -10,7 +10,7 @@ import time
 class VideoCamera(object):
     def __init__(self):
         time.sleep(5)
-        self.video = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        self.video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
         # self.video.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         # self.video.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     
@@ -58,6 +58,8 @@ def gen(camera):
     image_path = os.path.join(settings.MEDIA_ROOT, "registered")
     images = []
     classNames = []
+    if not os.path.exists(image_path):
+        os.mkdir(image_path)
     myList = os.listdir(image_path)
     
     for cl in myList:

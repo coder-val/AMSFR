@@ -1,0 +1,23 @@
+{% load static %}
+<div class="row">
+    <h4><b>IN</b></h4>
+    <div style="display: flex; gap: 1rem;">
+        {% for inside in insides%}
+        <div>
+            <img src="{{inside.reference.biometric_id.url}}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width="120">
+            <p style="text-align: center;">{{inside.employee_id|cut:"400392-"}}</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <h4><b>OUT</b></h4>
+    
+    <div style="display: flex; gap: 1rem;">
+        {% for outside in outsides%}
+        <div>
+            <img src="{{outside.reference.biometric_id.url}}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width="120">
+            <p style="text-align: center;">{{outside.employee_id|cut:"400392-"}}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>

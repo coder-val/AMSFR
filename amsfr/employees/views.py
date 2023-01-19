@@ -35,9 +35,29 @@ def home(request):
     employee = Employee.objects.all().exists()
     sched = Schedule.objects.filter(is_active=True)
 
-    context = {'employee':employee, 'sched':sched}
-    
-    return render(request, template, context)
+
+    in_am = Schedule.objects.filter(is_active=True).values()[0]['in_am']
+    in_pm = Schedule.objects.filter(is_active=True).values()[0]['in_pm']
+
+    now_time = dt.datetime.now().time()
+    now_date = dt.datetime.now().date()
+    cut_off = now_time.replace(hour=23, minute=59, second=59, microsecond=0)
+
+    if now_time >= in_am and now_time < in_pm:
+        insides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=True, date=now_date).order_by('-in_am')
+        outsides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=False, date=now_date).order_by('-out_am') | Attendance.objects.filter(in_am__isnull=True, out_am__isnull=False, date=now_date).order_by('-out_am')
+        context = {'insides':insides, 'outsides':outsides}
+
+    elif now_time >= in_pm and now_time < cut_off:
+        insides = Attendance.objects.filter(in_pm__isnull=False, out_pm__isnull=True, date=now_date).order_by('-in_pm')
+        outsides = Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=False, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=True, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=False, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=True, out_pm__isnull=False, date=now_date).order_by('-out_pm')
+        context = {'insides':insides, 'outsides':outsides}
+
+    if request.htmx:
+        return render(request, 'employees/attendance.html', context)
+    else:
+        context = {'employee':employee, 'sched':sched, 'insides':insides, 'outsides':outsides}
+        return render(request, template, context)
 
 def test(request):
     response = StreamingHttpResponse(gen(VideoCamera()),content_type='multipart/x-mixed-replace; boundary=frame')
@@ -264,6 +284,21 @@ def create_emp(request):
     form = EmployeeForm()
     template = 'employees/employee/create_emp.html'
 
+    if Employee.objects.all().count() == 0:
+        id_num = "001"
+    else:
+        recent_id = Employee.objects.latest('id')
+        emp_id = str(recent_id).split('-')[2]
+
+        numm = emp_id.replace("0", "")
+        int_num = int(numm) + 1
+        if len(str(int_num)) == 1:
+            id_num = "00" + str(int_num)
+        elif len(str(int_num)) == 2:
+            id_num = "0" + str(int_num)
+        else:
+            id_num = str(int_num)
+
     if request.method == 'POST':
         form = EmployeeForm(request.POST, request.FILES)
         if form.is_valid():
@@ -295,7 +330,7 @@ def create_emp(request):
             if os.path.isfile(image_checking):
                 os.remove(image_path)
                 messages.warning(request, "ID picture already used!")
-                return render(request, template, {'form':form})
+                return render(request, template, {'form':form, 'id_num':id_num})
 
             shutil.move(image_path, path_to_unregistered)
             test = checkIfExist(image_checking)
@@ -303,7 +338,7 @@ def create_emp(request):
             if test is True:
                 os.remove(image_checking)
                 messages.warning(request, "Employee already registered!")
-                return render(request, template, {'form':form})
+                return render(request, template, {'form':form, 'id_num':id_num})
             elif test is False:
                 user = User.objects.create_user(id, email, id)
                 register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, email = email, birth_date = birth_date, gender = gender, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, department = department, designation = designation, biometric_id = f'registered/{id}.jpg')
@@ -313,16 +348,16 @@ def create_emp(request):
                 os.rename(image_checking, new_image_path)
                 messages.success(request, f'Employee {id} registered successfully!')
                 form = EmployeeForm()
-                return render(request, template, {'form':form})
+                return render(request, template, {'form':form, 'id_num':id_num})
             else:
                 os.remove(image_checking)
                 messages.error(request, "No face detected!")
-                return render(request, template, {'form':form})
+                return render(request, template, {'form':form, 'id_num':id_num})
 
             # form.save()
             # return redirect('employee')
 
-    context = {'form' : form}
+    context = {'form' : form, 'id_num':id_num}
     return render(request, template, context)
 
 def view_emp(request, pk):

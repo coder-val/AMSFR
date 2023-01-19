@@ -30,16 +30,16 @@
     </div>
 
     <header>
-        <div class="row" style="padding-left: 90px;">
+        <div class="row">
             <blockquote style="margin-left: 2.5rem;">
             <h3 style="font-weight: bold">{% block heading %}{% endblock heading %}</h3>
             </blockquote>
         </div>
     </header>
     <main>
-        <div class="container">
+        {% comment %} <div class="container"> {% endcomment %}
             {% block content %}{% endblock content %}
-        </div>
+        {% comment %} </div> {% endcomment %}
     </main>
     <footer class="page-footer white" style="">
         <div class="white">
