@@ -348,7 +348,8 @@ def create_emp(request):
                 os.rename(image_checking, new_image_path)
                 messages.success(request, f'Employee {id} registered successfully!')
                 form = EmployeeForm()
-                return render(request, template, {'form':form, 'id_num':id_num})
+                # return render(request, template, {'form':form, 'id_num':id_num})
+                return redirect('create_emp')
             else:
                 os.remove(image_checking)
                 messages.error(request, "No face detected!")
