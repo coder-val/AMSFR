@@ -99,7 +99,9 @@
             var elems_t = document.querySelectorAll('.tooltipped-t');
             var instances = M.Modal.init(modal_elems);
             var instances = M.FormSelect.init(select_elems);
-            var instances = M.Datepicker.init(datepicker_elems,{yearRange: 100, minDate:date_prev, maxDate:date_now});
+            var instances = M.Datepicker.init(datepicker_elems,{yearRange: 60, minDate:date_prev, maxDate:date_now});
+            var id_expdate = document.getElementById('id_expiration_date');
+            var instances = M.Datepicker.init(id_expdate,{minDate:date_now});
             var instances = M.Timepicker.init(in_am_elem, {defaultTime: '7:15 AM'});
             var instances = M.Timepicker.init(out_am_elem, {defaultTime: '11:45 AM'});
             var instances = M.Timepicker.init(in_pm_elem, {defaultTime: '1:00 PM'});

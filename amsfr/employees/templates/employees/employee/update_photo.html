@@ -21,7 +21,7 @@
         <div style="display:flex; align-items:center; justify-content:center; gap: 1rem">
             <div>
                 {% for employee in emp_details %}
-                <img style="border: 3px solid" class="circle hoverable" src="{% if employee.biometric_id %}{{employee.biometric_id.url}}{% endif %}" alt="" width="200" style="display: block">
+                <img style="border: 3px solid" class="circle hoverable" src="{% if employee.id_picture %}{{employee.id_picture.url}}{% endif %}" alt="" width="200" style="display: block">
                 {% endfor %}
             </div>
             <span class="material-icons display_img1" style="display:none">double_arrow</span>
@@ -44,7 +44,7 @@
         <div class="row">
             <div class="file-field input-field col s12">
                 <div class="btn purple accent-3">
-                    <span>biometric id: </span>
+                    <span>Picture ID: </span>
                     <input type="file" name="biometric_id" accept="image/*" required="" id="id_biometric_id" class="validate">
                 </div>
                 <div class="file-path-wrapper">

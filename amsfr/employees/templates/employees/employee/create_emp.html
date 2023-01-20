@@ -43,14 +43,14 @@
                     {{form.birth_date}}
                 </div>
                 <div class="input-field col s4">
-                    {{form.email.errors}}
-                    {{form.email.label_tag}}
-                    {{form.email}}
-                </div>
-                <div class="input-field col s4">
                     {{form.mobile_number.errors}}
                     {{form.mobile_number.label_tag}}
                     {{form.mobile_number}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.position.errors}}
+                    {{form.position.label_tag}}
+                    {{form.position}}
                 </div>
             </div>
             <div class="row">
@@ -70,39 +70,17 @@
                     {{form.province}}
                 </div>
             </div>
-            <div class="row">
-                <div class="input-field col s4">
-                    <label style="position:absolute; top: -33px" for={{form.gender.id_for_label}}>{{form.gender.label}}:</label>
-                    {{form.gender.errors}}
-                    {{form.gender}}
-                </div>
-                <div class="input-field col s4">
-                    <label style="position:absolute; top: -33px" for={{form.department.id_for_label}}>{{form.department.label}}:</label>
-                    {{form.department.errors}}
-                    {{form.department}}
-                </div>
-                <div class="input-field col s4">
-                    <label style="position:absolute; top: -33px" for={{form.designation.id_for_label}}>{{form.designation.label}}:</label>
-                    {{form.designation.errors}}
-                    {{form.designation}}
-                </div>
-            </div>
             <div class="">
                 <blockquote>
                     <span><b>Note: Image must be clear and in 1 : 1 ratio [square].</b></span>
                 </blockquote>
             </div>
             <div class="row">
-                {% comment %} <div class="input-field col s12">
-                    <label style="position:absolute; top: -45px" for={{form.biometric_id.id_for_label}}>{{form.biometric_id.label}}:</label>
-                    {{form.biometric_id.errors}}
-                    {{form.biometric_id}}
-                </div> {% endcomment %}
                 <div class="file-field input-field col s8">
-                    {{form.biometric_id.errors}}
+                    {{form.id_picture.errors}}
                     <div class="btn purple accent-3">
-                        <span>{{form.biometric_id.label}}</span>
-                        {{form.biometric_id}}
+                        <span>{{form.id_picture.label}}</span>
+                        {{form.id_picture}}
                     </div>
                     <div class="file-path-wrapper">
                         <input class="file-path validate" type="text" required>
@@ -112,6 +90,23 @@
                     {{form.date_employed.errors}}
                     {{form.date_employed.label_tag}}
                     {{form.date_employed}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    {{form.license_no.errors}}
+                    {{form.license_no.label_tag}}
+                    {{form.license_no}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.registration_date.errors}}
+                    {{form.registration_date.label_tag}}
+                    {{form.registration_date}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.expiration_date.errors}}
+                    {{form.expiration_date.label_tag}}
+                    {{form.expiration_date}}
                 </div>
             </div>
             <div class="row">
@@ -128,6 +123,8 @@
     const inputs = document.querySelectorAll('input');
     const datepkr = document.getElementById('id_birth_date');
     const datemp = document.getElementById('id_date_employed');
+    const datereg = document.getElementById('id_registration_date');
+    const dateexp = document.getElementById('id_expiration_date');
     const id = document.getElementById('id_id');
     let date = new Date();
     let yyyy = date.getFullYear().toString().slice(2);
@@ -139,5 +136,7 @@
     id.setAttribute('value', `400392-${yyyy}-{{id_num}}`)
     datepkr.classList.add('datepicker')
     datemp.classList.add('datepicker')
+    datereg.classList.add('datepicker')
+    dateexp.classList.add('datepicker')
 </script>
 {% endblock content %}

@@ -16,27 +16,21 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Contact</th>
-                <th>Department</th>
-                <th>Designation</th>
+                <th>Position</th>
                 <th>Action</th>
             </tr>
         </thead>
         </tbody>
             {% for employee in employees %}
             <tr>
-                <td><img class="circle" src="{% if employee.biometric_id %}{{employee.biometric_id.url}}{% endif %}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width='60'></td>
+                <td><img class="circle" src="{% if employee.id_picture %}{{employee.id_picture.url}}{% endif %}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width='60'></td>
                 <td><a href="{% url 'view_emp' employee.id %}">{{employee.id|cut:"400392-"}}</a></td>
                 <td>{{employee.lastname}}, {{employee.firstname}} {{employee.middlename}}</td>
                 {% if employee.mobile_number %}
                 <td>{{employee.mobile_number}}</td>{% else %}
                 <td>~</td>{% endif %}
-                {% if employee.department %}
-                <td>{{employee.department}}</td>
-                {% else %}
-                <td>~</td>
-                {% endif %}
-                {% if employee.designation %}
-                <td>{{employee.designation}}</td>
+                {% if employee.position %}
+                <td>{{employee.position}}</td>
                 {% else %}
                 <td>~</td>
                 {% endif %}

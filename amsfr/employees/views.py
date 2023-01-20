@@ -93,13 +93,13 @@ def dashboard(request):
     return render(request, template, context)
 
 # DEPARTMENT ################################################################
-def department(request):
-    departments = Department.objects.all()
-    context = {'departments': departments}
-    template = 'employees/department/department.html'
-    return render(request, template, context)
+# def department(request):
+#     departments = Department.objects.all()
+#     context = {'departments': departments}
+#     template = 'employees/department/department.html'
+#     return render(request, template, context)
 
-def create_dept(request):
+# def create_dept(request):
     context = {}
     form = DepartmentForm()
     template = 'employees/department/create_dept.html'
@@ -115,7 +115,7 @@ def create_dept(request):
     context = {'form' : form}
     return render(request, template, context)
 
-def update_dept(request, pk):
+# def update_dept(request, pk):
     context = {}
     department = Department.objects.get(id=pk)
     dept_name = department.name
@@ -131,7 +131,7 @@ def update_dept(request, pk):
     context = {'form': form}
     return render(request, template, context)
 
-def delete_dept(request, pk):
+# def delete_dept(request, pk):
     department = Department.objects.get(id=pk)
     template = 'employees/department/delete_dept.html'
 
@@ -143,54 +143,54 @@ def delete_dept(request, pk):
     return render(request, template, {'department': department})
 
 # DESIGNATION ################################################################
-def designation(request):
-    designations = Designation.objects.all()
-    context = {'designations': designations}
-    template = "employees/designation/designation.html"
-    return render(request, template, context)
+# def designation(request):
+#     designations = Designation.objects.all()
+#     context = {'designations': designations}
+#     template = "employees/designation/designation.html"
+#     return render(request, template, context)
 
-def create_desig(request):
-    context = {}
-    form = DesignationForm()
-    template = 'employees/designation/create_desig.html'
+# def create_desig(request):
+#     context = {}
+#     form = DesignationForm()
+#     template = 'employees/designation/create_desig.html'
 
-    if request.method == 'POST':
-        form = DesignationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            name = form.cleaned_data['name']
-            messages.success(request, f'{name} added successfully!')
-            return redirect('designation')
+#     if request.method == 'POST':
+#         form = DesignationForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             name = form.cleaned_data['name']
+#             messages.success(request, f'{name} added successfully!')
+#             return redirect('designation')
 
-    context = {'form' : form}
-    return render(request, template, context)
+#     context = {'form' : form}
+#     return render(request, template, context)
 
-def update_desig(request, pk):
-    context = {}
-    designation = Designation.objects.get(id=pk)
-    desig_name = designation.name
-    form = DesignationForm(instance=designation)
-    template = 'employees/designation/update_desig.html'
-    if request.method == 'POST':
-        form = DesignationForm(request.POST, instance=designation)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f'{desig_name} updated to {designation.name} successfully!')
-            return redirect('designation')
+# def update_desig(request, pk):
+#     context = {}
+#     designation = Designation.objects.get(id=pk)
+#     desig_name = designation.name
+#     form = DesignationForm(instance=designation)
+#     template = 'employees/designation/update_desig.html'
+#     if request.method == 'POST':
+#         form = DesignationForm(request.POST, instance=designation)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, f'{desig_name} updated to {designation.name} successfully!')
+#             return redirect('designation')
     
-    context = {'form': form}
-    return render(request, template, context)
+#     context = {'form': form}
+#     return render(request, template, context)
 
-def delete_desig(request, pk):
-    designation = Designation.objects.get(id=pk)
-    template = 'employees/designation/delete_desig.html'
+# def delete_desig(request, pk):
+#     designation = Designation.objects.get(id=pk)
+#     template = 'employees/designation/delete_desig.html'
 
-    if request.method == 'POST':
-        designation.delete()
-        messages.success(request, f'{designation.name} deleted successfully!')
-        return redirect('designation')
+#     if request.method == 'POST':
+#         designation.delete()
+#         messages.success(request, f'{designation.name} deleted successfully!')
+#         return redirect('designation')
     
-    return render(request, template, {'designation': designation})
+#     return render(request, template, {'designation': designation})
 
 # SCHEDULE #####################################################################
 def activate(request, pk):
@@ -303,23 +303,27 @@ def create_emp(request):
         form = EmployeeForm(request.POST, request.FILES)
         if form.is_valid():
             id = form.cleaned_data['id']
-            biometric_id = request.FILES['biometric_id']
+            id_picture = request.FILES['id_picture']
             lastname = form.cleaned_data['lastname']
             firstname = form.cleaned_data['firstname']
             middlename = form.cleaned_data['middlename']
-            email = form.cleaned_data['email']
+            # email = form.cleaned_data['email']
             birth_date = form.cleaned_data['birth_date']
-            gender = form.cleaned_data['gender']
+            # gender = form.cleaned_data['gender']
             mobile_number = form.cleaned_data['mobile_number']
             barangay = form.cleaned_data['barangay']
             municipality = form.cleaned_data['municipality']
             province = form.cleaned_data['province']
+            position = form.cleaned_data['position']
             date_employed = form.cleaned_data['date_employed']
-            department = form.cleaned_data['department']
-            designation = form.cleaned_data['designation']
+            license_no = form.cleaned_data['license_no']
+            registration_date = form.cleaned_data['registration_date']
+            expiration_date = form.cleaned_data['expiration_date']
+
+            # department = form.cleaned_data['department']
             # reportsTo = form.cleaned_data['reportsTo']
 
-            file_name = default_storage.save(biometric_id.name, biometric_id)
+            file_name = default_storage.save(id_picture.name, id_picture)
             image_path = os.path.join(settings.MEDIA_ROOT, file_name)
             path_to_unregistered = os.path.join(settings.MEDIA_ROOT, "unregistered")
             image_checking = os.path.join(path_to_unregistered, file_name)
@@ -340,8 +344,8 @@ def create_emp(request):
                 messages.warning(request, "Employee already registered!")
                 return render(request, template, {'form':form, 'id_num':id_num})
             elif test is False:
-                user = User.objects.create_user(id, email, id)
-                register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, email = email, birth_date = birth_date, gender = gender, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, department = department, designation = designation, biometric_id = f'registered/{id}.jpg')
+                user = User.objects.create_user(id, "", id)
+                register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
                 user.save()
                 register.save()
                 new_image_path = os.path.join(settings.MEDIA_ROOT, f'registered/{id}.jpg')
@@ -450,8 +454,8 @@ def delete_emp(request, pk):
     template = 'employees/employee/delete_emp.html'
 
     if request.method == 'POST':
-        if os.path.isfile(os.path.join(settings.MEDIA_ROOT, emp_id.biometric_id.name)):
-            os.remove(os.path.join(settings.MEDIA_ROOT, emp_id.biometric_id.name))
+        if os.path.isfile(os.path.join(settings.MEDIA_ROOT, emp_id.id_picture.name)):
+            os.remove(os.path.join(settings.MEDIA_ROOT, emp_id.id_picture.name))
         # employee.delete()
         emp_user.delete()
         messages.success(request, f'Employee {emp_id} deleted successfully!')

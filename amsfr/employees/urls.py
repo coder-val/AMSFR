@@ -10,15 +10,15 @@ urlpatterns = [
 
     path('dashboard/', dashboard, name='dashboard'),
 
-    path('department/', department, name='department'),
-    path('department/create/', create_dept, name='create_dept'),
-    path('department/update/<str:pk>/', update_dept, name='update_dept'),
-    path('department/delete/<str:pk>/', delete_dept, name='delete_dept'),
+    # path('department/', department, name='department'),
+    # path('department/create/', create_dept, name='create_dept'),
+    # path('department/update/<str:pk>/', update_dept, name='update_dept'),
+    # path('department/delete/<str:pk>/', delete_dept, name='delete_dept'),
 
-    path('designation/', designation, name='designation'),
-    path('designation/create/', create_desig, name='create_desig'),
-    path('designation/update/<str:pk>/', update_desig, name='update_desig'),
-    path('designation/delete/<str:pk>/', delete_desig, name='delete_desig'),
+    # path('designation/', designation, name='designation'),
+    # path('designation/create/', create_desig, name='create_desig'),
+    # path('designation/update/<str:pk>/', update_desig, name='update_desig'),
+    # path('designation/delete/<str:pk>/', delete_desig, name='delete_desig'),
 
     path('schedule/', schedule, name='schedule'),
     path('schedule/create', create_sched, name='create_sched'),

@@ -38,14 +38,14 @@
                     {{form.birth_date}}
                 </div>
                 <div class="input-field col s4">
-                    {{form.email.errors}}
-                    {{form.email.label_tag}}
-                    {{form.email}}
-                </div>
-                <div class="input-field col s4">
                     {{form.mobile_number.errors}}
                     {{form.mobile_number.label_tag}}
                     {{form.mobile_number}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.position.errors}}
+                    {{form.position.label_tag}}
+                    {{form.position}}
                 </div>
             </div>
             <div class="row">
@@ -66,28 +66,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s4">
-                    <label style="position:absolute; top: -33px" for={{form.gender.id_for_label}}>{{form.gender.label}}:</label>
-                    {{form.gender.errors}}
-                    {{form.gender}}
-                </div>
-                <div class="input-field col s4">
-                    <label style="position:absolute; top: -33px" for={{form.department.id_for_label}}>{{form.department.label}}:</label>
-                    {{form.department.errors}}
-                    {{form.department}}
-                </div>
-                <div class="input-field col s4">
-                    <label style="position:absolute; top: -33px" for={{form.designation.id_for_label}}>{{form.designation.label}}:</label>
-                    {{form.designation.errors}}
-                    {{form.designation}}
-                </div>
-            </div>
-            <div class="row">
                 {% comment %} <div class="file-field input-field col s8">
-                    {{form.biometric_id.errors}}
-                    <div class="btn">
-                        <span>{{form.biometric_id.label}}</span>
-                        {{form.biometric_id}}
+                    {{form.id_picture.errors}}
+                    <div class="btn purple accent-3">
+                        <span>{{form.id_picture.label}}</span>
+                        {{form.id_picture}}
                     </div>
                     <div class="file-path-wrapper">
                         <input class="file-path validate" type="text" required>
@@ -100,7 +83,24 @@
                 </div>
             </div>
             <div class="row">
-                <a href="{% url 'update_photo' employee_id %}" class="left btn waves-effect waves-light light-blue accent-3" style="margin-right: .5rem">Image Update</a>
+                <div class="input-field col s4">
+                    {{form.license_no.errors}}
+                    {{form.license_no.label_tag}}
+                    {{form.license_no}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.registration_date.errors}}
+                    {{form.registration_date.label_tag}}
+                    {{form.registration_date}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.expiration_date.errors}}
+                    {{form.expiration_date.label_tag}}
+                    {{form.expiration_date}}
+                </div>
+            </div>
+            <div class="row">
+                <a href="{% url 'update_photo' employee_id %}" class="left btn waves-effect waves-light light-blue accent-3" style="margin-right: .5rem">Update Image</a>
                 <button class="right btn waves-effect waves-light green accent-4" type="submit" name="action">Update</button>
                 <a href="{% url 'employee' %}" class="right btn waves-effect waves-light purple accent-3" style="margin-right: .5rem">Back</a>
             </div>

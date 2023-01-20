@@ -1,14 +1,14 @@
 from django.forms import ModelForm
 from .models import *
 
-class DepartmentForm(ModelForm):
-    class Meta:
-        model = Department
-        fields = '__all__'
+# class DepartmentForm(ModelForm):
+#     class Meta:
+#         model = Department
+#         fields = '__all__'
 
-class DesignationForm(ModelForm):
+class PositionForm(ModelForm):
     class Meta:
-        model = Designation
+        model = Position
         fields = '__all__'
 
 class EmployeeForm(ModelForm):
@@ -17,10 +17,10 @@ class EmployeeForm(ModelForm):
         fields = '__all__'
         exclude = ['user']
 
-class EmployeeImageForm(ModelForm):
-    class Meta:
-        model = Employee
-        fields = ['biometric_id']
+# class EmployeeImageForm(ModelForm):
+#     class Meta:
+#         model = Employee
+#         fields = ['biometric_id']
 
 class ScheduleForm(ModelForm):
     class Meta:

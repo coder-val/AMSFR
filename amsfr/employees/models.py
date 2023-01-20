@@ -3,20 +3,20 @@ from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
 
 # Create your models here.
-class Department(models.Model):
-    name = models.CharField(max_length=50, unique=True, verbose_name="department name")
+# class Department(models.Model):
+#     name = models.CharField(max_length=50, unique=True, verbose_name="department name")
+
+#     class Meta:
+#         db_table = 'departments'
+
+#     def __str__(self):
+#         return self.name
+
+class Position(models.Model):
+    name = models.CharField(max_length=150, unique=True, verbose_name="position name")
 
     class Meta:
-        db_table = 'departments'
-
-    def __str__(self):
-        return self.name
-
-class Designation(models.Model):
-    name = models.CharField(max_length=150, unique=True, verbose_name="designation name")
-
-    class Meta:
-        db_table = 'designations'
+        db_table = 'positions'
 
     def __str__(self):
         return self.name
@@ -36,36 +36,41 @@ class Schedule(models.Model):
         return self.name
     
 class Employee(models.Model):
-    GENDER_CHOICES = [
-        ('M', 'MALE'),
-        ('F', 'FEMALE'),
-    ]
+    # GENDER_CHOICES = [
+    #     ('M', 'MALE'),
+    #     ('F', 'FEMALE'),
+    # ]
 
-    id = models.CharField(primary_key=True, max_length=14, validators=[MinLengthValidator(13, message="ID must be at least 13 characters.")])
 
     # account info
     user = models.ForeignKey(User, on_delete=models.CASCADE)#
+    # email = models.EmailField(blank=True, null=True, unique=True)#
+    # created = models.DateTimeField(auto_now_add=True)#
+
+    # personal info
+    id = models.CharField(primary_key=True, max_length=14, validators=[MinLengthValidator(13, message="ID must be at least 13 characters.")])
     firstname = models.CharField(max_length=40)#
     middlename = models.CharField(max_length=40)#
     lastname = models.CharField(max_length=40)#
-    email = models.EmailField(blank=True, null=True, unique=True)#
-    created = models.DateTimeField(auto_now_add=True)#
-
-    # personal info
     birth_date = models.DateField(blank=True, null=True)#
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=6, blank=True, null=True)#
     mobile_number = models.CharField(max_length=11, blank=True, null=True)#
     barangay = models.CharField(max_length=30, blank=True, null=True)#
     municipality = models.CharField(max_length=30, blank=True, null=True)#
     province = models.CharField(max_length=30, blank=True, null=True)#
+    # gender = models.CharField(choices=GENDER_CHOICES, max_length=6, blank=True, null=True)#
 
     # primary info
-    biometric_id = models.ImageField()
-    department = models.ForeignKey(Department, models.SET_NULL, blank=True, null=True)#
-    designation = models.ForeignKey(Designation, models.SET_NULL, blank=True, null=True)#
-    # reportsTo = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)# SETTINGS
+    id_picture = models.ImageField()
+    position = models.ForeignKey(Position, models.SET_NULL, blank=True, null=True)#
     date_employed = models.DateField(blank=True, null=True)
+    # reportsTo = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)# SETTINGS
+    # department = models.ForeignKey(Department, models.SET_NULL, blank=True, null=True)#
     # employment_status = models.CharField(max_length=8, default="active")
+
+    #license info
+    license_no = models.CharField(max_length=50, blank=True, null=True)
+    registration_date = models.DateField(blank=True, null=True)
+    expiration_date = models.DateField(blank=True, null=True)
 
     class Meta:
         db_table = 'employees'
