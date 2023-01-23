@@ -15,10 +15,10 @@ urlpatterns = [
     # path('department/update/<str:pk>/', update_dept, name='update_dept'),
     # path('department/delete/<str:pk>/', delete_dept, name='delete_dept'),
 
-    # path('designation/', designation, name='designation'),
-    # path('designation/create/', create_desig, name='create_desig'),
-    # path('designation/update/<str:pk>/', update_desig, name='update_desig'),
-    # path('designation/delete/<str:pk>/', delete_desig, name='delete_desig'),
+    path('position/', position, name='position'),
+    path('position/create/', create_position, name='create_position'),
+    path('position/update/<str:pk>/', update_position, name='update_position'),
+    path('position/delete/<str:pk>/', delete_position, name='delete_position'),
 
     path('schedule/', schedule, name='schedule'),
     path('schedule/create', create_sched, name='create_sched'),

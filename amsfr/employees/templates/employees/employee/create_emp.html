@@ -49,7 +49,8 @@
                 </div>
                 <div class="input-field col s4">
                     {{form.position.errors}}
-                    {{form.position.label_tag}}
+                    <label style="position:absolute; top: -28px;" for={{form.position.id_for_label}}>{{form.position.label}}:</label>
+                    {% comment %} {{form.position.label_tag}} {% endcomment %}
                     {{form.position}}
                 </div>
             </div>
@@ -91,6 +92,11 @@
                     {{form.date_employed.label_tag}}
                     {{form.date_employed}}
                 </div>
+            </div>
+            <div class="">
+                <blockquote>
+                    <span><b>Note: If licensed, kindly fill out the form below. Otherwise, leave it blank.</b></span>
+                </blockquote>
             </div>
             <div class="row">
                 <div class="input-field col s4">

@@ -60,7 +60,7 @@ class Employee(models.Model):
     # gender = models.CharField(choices=GENDER_CHOICES, max_length=6, blank=True, null=True)#
 
     # primary info
-    id_picture = models.ImageField()
+    id_picture = models.ImageField(verbose_name="Picture ID")
     position = models.ForeignKey(Position, models.SET_NULL, blank=True, null=True)#
     date_employed = models.DateField(blank=True, null=True)
     # reportsTo = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)# SETTINGS
@@ -90,6 +90,12 @@ class Attendance(models.Model):
 
     class Meta:
         db_table = 'attendance'
+
+class Threshold(models.Model):
+    threshold = models.TimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'threshold'
 
 class Holiday(models.Model):
     holiday = models.CharField(max_length=50)

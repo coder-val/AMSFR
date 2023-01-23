@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Position{% endblock title %}
+{% block heading %}Position{% endblock heading %}
+    
+{% block content %}
+<div class="row">
+    <table class="highlight centered hoverable responsive-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        </tbody>
+            {% for position in positions %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{position.name}}</td>
+                <td>
+                    <a href="{% url 'update_position' position.id %}" class="btn-floating waves-effect waves-light amber accent-4 tooltipped-b" data-position="left" data-tooltip="edit" alt="edit"><i class="material-icons">edit</i></a>
+                    <a href="{% url 'delete_position' position.id %}" class="btn-floating waves-effect waves-light red tooltipped-r" data-position="right" data-tooltip="delete" alt="delete"><i class="material-icons">delete</i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if not positions %}
+    <p class="center">No entries yet.</p>
+    {% endif %}
+</div>
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'create_position' %}" data-position="left" data-tooltip="create">
+      <i class="large material-icons">add</i>
+    </a>
+</div>
+{% endblock content %}

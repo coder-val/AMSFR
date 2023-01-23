@@ -2,10 +2,10 @@
 <div class="row">
     <h4><b>IN</b></h4>
     <div style="display: flex; gap: 1rem;">
-        {% for inside in insides%}
+        {% for inside in insides %}
         <div>
-            <img src="{{inside.reference.biometric_id.url}}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width="120">
-            <p style="text-align: center;">{{inside.employee_id|cut:"400392-"}}</p>
+            <img src="{{inside.reference.id_picture.url}}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width="100">
+            <p style="text-align: center"><b> {% if not inside.in_pm %}{{inside.in_am|time:"g:i:s A"}}{% else %}{{inside.in_pm|time:"g:i:s A"}}{% endif %} </b></p>
         </div>
         {% endfor %}
     </div>
@@ -13,10 +13,10 @@
     <h4><b>OUT</b></h4>
     
     <div style="display: flex; gap: 1rem;">
-        {% for outside in outsides%}
+        {% for outside in outsides %}
         <div>
-            <img src="{{outside.reference.biometric_id.url}}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width="120">
-            <p style="text-align: center;">{{outside.employee_id|cut:"400392-"}}</p>
+            <img src="{{outside.reference.id_picture.url}}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width="100">
+            <p style="text-align: center;"> <b> {% if not outside.out_pm %}{{outside.out_am|time:"g:i:s A"}}{% else %}{{outside.out_pm|time:"g:i:s A"}}{% endif %} </b></p>
         </div>
         {% endfor %}
     </div>

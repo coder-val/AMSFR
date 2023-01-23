@@ -27,3 +27,8 @@ class ScheduleForm(ModelForm):
         model = Schedule
         fields = '__all__'
         exclude = ['is_active']
+
+class ThresholdForm(ModelForm):
+    class Meta:
+        model = Threshold
+        fields = '__all__'

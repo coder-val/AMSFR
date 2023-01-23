@@ -44,7 +44,8 @@
                 </div>
                 <div class="input-field col s4">
                     {{form.position.errors}}
-                    {{form.position.label_tag}}
+                    <label style="position:absolute; top: -28px; font-size: 12px" for={{form.position.id_for_label}}>{{form.position.label}}:</label>
+                    {% comment %} {{form.position.label_tag}} {% endcomment %}
                     {{form.position}}
                 </div>
             </div>

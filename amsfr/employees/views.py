@@ -36,27 +36,31 @@ def home(request):
     sched = Schedule.objects.filter(is_active=True)
 
 
-    in_am = Schedule.objects.filter(is_active=True).values()[0]['in_am']
-    in_pm = Schedule.objects.filter(is_active=True).values()[0]['in_pm']
+    if sched:
+        in_am = convert_to_timedelta(Schedule.objects.filter(is_active=True).values()[0]['in_am'])
+        out_am = Schedule.objects.filter(is_active=True).values()[0]['out_am']
+        in_pm = convert_to_timedelta(Schedule.objects.filter(is_active=True).values()[0]['in_pm'])
+        out_pm = Schedule.objects.filter(is_active=True).values()[0]['out_pm']
+        threshold = dt.timedelta(minutes=30)
 
-    now_time = dt.datetime.now().time()
-    now_date = dt.datetime.now().date()
-    cut_off = now_time.replace(hour=23, minute=59, second=59, microsecond=0)
+        now_time = convert_to_timedelta(dt.datetime.now().time())
+        now_date = dt.datetime.now().date()
+        cut_off = dt.timedelta(hours=23, minutes=59, seconds=59, microseconds=0)
 
-    if now_time >= in_am and now_time < in_pm:
-        insides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=True, date=now_date).order_by('-in_am')
-        outsides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=False, date=now_date).order_by('-out_am') | Attendance.objects.filter(in_am__isnull=True, out_am__isnull=False, date=now_date).order_by('-out_am')
-        context = {'insides':insides, 'outsides':outsides}
+        if now_time >= dt.timedelta(hours=6) and now_time < in_pm:
+            insides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=True, date=now_date).order_by('-in_am')
+            outsides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=False, date=now_date).order_by('-out_am') | Attendance.objects.filter(in_am__isnull=True, out_am__isnull=False, date=now_date).order_by('-out_am')
+            context = {'insides':insides, 'outsides':outsides}
 
-    elif now_time >= in_pm and now_time < cut_off:
-        insides = Attendance.objects.filter(in_pm__isnull=False, out_pm__isnull=True, date=now_date).order_by('-in_pm')
-        outsides = Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=False, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=True, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=False, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=True, out_pm__isnull=False, date=now_date).order_by('-out_pm')
-        context = {'insides':insides, 'outsides':outsides}
+        elif now_time >= in_pm and now_time < cut_off:
+            insides = Attendance.objects.filter(in_pm__isnull=False, out_pm__isnull=True, date=now_date).order_by('-in_pm')
+            outsides = Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=False, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=True, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=False, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=True, out_pm__isnull=False, date=now_date).order_by('-out_pm')
+            context = {'insides':insides, 'outsides':outsides}
 
     if request.htmx:
         return render(request, 'employees/attendance.html', context)
     else:
-        context = {'employee':employee, 'sched':sched, 'insides':insides, 'outsides':outsides}
+        context = {'employee':employee, 'sched':sched}
         return render(request, template, context)
 
 def test(request):
@@ -143,54 +147,54 @@ def dashboard(request):
     return render(request, template, {'department': department})
 
 # DESIGNATION ################################################################
-# def designation(request):
-#     designations = Designation.objects.all()
-#     context = {'designations': designations}
-#     template = "employees/designation/designation.html"
-#     return render(request, template, context)
+def position(request):
+    positions = Position.objects.all()
+    context = {'positions': positions}
+    template = "employees/position/position.html"
+    return render(request, template, context)
 
-# def create_desig(request):
-#     context = {}
-#     form = DesignationForm()
-#     template = 'employees/designation/create_desig.html'
+def create_position(request):
+    context = {}
+    form = PositionForm()
+    template = 'employees/position/create_position.html'
 
-#     if request.method == 'POST':
-#         form = DesignationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             name = form.cleaned_data['name']
-#             messages.success(request, f'{name} added successfully!')
-#             return redirect('designation')
+    if request.method == 'POST':
+        form = PositionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            name = form.cleaned_data['name']
+            messages.success(request, f'{name} added successfully!')
+            return redirect('create_position')
 
-#     context = {'form' : form}
-#     return render(request, template, context)
+    context = {'form' : form}
+    return render(request, template, context)
 
-# def update_desig(request, pk):
-#     context = {}
-#     designation = Designation.objects.get(id=pk)
-#     desig_name = designation.name
-#     form = DesignationForm(instance=designation)
-#     template = 'employees/designation/update_desig.html'
-#     if request.method == 'POST':
-#         form = DesignationForm(request.POST, instance=designation)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, f'{desig_name} updated to {designation.name} successfully!')
-#             return redirect('designation')
+def update_position(request, pk):
+    context = {}
+    template = 'employees/position/update_position.html'
+    position = Position.objects.get(id=pk)
+    position_name = position.name
+    form = PositionForm(instance=position)
+    if request.method == 'POST':
+        form = PositionForm(request.POST, instance=position)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'{position_name} updated to {position.name} successfully!')
+            return redirect('position')
     
-#     context = {'form': form}
-#     return render(request, template, context)
+    context = {'form': form}
+    return render(request, template, context)
 
-# def delete_desig(request, pk):
-#     designation = Designation.objects.get(id=pk)
-#     template = 'employees/designation/delete_desig.html'
+def delete_position(request, pk):
+    position = Position.objects.get(id=pk)
+    template = 'employees/position/delete_position.html'
 
-#     if request.method == 'POST':
-#         designation.delete()
-#         messages.success(request, f'{designation.name} deleted successfully!')
-#         return redirect('designation')
+    if request.method == 'POST':
+        position.delete()
+        messages.success(request, f'{position.name} deleted successfully!')
+        return redirect('position')
     
-#     return render(request, template, {'designation': designation})
+    return render(request, template, {'position': position})
 
 # SCHEDULE #####################################################################
 def activate(request, pk):

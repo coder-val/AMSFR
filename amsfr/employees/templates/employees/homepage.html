@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}Attendance{% endblock title %}
-{% block heading %}Attendance threshold: <span style="text-decoration: underline; color: red">30 MINUTES{% endblock heading %}
+{% block heading %}Attendance{% endblock heading %}
 
 {% block content %}
 <div class="row">
@@ -18,23 +18,55 @@
             </div>
             <div class="col s6">
                 <div class="preloader-wrapper big active">
-                    <div class="spinner-layer spinner-blue-only">
-                        <div class="circle-clipper left">
-                            <div class="circle"></div>
-                        </div><div class="gap-patch">
-                            <div class="circle"></div>
-                        </div><div class="circle-clipper right">
-                            <div class="circle"></div>
-                        </div>
+                    <div class="spinner-layer spinner-blue">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
                     </div>
-                </div>
+              
+                    <div class="spinner-layer spinner-red">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
+              
+                    <div class="spinner-layer spinner-yellow">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
+              
+                    <div class="spinner-layer spinner-green">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
+                  </div>
             </div>
         </div>
         <div class="row" id="video" style="display: none">
-            <div class="col s12" style="height: 70vh; display: flex; align-items: center; justify-content: center;">
-                <img src="{% url 'test' %}" alt="" width="630">
+            <div class="col s12" style="display: flex; align-items: center; justify-content: center; margin-top: -1rem">
+                <img src="{% url 'test' %}" alt="" width="610">
             </div>
         </div>
+    </div>
+    <div class="col l6">
         {% if not employee %}
         <blockquote>
             <span><b>No registered employees yet. <a href="{% url 'employee' %}">Click here to register.</a></b></span>
@@ -45,9 +77,9 @@
             <span><b>No active schedule yet. <a href="{% url 'schedule' %}">Click here to activate.</a></b></span>
         </blockquote>
         {% endif %}
-    </div>
-    <div class="col l6" hx-get="{% url 'home' %}" hx-trigger="every 3s" hx-swap="innerHTML">
+        <div hx-get="{% url 'home' %}" hx-trigger="every 3s" hx-swap="innerHTML">
         {% include 'employees/attendance.html' %}
+        </div>
     </div>
 </div>
 <script>
