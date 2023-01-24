@@ -39,7 +39,7 @@
             <div class="col l6">
             {% for schedd in sched %}
             <blockquote>
-                <span><b>AM: {{schedd.in_am|time:"g:i A"}} - {{schedd.out_am|time:"g:i A"}}<br>PM: {{schedd.in_pm|time:"g:i A"}} - {{schedd.out_pm|time:"g:i A"}}<br>Threshold: <span style="text-decoration: underline; color: red">30 MINUTES </b></span>
+                <span><b>AM: {{schedd.in_am|time:"g:i A"}} - {{schedd.out_am|time:"g:i A"}}<br>PM: {{schedd.in_pm|time:"g:i A"}} - {{schedd.out_pm|time:"g:i A"}}<br>Threshold: <span style="text-decoration: underline; color: red"> {{threshold}} MINUTES </b></span>
             </blockquote>
             {% endfor %}
             </div>

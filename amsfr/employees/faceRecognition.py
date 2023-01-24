@@ -22,9 +22,9 @@ def checkFace(img):
     else:
         return True
 
-def checkImage(unregistered_img, id):
-    registered_path = os.path.join(settings.BASE_DIR, "static/registered")
-    registered_img = os.path.join(registered_path, f'{id}.jpg')
+def checkImage(unregistered_img, id_picture):
+    # registered_path = os.path.join(settings.BASE_DIR, "static/registered")
+    registered_img = os.path.join(settings.MEDIA_ROOT, id_picture)
 
     known_image = face_recognition.load_image_file(registered_img)
     unknown_image = face_recognition.load_image_file(unregistered_img)
@@ -45,7 +45,7 @@ def checkIfExist(image):
     images = []
     classNames = []
     myList = os.listdir(image_path)
-    print(myList)
+    # print(myList)
     
     for cl in myList:
         curImg = cv2.imread(f'{image_path}/{cl}')
@@ -65,13 +65,13 @@ def checkIfExist(image):
     facesCurFrame = face_recognition.face_locations(imgS)
 
     if not facesCurFrame:
-        winName = "Checking Image"
-        cv2.namedWindow(winName)
-        cv2.setWindowProperty(winName, cv2.WND_PROP_TOPMOST, 1)
-        cv2.putText(imgS, "NO FACE DETECTED!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 3)
-        cv2.imshow(winName, imgS)
-        cv2.waitKey(3000)
-        cv2.destroyAllWindows()
+        # winName = "Checking Image"
+        # cv2.namedWindow(winName)
+        # cv2.setWindowProperty(winName, cv2.WND_PROP_TOPMOST, 1)
+        # cv2.putText(imgS, "NO FACE DETECTED!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 3)
+        # cv2.imshow(winName, imgS)
+        # cv2.waitKey(3000)
+        # cv2.destroyAllWindows()
         return result
 
     encodesCurFrame = face_recognition.face_encodings(imgS, facesCurFrame)
@@ -83,12 +83,12 @@ def checkIfExist(image):
         y1, x2, y2, x1 = faceLoc
         # y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
         if len(images) == 0:
-            cv2.putText(imgS, "GOOD!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0), 3)
+            # cv2.putText(imgS, "GOOD!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0), 3)
             result = False
         
         elif matches[np.argmin(faceDis)] and (faceDis[np.argmin(faceDis)] < 0.5):
             # name = classNames[np.argmin(faceDis)].upper()
-            cv2.putText(imgS, "NO GOOD!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0, 0, 255), 3)
+            # cv2.putText(imgS, "NO GOOD!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0, 0, 255), 3)
             # print(name)
             # cv2.rectangle(imgS,(x1, y1), (x2, y2+50), (0, 255, 0), 2)
             # cv2.rectangle(imgS,(x1, y2), (x2, y2+50), (0, 255, 0), cv2.FILLED)
@@ -96,15 +96,15 @@ def checkIfExist(image):
             result = True
 
         else:
-            cv2.putText(imgS, "GOOD!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0), 3)
+            # cv2.putText(imgS, "GOOD!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0), 3)
             result = False
 
-    winName = "Checking Image"
-    cv2.namedWindow(winName)
-    cv2.setWindowProperty(winName, cv2.WND_PROP_TOPMOST, 1)
-    cv2.imshow(winName, imgS)
+    # winName = "Checking Image"
+    # cv2.namedWindow(winName)
+    # cv2.setWindowProperty(winName, cv2.WND_PROP_TOPMOST, 1)
+    # cv2.imshow(winName, imgS)
 
-    cv2.waitKey(3000)
+    # cv2.waitKey(3000)
     # time.sleep(5)
 
     # if cv2.waitKey(1) & 0xFF == ord('\x1B'):
@@ -112,7 +112,7 @@ def checkIfExist(image):
     # if cv2.getWindowProperty('Check Image', cv2.WND_PROP_VISIBLE) <1:
     #     break
     
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows()
     return result
 
 def face_recog(option):

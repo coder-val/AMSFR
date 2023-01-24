@@ -60,7 +60,7 @@
                   </div>
             </div>
         </div>
-        <div class="row" id="video" style="display: none">
+        <div class="row" id="video" style="display: none; pointer-events:none;user-drag:none;user-select:none">
             <div class="col s12" style="display: flex; align-items: center; justify-content: center; margin-top: -1rem">
                 <img src="{% url 'test' %}" alt="" width="610">
             </div>
@@ -77,7 +77,7 @@
             <span><b>No active schedule yet. <a href="{% url 'schedule' %}">Click here to activate.</a></b></span>
         </blockquote>
         {% endif %}
-        <div hx-get="{% url 'home' %}" hx-trigger="every 3s" hx-swap="innerHTML">
+        <div hx-get="{% url 'home' %}" hx-trigger="every 3s" hx-swap="innerHTML" style="pointer-events:none;user-drag:none;user-select:none">
         {% include 'employees/attendance.html' %}
         </div>
     </div>

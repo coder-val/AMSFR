@@ -34,6 +34,7 @@ def home(request):
 
     employee = Employee.objects.all().exists()
     sched = Schedule.objects.filter(is_active=True)
+    threshold = settings.THRESHOLD
 
 
     if sched:
@@ -41,7 +42,7 @@ def home(request):
         out_am = Schedule.objects.filter(is_active=True).values()[0]['out_am']
         in_pm = convert_to_timedelta(Schedule.objects.filter(is_active=True).values()[0]['in_pm'])
         out_pm = Schedule.objects.filter(is_active=True).values()[0]['out_pm']
-        threshold = dt.timedelta(minutes=30)
+        threshold = dt.timedelta(minutes=settings.THRESHOLD)
 
         now_time = convert_to_timedelta(dt.datetime.now().time())
         now_date = dt.datetime.now().date()
@@ -60,7 +61,7 @@ def home(request):
     if request.htmx:
         return render(request, 'employees/attendance.html', context)
     else:
-        context = {'employee':employee, 'sched':sched}
+        context = {'employee':employee, 'sched':sched, 'threshold':settings.THRESHOLD}
         return render(request, template, context)
 
 def test(request):
@@ -72,27 +73,6 @@ def dashboard(request):
     context = {}
     template = "employees/dashboard.html"
 
-    # emp_user = User.objects.filter(pk=12)[0].username
-    # # haha = emp_user.employee_set.all()
-    # print(emp_user)
-    
-    # print(emp_user.employee_set.all().filter(lastname="Cabitac").values_list())
-
-    # toggle = True
-
-    # school_id = "400392"
-    # dtn = dt.datetime.now().strftime("%Y")
-    # year = dtn[2:len(dtn)]
-    # id_prefix = f'{school_id}-{year}-'
-    # print(id_prefix)
-
-    # id = User.objects.get(id=2)
-    # id.delete()
-
-    # user = User.objects.create_user(f'{id_prefix}001', "", f'{id_prefix}001')
-    # user.save()
-    # emp = Employee.objects.create(user = user, id=id_prefix+"001", firstname = "Val", middlename = "Caccam", lastname = "Cabitac", gender="M", biometric_id = "awit.jpg")
-    # emp.save()
 
     return render(request, template, context)
 
@@ -348,11 +328,12 @@ def create_emp(request):
                 messages.warning(request, "Employee already registered!")
                 return render(request, template, {'form':form, 'id_num':id_num})
             elif test is False:
+                id_name = f'{id.split("-")[2]}-{lastname}, {firstname[0]}.'
                 user = User.objects.create_user(id, "", id)
-                register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
+                register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
                 user.save()
                 register.save()
-                new_image_path = os.path.join(settings.MEDIA_ROOT, f'registered/{id}.jpg')
+                new_image_path = os.path.join(settings.MEDIA_ROOT, f'registered/{id_name}.jpg')
                 os.rename(image_checking, new_image_path)
                 messages.success(request, f'Employee {id} registered successfully!')
                 form = EmployeeForm()
@@ -407,10 +388,10 @@ def update_photo(request, pk):
     template = 'employees/employee/update_photo.html'
 
     if request.method == 'POST':
-        biometric_id = request.FILES['biometric_id']
+        id_picture = request.FILES['id_picture']
         cbox = request.POST.get('cbox')
 
-        file_name = default_storage.save(biometric_id.name, biometric_id)
+        file_name = default_storage.save(id_picture.name, id_picture)
         image_path = os.path.join(settings.MEDIA_ROOT, file_name)
         path_to_unregistered = os.path.join(settings.MEDIA_ROOT, "unregistered")
         path_to_registered = os.path.join(settings.MEDIA_ROOT, "registered")
@@ -418,7 +399,8 @@ def update_photo(request, pk):
 
         shutil.move(image_path, path_to_unregistered)
 
-        registered_image = os.path.join(path_to_registered, f'{pk}.jpg')
+        # registered_image = os.path.join(path_to_registered, f'{pk}.jpg')
+        registered_image = os.path.join(settings.MEDIA_ROOT, str(emp_details[0].id_picture))
         if cbox is None:
             result = checkFace(image_checking)
 
@@ -432,7 +414,7 @@ def update_photo(request, pk):
                 os.remove(image_checking)
         
         else:
-            result = checkImage(image_checking, pk)
+            result = checkImage(image_checking, str(emp_details[0].id_picture))
             
             if result is False:
                 print("IMAGE NOT THE SAME")

@@ -1,5 +1,6 @@
 from .models import Attendance, Schedule, Employee
 import datetime
+from django.conf import settings
 
 def check_sched():
     check = Schedule.objects.filter(is_active=True)
@@ -47,7 +48,7 @@ def mark_attendance(name):
     time_now = datetime.datetime.now().time()
     date_now = datetime.datetime.now().date()
     td_time_now = datetime.timedelta(hours=time_now.hour, minutes=time_now.minute, seconds=time_now.second, microseconds=time_now.microsecond)
-    threshold = datetime.timedelta(minutes=30)
+    threshold = datetime.timedelta(minutes=settings.THRESHOLD)
 
     sched = Schedule.objects.filter(is_active=True).values()
 
