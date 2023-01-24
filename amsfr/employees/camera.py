@@ -10,7 +10,7 @@ import time
 class VideoCamera(object):
     def __init__(self):
         time.sleep(5)
-        self.video = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+        self.video = cv2.VideoCapture(settings.CAMERA, cv2.CAP_DSHOW)
         # self.video.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         # self.video.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     
@@ -41,12 +41,13 @@ class VideoCamera(object):
                 if matches[matchesIndex] and (faceDis[matchesIndex] < 0.5):
                     # name = classNames[matchesIndex].upper()
                     name = classNames[matchesIndex]
+                    print(name)
                     # cv2.rectangle(image,(x1, y1), (x2, y2+50), (0, 255, 0), 2)
                     # cv2.rectangle(image,(x1, y2), (x2, y2+50), (0, 255, 0), cv2.FILLED)
                     # cv2.putText(image, name[7:len(name)], (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0,255,0), 3)
-                    cv2.putText(image, name.upper(), (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0,255,0), 3)
+                    cv2.putText(image, name.split('-')[2].upper(), (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0,255,0), 3)
                     # mark_attendance(option, name)
-                    # mark_attendance(name)
+                    mark_attendance(name.split('_')[0])
 
                 else:
                     cv2.putText(image, "unknown".upper(), (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (255,255,255), 3)

@@ -31,18 +31,19 @@ def convert_time(time):
 def home(request):
     context = {}
     template = "employees/homepage.html"
+    partial_template = 'employees/attendance.html'
 
     employee = Employee.objects.all().exists()
     sched = Schedule.objects.filter(is_active=True)
-    threshold = settings.THRESHOLD
+    # threshold = settings.THRESHOLD
 
 
     if sched:
-        in_am = convert_to_timedelta(Schedule.objects.filter(is_active=True).values()[0]['in_am'])
-        out_am = Schedule.objects.filter(is_active=True).values()[0]['out_am']
+        # in_am = convert_to_timedelta(Schedule.objects.filter(is_active=True).values()[0]['in_am'])
+        # out_am = Schedule.objects.filter(is_active=True).values()[0]['out_am']
         in_pm = convert_to_timedelta(Schedule.objects.filter(is_active=True).values()[0]['in_pm'])
-        out_pm = Schedule.objects.filter(is_active=True).values()[0]['out_pm']
-        threshold = dt.timedelta(minutes=settings.THRESHOLD)
+        # out_pm = Schedule.objects.filter(is_active=True).values()[0]['out_pm']
+        # threshold = dt.timedelta(minutes=settings.THRESHOLD)
 
         now_time = convert_to_timedelta(dt.datetime.now().time())
         now_date = dt.datetime.now().date()
@@ -59,7 +60,7 @@ def home(request):
             context = {'insides':insides, 'outsides':outsides}
 
     if request.htmx:
-        return render(request, 'employees/attendance.html', context)
+        return render(request, partial_template, context)
     else:
         context = {'employee':employee, 'sched':sched, 'threshold':settings.THRESHOLD}
         return render(request, template, context)
@@ -328,7 +329,7 @@ def create_emp(request):
                 messages.warning(request, "Employee already registered!")
                 return render(request, template, {'form':form, 'id_num':id_num})
             elif test is False:
-                id_name = f'{id.split("-")[2]}-{lastname}, {firstname[0]}.'
+                id_name = f'{id}_{lastname}, {firstname[0]}.'
                 user = User.objects.create_user(id, "", id)
                 register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
                 user.save()

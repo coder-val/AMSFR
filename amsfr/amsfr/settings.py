@@ -139,7 +139,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static')
 
-LOGIN_URL = "login/"
+LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/"
 
 THRESHOLD = 5 #MINUTES
+CAMERA = 0
