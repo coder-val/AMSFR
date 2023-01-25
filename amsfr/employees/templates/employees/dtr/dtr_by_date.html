@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}DTR BY DATE{% endblock title %}
+{% block heading %}DTR BY DATE{% endblock heading %}
+
+{% block content %}
+<div class="row">
+    <table class="highlight centered hoverable responsive-table">
+        <thead>
+            <tr>
+                <th>date</th>
+                <th>No. Attendance</th>
+                <th>No. Absences</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% include 'employees/partials/dtr_by_date.html' %}
+        </tbody>
+        
+    </table>
+</div>
+
+{% endblock content %}

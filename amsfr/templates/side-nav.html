@@ -1,9 +1,9 @@
 {% block nav %}
 <div class="navibar hide-on-med-and-down">
     <ul>
-        <li><a href="{% url 'home' %}" class="nav-link f waves-effect waves-light">
-            <i class="fas fa-solid fa-clock"></i>
-            <span class="nav-item">Attendance</span>
+        <li><a href="{% url 'schedule' %}" class="nav-link f waves-effect waves-light">
+            <i class="fas fa-solid fa-gear"></i>
+            <span class="nav-item">Settings</span>
         </a></li>
         <li><a href="{% url 'employee' %}" class="nav-link waves-effect waves-light">
             <i class="fas fa-solid fa-users"></i>
@@ -17,9 +17,9 @@
             <i class="fas fa-solid fa-briefcase"></i>
             <span class="nav-item">Positions</span>
         </a></li>
-        <li><a href="{% url 'schedule' %}" class="nav-link waves-effect waves-light">
-            <i class="fas fa-solid fa-gear"></i>
-            <span class="nav-item">Settings</span>
+        <li><a href="{% url 'dtr_by_date' %}" class="nav-link waves-effect waves-light">
+            <i class="fas fa-solid fa-clock"></i>
+            <span class="nav-item">DTR</span>
         </a></li>
     </ul>
 </div>

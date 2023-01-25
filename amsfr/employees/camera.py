@@ -41,11 +41,11 @@ class VideoCamera(object):
                 if matches[matchesIndex] and (faceDis[matchesIndex] < 0.5):
                     # name = classNames[matchesIndex].upper()
                     name = classNames[matchesIndex]
-                    print(name)
+                    # print(name)
                     # cv2.rectangle(image,(x1, y1), (x2, y2+50), (0, 255, 0), 2)
                     # cv2.rectangle(image,(x1, y2), (x2, y2+50), (0, 255, 0), cv2.FILLED)
                     # cv2.putText(image, name[7:len(name)], (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0,255,0), 3)
-                    cv2.putText(image, name.split('-')[2].upper(), (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0,255,0), 3)
+                    cv2.putText(image, name.split('-')[2].upper(), (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.2, (0,255,0), 3)
                     # mark_attendance(option, name)
                     mark_attendance(name.split('_')[0])
 

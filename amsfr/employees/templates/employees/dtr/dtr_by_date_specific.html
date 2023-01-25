@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}DTR BY DATE{% endblock title %}
+{% block heading %}{{date}}{% endblock heading %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>IN<br>AM</th>
+            <th>OUT<br>AM</th>
+            <th>IN<br>PM</th>
+            <th>OUT<br>PM</th>
+            <th>REMARKS</th>
+            <th>UNDERTIME</th>
+            <th>OVERTIME</th>
+            <th>MINUTES<br>WORKED</th>
+            <th>ACTIONS</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log, ut, ot, min in logs %}
+        <tr>
+            <td> {{log.employee_id|cut:"400392-"}} </td>
+            <td> {{log.reference.lastname}}, {{log.reference.firstname}} {{log.reference.middlename}} </td>
+            <td> {% if log.in_am %}{{log.in_am|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+            <td> {% if log.out_am %}{{log.out_am|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+            <td> {% if log.in_pm %}{{log.in_pm|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+            <td> {% if log.out_pm %}{{log.out_pm|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+            <td> {{log.remarks}} </td>
+            <td> {% if min and ut %}{{ut}}{% else %}-{% endif %} </td>
+            <td> {% if min and ot %}{{ot}}{% else %}-{% endif %} </td>
+            <td> {% if min %}{{min}}{% else %}-{% endif %} </td>
+            <td>eme</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'dtr_by_date' %}" data-position="left" data-tooltip="back">
+      <i class="large material-icons">arrow_back</i>
+    </a>
+</div>
+{% endblock content %}

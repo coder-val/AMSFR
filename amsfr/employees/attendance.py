@@ -41,13 +41,44 @@ def checkpoint_out_pm():
         return False
 
 def convert_to_timedelta(time):
-    td_time = datetime.timedelta(hours=time.hour, minutes=time.minute, seconds=time.second, microseconds=time.microsecond)
+    td_time = datetime.timedelta(hours=time.hour, minutes=time.minute, seconds=time.second)
     return td_time
+
+def convert_to_timedelta_2(time):
+    td_time = datetime.timedelta(hours=time.hour, minutes=time.minute, seconds=time.second)
+    return td_time
+
+# def check_ut_or_ot(time):
+#     result = 0
+#     if time < 480:
+#         result = 480 - time
+#     elif time > 480:
+#         result = time - 480
+#     return result
+
+def convert_time_to_minutes(time):
+    s_time = str(time).split(':')
+    c_time = int(s_time[0])*60 + int(s_time[1]) + int(s_time[2])/60
+    return int(c_time)
+
+def calc_minutes_worked(in_am, out_am, in_pm, out_pm):
+    if in_am and out_am:
+        am_time = convert_to_timedelta_2(out_am) - convert_to_timedelta_2(in_am)
+    else:
+        am_time = datetime.timedelta(hours=0, minutes=0, seconds=0)
+
+    if in_pm and out_pm:
+        pm_time = convert_to_timedelta_2(out_pm) - convert_to_timedelta_2(in_pm)
+    else:
+        pm_time = datetime.timedelta(hours=0, minutes=0, seconds=0)
+
+    calc = am_time + pm_time
+    return calc
 
 def mark_attendance(name):
     time_now = datetime.datetime.now().time()
     date_now = datetime.datetime.now().date()
-    td_time_now = datetime.timedelta(hours=time_now.hour, minutes=time_now.minute, seconds=time_now.second, microseconds=time_now.microsecond)
+    td_time_now = datetime.timedelta(hours=time_now.hour, minutes=time_now.minute, seconds=time_now.second)
     threshold = datetime.timedelta(minutes=settings.THRESHOLD)
 
     sched = Schedule.objects.filter(is_active=True).values()

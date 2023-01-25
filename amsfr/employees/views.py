@@ -13,7 +13,7 @@ from .attendance import *
 import datetime as dt
 import shutil, os
 from workalendar.asia import Philippines
-# import pandas as pd
+import pandas as pd
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import StreamingHttpResponse, HttpResponse
@@ -74,6 +74,78 @@ def dashboard(request):
     context = {}
     template = "employees/dashboard.html"
 
+    logs = Attendance.objects.filter(date="2023-01-01")
+    if logs[0].in_am and logs[0].out_am:
+        print(True)
+    else:
+        print(False)
+
+    
+    # qs = Attendance.objects.filter(employee_id='400392-23-001', date__gte='2023-01-01', date__lte='2023-01-05').values_list('employee_id', 'in_am', 'out_am', 'in_pm', 'out_pm', 'remarks')
+    # print(qs.count())
+    # df = pd.DataFrame(list(qs), columns=['employee_id', 'in_am', 'out_am', 'in_pm', 'out_pm', 'remarks'])
+    # print(df)
+
+    # holidays = [Holiday(date=x[0], holiday=x[1]) for x in holiday_list if not Holiday.objects.filter(holiday=x[1]).exists()]
+    # Holiday.objects.bulk_create(holidays)
+
+    return render(request, template, context)
+
+def dtr_by_date(request):
+    context = {}
+    template = 'employees/dtr/dtr_by_date.html'
+
+    # p = Paginator(employees, 10)
+    # page_number = request.GET.get('page')
+    # p_employees = p.get_page(page_number)
+    # context = {'employees': p_employees}
+
+    total = Employee.objects.count()
+    dates = Attendance.objects.values_list('date', flat=True).distinct().filter(date__month=dt.datetime.now().date().month).order_by('date')
+    p = Paginator(dates, per_page=5, orphans=1)
+    page_number = request.GET.get('page')
+    p_dates = p.get_page(page_number)
+    present = []
+    absent = []
+    for x in dates:
+        p = Attendance.objects.filter(date=x).count()
+        a = total - p
+        present.append(p)
+        absent.append(a)
+    items = zip(p_dates,present,absent)
+    context = {'dates':items, 'p_dates':p_dates}
+    if request.htmx:
+        return render(request, 'employees/partials/dtr_by_date.html', context)
+    return render(request, template, context)
+
+def dtr_specific_date(request, date):
+    context = {}
+    template = 'employees/dtr/dtr_by_date_specific.html'
+
+    d = date.split('-')
+    date = dt.date(year=int(d[0]),month=int(d[1]), day=int(d[2]))
+
+    logs = Attendance.objects.filter(date=date)
+    minutes_worked = []
+    undertime = []
+    overtime = []
+    for x in range(logs.count()):
+        calc = calc_minutes_worked(logs[x].in_am, logs[x].out_am, logs[x].in_pm, logs[x].out_pm)
+        mins = convert_time_to_minutes(calc)
+        minutes_worked.append(mins)
+        if mins < 480:
+            undertime.append(480 - mins)
+            overtime.append("")
+        elif mins > 480:
+            overtime.append(mins - 480)
+            undertime.append("")
+        else:
+            undertime.append("")
+            overtime.append("")
+    
+    sets = zip(logs, undertime, overtime, minutes_worked)
+    # print(int(convert_time_to_minutes(str(calc))))
+    context = {'logs':sets, 'date':date}
 
     return render(request, template, context)
 
@@ -85,47 +157,47 @@ def dashboard(request):
 #     return render(request, template, context)
 
 # def create_dept(request):
-    context = {}
-    form = DepartmentForm()
-    template = 'employees/department/create_dept.html'
+    # context = {}
+    # form = DepartmentForm()
+    # template = 'employees/department/create_dept.html'
 
-    if request.method == 'POST':
-        form = DepartmentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            name = form.cleaned_data['name']
-            messages.success(request, f'{name} added successfully!')
-            return redirect('create_dept')
+    # if request.method == 'POST':
+    #     form = DepartmentForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         name = form.cleaned_data['name']
+    #         messages.success(request, f'{name} added successfully!')
+    #         return redirect('create_dept')
 
-    context = {'form' : form}
-    return render(request, template, context)
+    # context = {'form' : form}
+    # return render(request, template, context)
 
 # def update_dept(request, pk):
-    context = {}
-    department = Department.objects.get(id=pk)
-    dept_name = department.name
-    form = DepartmentForm(instance=department)
-    template = 'employees/department/update_dept.html'
-    if request.method == 'POST':
-        form = DepartmentForm(request.POST, instance=department)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f'{dept_name} updated to {department.name} successfully!')
-            return redirect('department')
+    # context = {}
+    # department = Department.objects.get(id=pk)
+    # dept_name = department.name
+    # form = DepartmentForm(instance=department)
+    # template = 'employees/department/update_dept.html'
+    # if request.method == 'POST':
+    #     form = DepartmentForm(request.POST, instance=department)
+    #     if form.is_valid():
+    #         form.save()
+    #         messages.success(request, f'{dept_name} updated to {department.name} successfully!')
+    #         return redirect('department')
     
-    context = {'form': form}
-    return render(request, template, context)
+    # context = {'form': form}
+    # return render(request, template, context)
 
 # def delete_dept(request, pk):
-    department = Department.objects.get(id=pk)
-    template = 'employees/department/delete_dept.html'
+    # department = Department.objects.get(id=pk)
+    # template = 'employees/department/delete_dept.html'
 
-    if request.method == 'POST':
-        department.delete()
-        messages.success(request, f'{department.name} deleted successfully!')
-        return redirect('department')
+    # if request.method == 'POST':
+    #     department.delete()
+    #     messages.success(request, f'{department.name} deleted successfully!')
+    #     return redirect('department')
     
-    return render(request, template, {'department': department})
+    # return render(request, template, {'department': department})
 
 # DESIGNATION ################################################################
 def position(request):
@@ -264,6 +336,13 @@ def employee(request):
     template = "employees/employee/employee.html"
     return render(request, template, context)
 
+def view_emp(request, pk):
+    emp_details = Employee.objects.filter(id=pk)
+    id = emp_details[0].id
+    context = {'emp_details': emp_details, 'emp_id':id}
+    template = 'employees/employee/view_emp.html'
+    return render(request, template, context)
+
 def create_emp(request):
     context = {}
     form = EmployeeForm()
@@ -349,13 +428,6 @@ def create_emp(request):
             # return redirect('employee')
 
     context = {'form' : form, 'id_num':id_num}
-    return render(request, template, context)
-
-def view_emp(request, pk):
-    emp_details = Employee.objects.filter(id=pk)
-    id = emp_details[0].id
-    context = {'emp_details': emp_details, 'emp_id':id}
-    template = 'employees/employee/view_emp.html'
     return render(request, template, context)
 
 def update_emp(request, pk):

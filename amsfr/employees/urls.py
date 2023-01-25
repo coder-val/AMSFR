@@ -38,6 +38,9 @@ urlpatterns = [
     path('employee/update_photo/<str:pk>/', update_photo, name='update_photo'),
     path('employee/delete/<str:pk>/', delete_emp, name='delete_emp'),
 
+    path('dtr/dtr_by_date/', dtr_by_date, name="dtr_by_date"),
+    path('dtr/dtr_by_date/<str:date>/', dtr_specific_date, name="dtr_specific_date"),
+
     path('attendance/', attendance, name='attendance'),
     path('attendance/in_am', in_am, name='in_am'),
     path('attendance/out_am', out_am, name='out_am'),

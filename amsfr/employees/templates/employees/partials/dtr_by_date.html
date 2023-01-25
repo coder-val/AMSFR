@@ -1,0 +1,18 @@
+{% load static %}
+{% for date, present, absent in dates %}
+<tr>
+    <td> {{date}} </td>
+    <td> {{present}} </td>
+    <td> {{absent}} </td>
+    <td><a href="{% url 'dtr_specific_date' date %} "><i class="material-icons">list</i></a></td>
+</tr>
+{% endfor %}
+<tr id="load-more">
+    <td>
+        <button 
+        hx-get="{% url 'dtr_by_date' %}?page=2"
+        hx-target="#load-more"
+        hx-swap="outerHTML"
+        >Load More</button>
+    </td>
+</tr>
