@@ -74,13 +74,6 @@ def dashboard(request):
     context = {}
     template = "employees/dashboard.html"
 
-    logs = Attendance.objects.filter(date="2023-01-01")
-    if logs[0].in_am and logs[0].out_am:
-        print(True)
-    else:
-        print(False)
-
-    
     # qs = Attendance.objects.filter(employee_id='400392-23-001', date__gte='2023-01-01', date__lte='2023-01-05').values_list('employee_id', 'in_am', 'out_am', 'in_pm', 'out_pm', 'remarks')
     # print(qs.count())
     # df = pd.DataFrame(list(qs), columns=['employee_id', 'in_am', 'out_am', 'in_pm', 'out_pm', 'remarks'])
