@@ -74,37 +74,18 @@ def dashboard(request):
     context = {}
     template = "employees/dashboard.html"
 
-    logs = Attendance.objects.filter(date="2023-01-01")
-    if logs[0].in_am and logs[0].out_am:
-        print(True)
-    else:
-        print(False)
-
-    
-    # qs = Attendance.objects.filter(employee_id='400392-23-001', date__gte='2023-01-01', date__lte='2023-01-05').values_list('employee_id', 'in_am', 'out_am', 'in_pm', 'out_pm', 'remarks')
-    # print(qs.count())
-    # df = pd.DataFrame(list(qs), columns=['employee_id', 'in_am', 'out_am', 'in_pm', 'out_pm', 'remarks'])
-    # print(df)
-
-    # holidays = [Holiday(date=x[0], holiday=x[1]) for x in holiday_list if not Holiday.objects.filter(holiday=x[1]).exists()]
-    # Holiday.objects.bulk_create(holidays)
-
     return render(request, template, context)
 
 def dtr_by_date(request):
     context = {}
     template = 'employees/dtr/dtr_by_date.html'
 
-    # p = Paginator(employees, 10)
-    # page_number = request.GET.get('page')
-    # p_employees = p.get_page(page_number)
-    # context = {'employees': p_employees}
-
     total = Employee.objects.count()
-    dates = Attendance.objects.values_list('date', flat=True).distinct().filter(date__month=dt.datetime.now().date().month).order_by('date')
-    p = Paginator(dates, per_page=5, orphans=1)
-    page_number = request.GET.get('page')
-    p_dates = p.get_page(page_number)
+    # dates = Attendance.objects.values_list('date', flat=True).order_by('-date').distinct().filter(date__month=dt.datetime.now().date().month)
+    dates = Attendance.objects.values_list('date', flat=True).order_by('-date').distinct()
+    # p = Paginator(dates, per_page=5, orphans=1)
+    # page_number = request.GET.get('page')
+    # p_dates = p.get_page(page_number)
     present = []
     absent = []
     for x in dates:
@@ -112,10 +93,10 @@ def dtr_by_date(request):
         a = total - p
         present.append(p)
         absent.append(a)
-    items = zip(p_dates,present,absent)
-    context = {'dates':items, 'p_dates':p_dates}
-    if request.htmx:
-        return render(request, 'employees/partials/dtr_by_date.html', context)
+    items = zip(dates,present,absent)
+    context = {'dates':items}
+    # if request.htmx:
+    #     return render(request, 'employees/partials/dtr_by_date.html', context)
     return render(request, template, context)
 
 def dtr_specific_date(request, date):
@@ -125,7 +106,7 @@ def dtr_specific_date(request, date):
     d = date.split('-')
     date = dt.date(year=int(d[0]),month=int(d[1]), day=int(d[2]))
 
-    logs = Attendance.objects.filter(date=date)
+    logs = Attendance.objects.filter(date=date).order_by('reference__lastname')
     minutes_worked = []
     undertime = []
     overtime = []
@@ -146,6 +127,15 @@ def dtr_specific_date(request, date):
     sets = zip(logs, undertime, overtime, minutes_worked)
     # print(int(convert_time_to_minutes(str(calc))))
     context = {'logs':sets, 'date':date}
+
+    return render(request, template, context)
+
+def dtr_by_employee(request):
+    context = {}
+    template = 'employees/dtr/dtr_by_employee.html'
+
+    emp_id = Employee.objects.filter(attendance__id=90)
+    print(emp_id[1])
 
     return render(request, template, context)
 

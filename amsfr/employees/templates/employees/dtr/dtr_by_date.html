@@ -15,7 +15,14 @@
             </tr>
         </thead>
         <tbody>
-            {% include 'employees/partials/dtr_by_date.html' %}
+            {% for date, present, absent in dates %}
+            <tr>
+                <td> {{date}} </td>
+                <td> {{present}} </td>
+                <td> {{absent}} </td>
+                <td><a href="{% url 'dtr_specific_date' date %} "><i class="material-icons">list</i></a></td>
+            </tr>
+            {% endfor %}
         </tbody>
         
     </table>
