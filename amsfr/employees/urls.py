@@ -40,6 +40,7 @@ urlpatterns = [
 
     path('dtr/dtr_by_date/', dtr_by_date, name="dtr_by_date"),
     path('dtr/dtr_by_date/<str:date>/', dtr_specific_date, name="dtr_specific_date"),
+    path('dtr/dtr_by_employee/', dtr_by_employee, name="dtr_by_employee"),
 
     path('attendance/', attendance, name='attendance'),
     path('attendance/in_am', in_am, name='in_am'),
