@@ -74,6 +74,6 @@ body {
     background: #eee;
 }
 .navibar:hover{
-    width: 220px;
-    transition: all 0.5s ease;
+    width: 235px;
+    transition: all 0.2s ease;
 }

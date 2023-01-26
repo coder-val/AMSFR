@@ -11,23 +11,25 @@
                 <th>NAME</th>
                 <th>DAYS<br>WORKED</th>
                 <th>ABSENTS</th>
-                <th>LATE</th>
+                <th>LATES</th>
                 <th>UNDERTIME</th>
                 <th>OVERTIME</th>
                 <th>DETAILS</th>
             </tr>
         </thead>
         <tbody>
+            {% for employee, days, absents, lates, ut, ot in employees %}
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td> {{employee.id|cut:"400392-"}} </td>
+                <td> {{employee.lastname}}, {{employee.firstname}} {{employee.middlename}} </td>
+                <td> {{days}} </td>
+                <td> {{absents}} </td>
+                <td> {{lates}} </td>
+                <td> {{ut}} </td>
+                <td> {{ot}} </td>
+                <td><a href="{% url 'dtr_specific_employee' employee.id %}"><i class="material-icons">list</i></a></td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>

@@ -73,22 +73,6 @@ def test(request):
 def dashboard(request):
     context = {}
     template = "employees/dashboard.html"
-
-    logs = Attendance.objects.filter(date="2023-01-01")
-    if logs[0].in_am and logs[0].out_am:
-        print(True)
-    else:
-        print(False)
-
-    
-    # qs = Attendance.objects.filter(employee_id='400392-23-001', date__gte='2023-01-01', date__lte='2023-01-05').values_list('employee_id', 'in_am', 'out_am', 'in_pm', 'out_pm', 'remarks')
-    # print(qs.count())
-    # df = pd.DataFrame(list(qs), columns=['employee_id', 'in_am', 'out_am', 'in_pm', 'out_pm', 'remarks'])
-    # print(df)
-
-    # holidays = [Holiday(date=x[0], holiday=x[1]) for x in holiday_list if not Holiday.objects.filter(holiday=x[1]).exists()]
-    # Holiday.objects.bulk_create(holidays)
-
     return render(request, template, context)
 
 def dtr_by_date(request):
@@ -149,11 +133,77 @@ def dtr_by_employee(request):
     context = {}
     template = 'employees/dtr/dtr_by_employee.html'
 
-    emp_id = Employee.objects.filter(attendance__id=90)
-    print(emp_id[1])
+    # emp_id = Employee.objects.filter(attendance__id=90)
+    # print(emp_id[1])
+    employees = Employee.objects.all().order_by('lastname')
+    daysWorked = []
+    absents = []
+    lates = []
+    undertime = []
+    overtime = []
+    # total_hours = 0
+    
+    for x in range(employees.count()):
+        attendance_list = Attendance.objects.all()
+        days_worked = attendance_list.filter(employee_id=employees[x], remarks="P") | attendance_list.filter(employee_id=employees[x], remarks="L")
+        absent = attendance_list.values_list('date').distinct().count() - days_worked.count()
+        late = attendance_list.filter(employee_id=employees[x], remarks="L").count()
+        logs = attendance_list.filter(employee_id=employees[x])
+        ut_count = 0
+        ot_count = 0
+        for y in range(logs.count()):
+            calc = calc_minutes_worked(logs[y].in_am, logs[y].out_am, logs[y].in_pm, logs[y].out_pm)
+            mins = convert_time_to_minutes(calc)
+            if mins < 480:
+                # undertime.append(480 - mins)
+                ut_count+=1
+            elif mins > 480:
+                # overtime.append(mins - 480)
+                ot_count+=1
+
+        daysWorked.append(days_worked.count())
+        absents.append(absent)
+        lates.append(late)
+        undertime.append(ut_count)
+        overtime.append(ot_count)
+
+    # print(round(total_hours/60, 2))
+    # print(total_hours)
+    sets = zip(employees,daysWorked,absents,lates,undertime,overtime)
+    context = {'employees':sets}
 
     return render(request, template, context)
 
+def dtr_specific_employee(request, pk):
+    context = {}
+    template = 'employees/dtr/dtr_by_employee_specific.html'
+
+    minutes_worked = []
+    undertime = []
+    overtime = []
+    total_hours = 0
+
+    emp_name = Employee.objects.filter(id=pk)
+    emp_logs = Attendance.objects.filter(employee_id=pk).order_by('-date')
+    for x in range(emp_logs.count()):
+        calc = calc_minutes_worked(emp_logs[x].in_am, emp_logs[x].out_am, emp_logs[x].in_pm, emp_logs[x].out_pm)
+        mins = convert_time_to_minutes(calc)
+        minutes_worked.append(mins)
+        if mins < 480:
+            undertime.append(480 - mins)
+            overtime.append("")
+        elif mins > 480:
+            overtime.append(mins - 480)
+            undertime.append("")
+        else:
+            undertime.append("")
+            overtime.append("")
+
+        total_hours+=mins
+    sets = zip(emp_logs, undertime, overtime, minutes_worked)
+    
+    context = {'employee':emp_name, 'logs':sets, 'total':round(total_hours/60, 2)}
+    return render(request, template, context)
 # DEPARTMENT ################################################################
 # def department(request):
 #     departments = Department.objects.all()

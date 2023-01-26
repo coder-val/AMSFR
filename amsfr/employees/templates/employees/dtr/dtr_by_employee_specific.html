@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}DTR BY EMPLOYEE{% endblock title %}
+{% block heading %}{% for name in employee %}{{name.lastname}}, {{name.firstname}} {{name.middlename.0|add:"."}}{% endfor %}<span style="font-size: 1.5rem; margin-left:1rem" class="green accent-1"> {{total}} hours </span>{% endblock heading %}
+
+{% block content %}
+<div class="row">
+    
+</div>
+<div class="row">
+    <table class="highlight centered hoverable responsive-table">
+        <thead>
+            <tr>
+                <th>DAY</th>
+                <th>DATE</th>
+                <th>IN<br>AM</th>
+                <th>OUT<br>AM</th>
+                <th>IN<br>PM</th>
+                <th>OUT<br>PM</th>
+                <th>REMARKS</th>
+                <th>UNDERTIME</th>
+                <th>OVERTIME</th>
+                <th>MINUTES<br>WORKED</th>
+                <th>ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log, ut, ot, min in logs %}
+            {% if log.date|date:"D" == "Sun" %}
+            <tr class="yellow lighten-4">
+            {% else %}
+            <tr>
+            {% endif %}
+                <td> {{log.date|date:"D"}} </td>
+                <td> {{log.date|date:"SHORT_DATE_FORMAT"}} </td>
+                <td> {% if log.in_am %}{{log.in_am|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+                <td> {% if log.out_am %}{{log.out_am|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+                <td> {% if log.in_pm %}{{log.in_pm|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+                <td> {% if log.out_pm %}{{log.out_pm|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+                <td> {{log.remarks}} </td>
+                <td> {% if min and ut %}{{ut}}{% else %}-{% endif %} </td>
+                <td> {% if min and ot %}{{ot}}{% else %}-{% endif %} </td>
+                <td> {% if min %}{{min}}{% else %}-{% endif %} </td>
+                <td>eme</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'dtr_by_employee' %}" data-position="left" data-tooltip="back">
+      <i class="large material-icons">arrow_back</i>
+    </a>
+</div>
+{% endblock content %}
