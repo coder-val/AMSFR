@@ -3,23 +3,47 @@
 {% block heading %}DTR BY DATE{% endblock heading %}
 
 {% block content %}
+<div class="row right">
+    <div class="col" style="display: flex; align-items:center; justify-content:center; gap:1rem">
+        <span><b>restday</b></span>
+        <span class="yellow lighten-4 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
+    </div>
+    <div class="col" style="display: flex; align-items:center; justify-content:center; gap:1rem">
+        <span style=""><b>holiday</b></span>
+        <span class="purple lighten-4 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
+    </div>
+    <div class="col" style="display: flex; align-items:center; justify-content:center; gap:1rem">
+        <span style=""><b>absent</b></span>
+        <span class="grey lighten-2 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
+    </div>
+</div>
 <div class="row">
     <table class="highlight centered hoverable responsive-table">
         <thead>
             <tr>
-                <th>date</th>
-                <th>No. Attendance</th>
-                <th>No. Absences</th>
-                <th>View</th>
+                <th>DAY</th>
+                <th>DATE</th>
+                <th>NO. ATTENDANCE</th>
+                <th>NO. ABSENCES</th>
+                <th>VIEW</th>
             </tr>
         </thead>
         <tbody>
-            {% for date, present, absent in dates %}
+            {% for date, present, absent, holiday in dates %}
+            {% if holiday is True %}
+            <tr class="purple lighten-4">
+            {% elif date|date:"D" == "Sun" %}
+            <tr class="yellow lighten-4">
+            {% elif not present %}
+            <tr class="grey lighten-2">
+            {% else %}
             <tr>
-                <td> {{date}} </td>
+            {% endif %}
+                <td> {{date|date:"D"}} </td>
+                <td> {{date|date:"SHORT_DATE_FORMAT"}} </td>
                 <td> {{present}} </td>
-                <td> {{absent}} </td>
-                <td><a href="{% url 'dtr_specific_date' date %} "><i class="material-icons">list</i></a></td>
+                <td> {% if absent > 0 %}{{absent}}{% endif %} </td>
+                <td> {% if present %}<a href="{% url 'dtr_specific_date' date %} "><i class="material-icons">list</i></a>{% endif %} </td>
             </tr>
             {% endfor %}
         </tbody>

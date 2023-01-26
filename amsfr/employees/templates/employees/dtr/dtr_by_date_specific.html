@@ -24,7 +24,7 @@
             {% for log, ut, ot, min in logs %}
             <tr>
                 <td> {{log.employee_id|cut:"400392-"}} </td>
-                <td> {{log.reference.lastname}}, {{log.reference.firstname}} {{log.reference.middlename}} </td>
+                <td> {{log.reference.lastname|upper}}, {{log.reference.firstname|upper}} {{log.reference.middlename.0|upper|add:"."}} </td>
                 <td> {% if log.in_am %}{{log.in_am|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
                 <td> {% if log.out_am %}{{log.out_am|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
                 <td> {% if log.in_pm %}{{log.in_pm|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>

@@ -21,7 +21,7 @@
             {% for employee, days, absents, lates, ut, ot in employees %}
             <tr>
                 <td> {{employee.id|cut:"400392-"}} </td>
-                <td> {{employee.lastname}}, {{employee.firstname}} {{employee.middlename}} </td>
+                <td> {{employee.lastname}}, {{employee.firstname}} {{employee.middlename.0|add:"."}} </td>
                 <td> {{days}} </td>
                 <td> {{absents}} </td>
                 <td> {{lates}} </td>
