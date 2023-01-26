@@ -37,7 +37,11 @@
                                         </tr>
                                         <tr>
                                             <td class="right"><b>Address: </b></td>
+                                            {% if employee.barangay and employee.municipality and employee.province %}
                                             <td> {{employee.barangay}}, {{employee.municipality}}, {{employee.province}} </td>
+                                            {% else %}
+                                            <td>None</td>
+                                            {% endif %}
                                         </tr>
                                     </tbody>
                                 </table>
@@ -154,7 +158,8 @@
                                     </tbody>
                                 </table> {% endcomment %}
                                 <p class="center">
-                                    under construction
+                                    <a href="{% url 'dtr_specific_employee' employee.id %}">ALL LOGS</a>
+                                    
                                 </p>
                             </div>
                         </li>
