@@ -20,6 +20,10 @@ from django.http import StreamingHttpResponse, HttpResponse
 from .camera import *
 import calendar
 
+from django.views.generic import View
+from .process import html_to_pdf
+from django.template.loader import render_to_string
+
 def convert_time(time):
     if time >= dt.time(1,0,0) and time < dt.time(11,59,59):
         str_time = time.strftime("%H:%M:%S")
@@ -29,6 +33,126 @@ def convert_time(time):
     return time
 
 # Create your views here.
+# class GeneratePdf(View):
+#     def get(self, request, *args, **kwargs):
+#         data = Attendance.objects.all()
+#         open('templates/temp.html', "w").write(render_to_string('print.html',{'data':data}))
+
+#         pdf = html_to_pdf('temp.html')
+
+#         return HttpResponse(pdf, content_type='application/pdf')
+
+def print_monthly(request):
+    pk = "400392-23-001"
+
+    ph_calendar = Philippines()
+    # emp_id = []
+    # emp_date = []
+    emp_in_am = []
+    emp_out_am = []
+    emp_in_pm = []
+    emp_out_pm = []
+    emp_remarks = []
+    minutes_worked = []
+    undertime = []
+    overtime = []
+    holidays = []
+    regulars = []
+
+    now = dt.datetime.now().date()
+    days_in_month = calendar.monthrange(now.year, now.month)[1]
+    dates = [dt.datetime(year=now.year, month=now.month, day=x).date() for x in range(1, days_in_month+1)]
+    total_hours = 0
+    attendance_dates = Attendance.objects.filter(date__month=now.month).values_list('date', flat=True).distinct().order_by('date')
+    emp_name = Employee.objects.filter(id=pk)
+    emp_logs = Attendance.objects.filter(employee_id=pk, date__month=dt.datetime.now().date().month).order_by('date')
+    r = 0
+    y = 0
+    z = 0
+    for x in range(1, len(dates)+1):
+        try:
+            d = dt.datetime.strptime(str(attendance_dates[r]), "%Y-%m-%d").date().day
+            # print(d)
+            h = dt.datetime.strptime(str(dates[z]), "%Y-%m-%d").date()
+
+            if ph_calendar.is_holiday(h):
+                holidays.append(True)
+                z+=1
+            else:
+                holidays.append(False)
+                z+=1
+            
+            if d == x:
+                regulars.append(True)
+                r+=1
+            else:
+                regulars.append(False)
+            
+
+            if emp_logs[y].date.day == x:
+                # emp_id.append(emp_logs[y].employee_id)
+                # emp_date.append(emp_logs[y].date)
+                emp_in_am.append(emp_logs[y].in_am)
+                emp_out_am.append(emp_logs[y].out_am)
+                emp_in_pm.append(emp_logs[y].in_pm)
+                emp_out_pm.append(emp_logs[y].out_pm)
+                emp_remarks.append(emp_logs[y].remarks)
+                
+                calc = calc_minutes_worked(emp_logs[y].in_am, emp_logs[y].out_am, emp_logs[y].in_pm, emp_logs[y].out_pm)
+                mins = convert_time_to_minutes(calc)
+                minutes_worked.append(mins)
+                if mins < 480:
+                    undertime.append(480 - mins)
+                    overtime.append("")
+                elif mins > 480:
+                    overtime.append(mins - 480)
+                    undertime.append("")
+                else:
+                    undertime.append("")
+                    overtime.append("")
+                total_hours+=mins
+                y+=1
+            else:
+                # emp_id.append("")
+                # emp_date.append("")
+                emp_in_am.append("")
+                emp_out_am.append("")
+                emp_in_pm.append("")
+                emp_out_pm.append("")
+                emp_remarks.append("")
+                undertime.append("")
+                overtime.append("")
+                minutes_worked.append("")
+        except:
+            # emp_id.append("")
+            # emp_date.append("")
+            emp_in_am.append("")
+            emp_out_am.append("")
+            emp_in_pm.append("")
+            emp_out_pm.append("")
+            emp_remarks.append("")
+            undertime.append("")
+            overtime.append("")
+            minutes_worked.append("")
+
+    days_worked = [x for x in emp_remarks if x !=""]
+    lates = [x for x in emp_remarks if x =="L"]
+    absents = len(attendance_dates) - len(days_worked)
+    ut = [x for x in undertime if x != ""]
+    ot = [x for x in overtime if x != ""]
+    sets = zip(dates, emp_in_am, emp_out_am, emp_in_pm, emp_out_pm, emp_remarks, undertime, overtime, minutes_worked, holidays, regulars)
+    
+    context = {'employee':emp_name, 'logs':sets, 'total':round(total_hours/60, 2), 'days_worked':len(days_worked), 'lates':len(lates), 'absents':absents, 'undertime':len(ut), 'overtime':len(ot), 'month':now}
+
+
+
+    # data = Employee.objects.all()
+    open('templates/temp.html', "w").write(render_to_string('print.html',context))
+
+    pdf = html_to_pdf('temp.html')
+
+    return HttpResponse(pdf, content_type='application/pdf')
+
 def home(request):
     context = {}
     template = "employees/homepage.html"
@@ -76,6 +200,11 @@ def dashboard(request):
     template = "employees/dashboard.html"
     return render(request, template, context)
 
+# def test_print(request):
+#     context = {}
+#     template = "employees/pdf/print.html"
+#     return render(request, template, context)
+
 def dtr_by_date(request):
     context = {}
     template = 'employees/dtr/dtr_by_date.html'
@@ -92,17 +221,20 @@ def dtr_by_date(request):
     # p_dates = p.get_page(page_number)
     now = dt.datetime.now().date()
     days_in_month = calendar.monthrange(now.year, now.month)[1]
-    dates_list = Attendance.objects.filter(date__month=now.month).values_list('date', flat=True).distinct().order_by('date')
+    attendance_dates = Attendance.objects.filter(date__month=now.month).values_list('date', flat=True).distinct().order_by('date')
     dates = [dt.datetime(year=now.year, month=now.month, day=x).date() for x in range(1, days_in_month+1)]
     presents = []
     absents = []
     holidays = []
+    regulars = []
+    r = 0
     y = 0
     z = 0
     
     for x in range(1, len(dates) + 1):
         try:
-            d = dt.datetime.strptime(str(dates_list[y]), "%Y-%m-%d").date().day
+            dd = dt.datetime.strptime(str(attendance_dates[r]), "%Y-%m-%d").date().day
+            d = dt.datetime.strptime(str(attendance_dates[y]), "%Y-%m-%d").date().day
             h = dt.datetime.strptime(str(dates[z]), "%Y-%m-%d").date()
 
             if ph_calendar.is_holiday(h):
@@ -110,8 +242,14 @@ def dtr_by_date(request):
             else:
                 holidays.append(False)
 
+            if dd == x:
+                regulars.append(True)
+                r+=1
+            else:
+                regulars.append(False)
+
             if  d == x:
-                p = Attendance.objects.filter(date=dates_list[y]).count()
+                p = Attendance.objects.filter(date=attendance_dates[y]).count()
                 a = total - p
                 presents.append(p)
                 absents.append(a)
@@ -132,7 +270,8 @@ def dtr_by_date(request):
     presents.reverse()
     absents.reverse()
     holidays.reverse()
-    items = zip(dates,presents,absents,holidays)
+    regulars.reverse()
+    items = zip(dates,presents,absents,holidays, regulars)
     context = {'dates':items}
     # if request.htmx:
     #     return render(request, 'employees/partials/dtr_by_date.html', context)
@@ -230,6 +369,7 @@ def dtr_specific_employee(request, pk):
     undertime = []
     overtime = []
     holidays = []
+    regulars = []
     now = dt.datetime.now().date()
     days_in_month = calendar.monthrange(now.year, now.month)[1]
     dates = [dt.datetime(year=now.year, month=now.month, day=x).date() for x in range(1, days_in_month+1)]
@@ -237,16 +377,27 @@ def dtr_specific_employee(request, pk):
 
     emp_name = Employee.objects.filter(id=pk)
     emp_logs = Attendance.objects.filter(employee_id=pk, date__month=dt.datetime.now().date().month).order_by('date')
+    attendance_dates = Attendance.objects.filter(date__month=now.month).values_list('date', flat=True).distinct().order_by('date')
+    r = 0
     y = 0
     z = 0
     for x in range(1, len(dates)+1):
         try:
+            d = dt.datetime.strptime(str(attendance_dates[r]), "%Y-%m-%d").date().day
             h = dt.datetime.strptime(str(dates[z]), "%Y-%m-%d").date()
 
             if ph_calendar.is_holiday(h):
                 holidays.append(True)
+                z+=1
             else:
                 holidays.append(False)
+                z+=1
+
+            if d == x:
+                regulars.append(True)
+                r+=1
+            else:
+                regulars.append(False)
 
             if emp_logs[y].date.day == x:
                 # emp_id.append(emp_logs[y].employee_id)
@@ -294,8 +445,6 @@ def dtr_specific_employee(request, pk):
             overtime.append("")
             minutes_worked.append("")
 
-        z+=1
-
         # calc = calc_minutes_worked(emp_logs[x].in_am, emp_logs[x].out_am, emp_logs[x].in_pm, emp_logs[x].out_pm)
         # mins = convert_time_to_minutes(calc)
         # minutes_worked.append(mins)
@@ -309,7 +458,7 @@ def dtr_specific_employee(request, pk):
         #     undertime.append("")
         #     overtime.append("")
         # total_hours+=mins
-    sets = zip(dates, emp_in_am, emp_out_am, emp_in_pm, emp_out_pm, emp_remarks, undertime, overtime, minutes_worked, holidays)
+    sets = zip(dates, emp_in_am, emp_out_am, emp_in_pm, emp_out_pm, emp_remarks, undertime, overtime, minutes_worked, holidays, regulars)
     
     context = {'employee':emp_name, 'logs':sets, 'total':round(total_hours/60, 2)}
     return render(request, template, context)

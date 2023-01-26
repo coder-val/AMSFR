@@ -10,10 +10,10 @@
     </div>
     <div class="col" style="display: flex; align-items:center; justify-content:center; gap:1rem">
         <span style=""><b>holiday</b></span>
-        <span class="purple lighten-4 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
+        <span class="green lighten-4 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
     </div>
     <div class="col" style="display: flex; align-items:center; justify-content:center; gap:1rem">
-        <span style=""><b>absent</b></span>
+        <span style=""><b>none</b></span>
         <span class="grey lighten-2 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
     </div>
 </div>
@@ -29,12 +29,12 @@
             </tr>
         </thead>
         <tbody>
-            {% for date, present, absent, holiday in dates %}
+            {% for date, present, absent, holiday, regular in dates %}
             {% if holiday is True %}
-            <tr class="purple lighten-4">
+            <tr class="green lighten-4">
             {% elif date|date:"D" == "Sun" %}
             <tr class="yellow lighten-4">
-            {% elif not present %}
+            {% elif not regular %}
             <tr class="grey lighten-2">
             {% else %}
             <tr>

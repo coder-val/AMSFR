@@ -1,0 +1,119 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HADKOGGGGG</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      @frame header_frame {
+        -pdf-frame-content: header_content;
+        margin: 1.5cm;
+        {% comment %} -pdf-frame-border: 1; {% endcomment %}
+      }
+      @frame content_frame {
+          {% comment %} left: 50pt;
+           width: 512pt; {% endcomment %}
+          top: 60pt; 
+          {% comment %} height: 692pt;  {% endcomment %}
+          margin: 1.5cm;
+          {% comment %} -pdf-frame-border: 1; {% endcomment %}
+      }
+    }
+    h1, .month{
+      text-align: center;
+    }
+    .month {
+      font-size: 2rem;
+    }
+    td, th {
+      padding: 2px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    table {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div id="header_content">
+      <h1>ST. FRANCIS ACADEMY OF STA. TERESITA, INCORPORATED<br>
+      <span style="font-weight: light">VILLA, STA. TERESITA, CAGAYAN</span></h1>
+    </div>
+  </header>
+  <main>
+    <div>
+      {% for emp in employee %}
+      <h2>ID: {{emp.id}} <br> Name: {{emp.firstname|upper}} {{emp.middlename.0|add:"."|upper}} {{emp.lastname|upper}} <br> Position: {% if emp.position  %} {{emp.position}} {% endif %} </h2>
+      {% endfor %}
+    </div>
+    <div>
+      <h1 class="month"> {{month|date:"F"|upper}} </h1>
+    </div>
+    <table class="highlight centered hoverable responsive-table">
+      <thead>
+          <tr>
+              <th rowspan="2">DAYS</th>
+              {% comment %} <th>DATE</th> {% endcomment %}
+              <th colspan="2">MORNING</th>
+              <th colspan="2">AFTERNOON</th>
+              <th rowspan="2">REMARKS</th>
+              <th rowspan="2">UNDERTIME<br>min.</th>
+              <th rowspan="2">OVERTIME<br>min.</th>
+              <th rowspan="2">MINUTES<br>WORKED</th>
+              {% comment %} <th>ACTIONS</th> {% endcomment %}
+          </tr>
+          <tr>
+            <th>IN</th>
+            <th>OUT</th>
+            <th>IN</th>
+            <th>OUT</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for date, in_am, out_am, in_pm, out_pm, remarks, ut, ot, min, holiday, regular in logs %}
+          {% if holiday is True %}
+          <tr style="background-color: #CEFF9F">
+          {% elif date|date:"D" == "Sun" %}
+          <tr style="background-color: #FFFEB0">
+          {% elif regular and not remarks %}
+          <tr style="background-color: #CFCFCF">
+          {% else %}
+          <tr>
+          {% endif %}
+              <td> {{forloop.counter}} </td>
+              {% comment %} <td> {{date|date:"SHORT_DATE_FORMAT"}} </td> {% endcomment %}
+              <td> {% if in_am %}{{in_am|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+              <td> {% if out_am %}{{out_am|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+              <td> {% if in_pm %}{{in_pm|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+              <td> {% if out_pm %}{{out_pm|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+              <td> {% if remarks %}{{remarks}}{% elif regular and not remarks %}A{% endif %}</td>
+              <td> {{ut}} </td>
+              <td> {{ot}} </td>
+              <td> {{min}} </td>
+              {% comment %} <td> {% if remarks %}soon{% endif %} </td> {% endcomment %}
+              {% comment %} <td> {{log.date|date:"D"}} </td>
+              <td> {{log.date|date:"SHORT_DATE_FORMAT"}} </td>
+              <td> {% if log.date|date:"j" == date|slugify %}hakdog {% else %}{{log.date|date:"j"}}{% endif %} </td>
+              <td> {% if log.in_am %}{{log.in_am|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+              <td> {% if log.out_am %}{{log.out_am|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+              <td> {% if log.in_pm %}{{log.in_pm|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+              <td> {% if log.out_pm %}{{log.out_pm|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
+              <td> {{log.remarks}} </td>
+              <td> {% if min and ut %}{{ut}}{% else %}-{% endif %} </td>
+              <td> {% if min and ot %}{{ot}}{% else %}-{% endif %} </td>
+              <td> {% if min %}{{min}}{% else %}-{% endif %} </td>
+              <td>eme</td> {% endcomment %}
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+  <div style="text-align: center">
+    <p style="font-size: 12px"><b> DAYS WORKED: {{days_worked}} &nbsp;&nbsp;&nbsp;&nbsp; LATES: {{lates}} &nbsp;&nbsp;&nbsp;&nbsp; ABSENCES: {{absents}} &nbsp;&nbsp;&nbsp;&nbsp; UNDERTIME: {{undertime}} &nbsp;&nbsp;&nbsp;&nbsp; OVERTIME: {{overtime}} &nbsp;&nbsp;&nbsp;&nbsp; TOTAL HOURS: {{total}} </b></p>
+  </div>
+  </main>
+</body>
+</html>

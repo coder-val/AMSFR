@@ -10,8 +10,8 @@
                 <th>ID</th>
                 <th>NAME</th>
                 <th>DAYS<br>WORKED</th>
-                <th>ABSENTS</th>
                 <th>LATES</th>
+                <th>ABSENCES</th>
                 <th>UNDERTIME</th>
                 <th>OVERTIME</th>
                 <th>DETAILS</th>
@@ -23,8 +23,8 @@
                 <td> {{employee.id|cut:"400392-"}} </td>
                 <td> {{employee.lastname}}, {{employee.firstname}} {{employee.middlename.0|add:"."}} </td>
                 <td> {{days}} </td>
-                <td> {{absents}} </td>
                 <td> {{lates}} </td>
+                <td> {{absents}} </td>
                 <td> {{ut}} </td>
                 <td> {{ot}} </td>
                 <td><a href="{% url 'dtr_specific_employee' employee.id %}"><i class="material-icons">list</i></a></td>

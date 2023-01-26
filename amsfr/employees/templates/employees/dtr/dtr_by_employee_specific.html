@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}DTR BY EMPLOYEE{% endblock title %}
-{% block heading %}{% for name in employee %}{{name.lastname|upper}}, {{name.firstname|upper}} {{name.middlename.0|upper|add:"."}}{% endfor %}<span style="font-size: 1.5rem; margin-left:1rem" class="green accent-1"> {{total}} hours </span>{% endblock heading %}
+{% block heading %}{% for name in employee %}{{name.lastname|upper}}, {{name.firstname|upper}} {{name.middlename.0|upper|add:"."}}{% endfor %}<span style="font-size: 1.5rem; margin-left:1rem" class="purple lighten-5">{{total}} hours </span>{% endblock heading %}
 
 {% block content %}
 <div class="row right">
@@ -10,7 +10,7 @@
     </div>
     <div class="col" style="display: flex; align-items:center; justify-content:center; gap:1rem">
         <span style=""><b>holiday</b></span>
-        <span class="purple lighten-4 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
+        <span class="green lighten-4 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
     </div>
     <div class="col" style="display: flex; align-items:center; justify-content:center; gap:1rem">
         <span style=""><b>absent</b></span>
@@ -35,16 +35,16 @@
             </tr>
         </thead>
         <tbody>
-            {% for date, in_am, out_am, in_pm, out_pm, remarks, ut, ot, min, holiday in logs %}
+            {% for date, in_am, out_am, in_pm, out_pm, remarks, ut, ot, min, holiday, regular in logs %}
             {% if holiday is True %}
-            <tr class="purple lighten-4">
+            <tr class="green lighten-4">
             {% elif date|date:"D" == "Sun" %}
             <tr class="yellow lighten-4">
             {% comment %} {% elif remarks == "P" %}
             <tr class="green lighten-4">
                 {% elif remarks == "L" %}
             <tr class="yellow lighten-4"> {% endcomment %}
-            {% elif not remarks %}
+            {% elif regular and not remarks %}
             <tr class="grey lighten-3">
             {% else %}
             <tr>
@@ -55,7 +55,7 @@
                 <td> {% if out_am %}{{out_am|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
                 <td> {% if in_pm %}{{in_pm|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
                 <td> {% if out_pm %}{{out_pm|time:"g:i:s"}}{% else %}--:--:--{% endif %} </td>
-                <td> {{remarks}} </td>
+                <td> {% if remarks %}{{remarks}}{% elif regular and not remarks %}A{% endif %} </td>
                 <td> {{ut}} </td>
                 <td> {{ot}} </td>
                 <td> {{min}} </td>
