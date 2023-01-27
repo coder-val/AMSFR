@@ -3,13 +3,13 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HADKOGGGGG</title>
+  <title>MONTHLY DTR</title>
   <style>
     @page {
       size: A4 portrait;
       @frame header_frame {
         -pdf-frame-content: header_content;
-        margin: 1.5cm;
+        margin: 1.2cm;
         {% comment %} -pdf-frame-border: 1; {% endcomment %}
       }
       @frame content_frame {
@@ -28,7 +28,7 @@
       font-size: 2rem;
     }
     td, th {
-      padding: 2px;
+      padding: 1.5px;
       text-align: center;
       vertical-align: middle;
     }
@@ -51,7 +51,7 @@
       {% endfor %}
     </div>
     <div>
-      <h1 class="month"> {{month|date:"F"|upper}} </h1>
+      <h1 class="month"> {{month|date:"F"|upper}} {{month|date:"Y"}} </h1>
     </div>
     <table class="highlight centered hoverable responsive-table">
       <thead>

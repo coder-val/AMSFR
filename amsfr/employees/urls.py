@@ -43,7 +43,7 @@ urlpatterns = [
     path('dtr/dtr_by_employee/', dtr_by_employee, name="dtr_by_employee"),
     path('dtr/dtr_by_employee/<str:pk>/', dtr_specific_employee, name="dtr_specific_employee"),
 
-    path('dtr/print/', print_monthly, name="print_monthly"),
+    path('dtr/dtr_by_employee/<str:pk>/print/', print_monthly, name="print_monthly"),
     # path('dtr/print/pdf/', GeneratePdf.as_view()),
 
     path('attendance/', attendance, name='attendance'),

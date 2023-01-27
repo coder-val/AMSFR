@@ -16,6 +16,11 @@
         <span style=""><b>absent</b></span>
         <span class="grey lighten-2 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
     </div>
+    <div class="col left">
+        {% for emp in employee %}
+        <a href="{% url 'print_monthly' emp.id %}" target="_blank" class="left btn waves-effect waves-light purple accent-3">PRINT</a>
+        {% endfor %}
+    </div>
 </div>
 <div class="row">
     <table class="highlight centered hoverable responsive-table">

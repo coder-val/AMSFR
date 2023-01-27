@@ -42,8 +42,8 @@ def convert_time(time):
 
 #         return HttpResponse(pdf, content_type='application/pdf')
 
-def print_monthly(request):
-    pk = "400392-23-001"
+def print_monthly(request, pk):
+    # pk = "400392-23-001"
 
     ph_calendar = Philippines()
     # emp_id = []
@@ -285,6 +285,9 @@ def dtr_specific_date(request, date):
     date = dt.date(year=int(d[0]),month=int(d[1]), day=int(d[2]))
 
     logs = Attendance.objects.filter(date=date).order_by('reference__lastname')
+    # absents_list = [Employee.objects.exclude(id=x) for x in logs.values_list('employee_id')]
+    # absents = Employee.objects.filter(id__in=absents_list)
+    # print(absents)
     minutes_worked = []
     undertime = []
     overtime = []
