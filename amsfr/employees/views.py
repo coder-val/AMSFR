@@ -32,6 +32,14 @@ def convert_time(time):
         return convert
     return time
 
+def get_age(birthdate):
+    today = dt.date.today()
+    print(today)
+    one_or_zero = ((today.month, today.day) < (birthdate.month, birthdate.day))
+    year_difference = today.year - birthdate.year
+    age = year_difference - one_or_zero
+    return age
+
 # Create your views here.
 # class GeneratePdf(View):
 #     def get(self, request, *args, **kwargs):
@@ -42,9 +50,7 @@ def convert_time(time):
 
 #         return HttpResponse(pdf, content_type='application/pdf')
 
-def print_monthly(request, pk):
-    # pk = "400392-23-001"
-
+def print_first_half(request, pk, date):
     ph_calendar = Philippines()
     # emp_id = []
     # emp_date = []
@@ -59,19 +65,26 @@ def print_monthly(request, pk):
     holidays = []
     regulars = []
 
-    now = dt.datetime.now().date()
-    days_in_month = calendar.monthrange(now.year, now.month)[1]
-    dates = [dt.datetime(year=now.year, month=now.month, day=x).date() for x in range(1, days_in_month+1)]
+    year_date = date.split("-")[0]
+    month_date = date.split("-")[1]
+
+    now = dt.date(year=int(year_date), month=int(month_date), day=1)
+    days_in_month = calendar.monthrange(int(year_date), int(month_date))[1]
+    dates = [dt.datetime(year=int(year_date), month=int(month_date), day=x).date() for x in range(1, 15+1)]
     total_hours = 0
-    attendance_dates = Attendance.objects.filter(date__month=now.month).values_list('date', flat=True).distinct().order_by('date')
+    attendance_dates = Attendance.objects.filter(date__month=int(month_date), date__year=int(year_date), date__range=[now, now.replace(day=15)]).values_list('date', flat=True).distinct().order_by('date')
     emp_name = Employee.objects.filter(id=pk)
-    emp_logs = Attendance.objects.filter(employee_id=pk, date__month=dt.datetime.now().date().month).order_by('date')
+    emp_logs = Attendance.objects.filter(employee_id=pk, date__month=int(month_date), date__year=int(year_date), date__range=[now, now.replace(day=15)]).order_by('date')
     r = 0
     y = 0
     z = 0
-    for x in range(1, len(dates)+1):
+    for x in range(1, days_in_month+1):
         try:
             d = dt.datetime.strptime(str(attendance_dates[r]), "%Y-%m-%d").date().day
+        except IndexError:
+            regulars.append(False)
+        try:
+            # d = dt.datetime.strptime(str(attendance_dates[r]), "%Y-%m-%d").date().day
             # print(d)
             h = dt.datetime.strptime(str(dates[z]), "%Y-%m-%d").date()
 
@@ -140,9 +153,251 @@ def print_monthly(request, pk):
     absents = len(attendance_dates) - len(days_worked)
     ut = [x for x in undertime if x != ""]
     ot = [x for x in overtime if x != ""]
+
+    signatory = Signatory.objects.first()
     sets = zip(dates, emp_in_am, emp_out_am, emp_in_pm, emp_out_pm, emp_remarks, undertime, overtime, minutes_worked, holidays, regulars)
     
-    context = {'employee':emp_name, 'logs':sets, 'total':round(total_hours/60, 2), 'days_worked':len(days_worked), 'lates':len(lates), 'absents':absents, 'undertime':len(ut), 'overtime':len(ot), 'month':now}
+    context = {'employee':emp_name, 'logs':sets, 'total':round(total_hours/60, 2), 'days_worked':len(days_worked), 'lates':len(lates), 'absents':absents, 'undertime':len(ut), 'overtime':len(ot), 'month':now, 'dt':dt.datetime.now(), 'signatory':signatory}
+
+
+
+    # data = Employee.objects.all()
+    open('templates/temp.html', "w").write(render_to_string('print.html',context))
+
+    pdf = html_to_pdf('temp.html')
+
+    return HttpResponse(pdf, content_type='application/pdf')
+
+def print_second_half(request, pk, date):
+    ph_calendar = Philippines()
+    # emp_id = []
+    # emp_date = []
+    emp_in_am = []
+    emp_out_am = []
+    emp_in_pm = []
+    emp_out_pm = []
+    emp_remarks = []
+    minutes_worked = []
+    undertime = []
+    overtime = []
+    holidays = []
+    regulars = []
+
+    year_date = date.split("-")[0]
+    month_date = date.split("-")[1]
+
+    now = dt.date(year=int(year_date), month=int(month_date), day=1)
+    days_in_month = calendar.monthrange(int(year_date), int(month_date))[1]
+    dates = [dt.datetime(year=int(year_date), month=int(month_date), day=x).date() for x in range(16, days_in_month+1)]
+    total_hours = 0
+    attendance_dates = Attendance.objects.filter(date__month=int(month_date), date__year=int(year_date), date__range=[now.replace(day=16), now.replace(day=days_in_month)]).values_list('date', flat=True).distinct().order_by('date')
+    emp_name = Employee.objects.filter(id=pk)
+    emp_logs = Attendance.objects.filter(employee_id=pk, date__month=int(month_date), date__year=int(year_date), date__range=[now.replace(day=16), now.replace(day=days_in_month)]).order_by('date')
+    r = 0
+    y = 0
+    z = 0
+    for x in range(16, days_in_month+1):
+        try:
+            d = dt.datetime.strptime(str(attendance_dates[r]), "%Y-%m-%d").date().day
+        except IndexError:
+            regulars.append(False)
+        try:
+            # d = dt.datetime.strptime(str(attendance_dates[r]), "%Y-%m-%d").date().day
+            # print(d)
+            h = dt.datetime.strptime(str(dates[z]), "%Y-%m-%d").date()
+
+            if ph_calendar.is_holiday(h):
+                holidays.append(True)
+                z+=1
+            else:
+                holidays.append(False)
+                z+=1
+            
+            if d == x:
+                regulars.append(True)
+                r+=1
+            else:
+                regulars.append(False)
+            
+
+            if emp_logs[y].date.day == x:
+                # emp_id.append(emp_logs[y].employee_id)
+                # emp_date.append(emp_logs[y].date)
+                emp_in_am.append(emp_logs[y].in_am)
+                emp_out_am.append(emp_logs[y].out_am)
+                emp_in_pm.append(emp_logs[y].in_pm)
+                emp_out_pm.append(emp_logs[y].out_pm)
+                emp_remarks.append(emp_logs[y].remarks)
+                
+                calc = calc_minutes_worked(emp_logs[y].in_am, emp_logs[y].out_am, emp_logs[y].in_pm, emp_logs[y].out_pm)
+                mins = convert_time_to_minutes(calc)
+                minutes_worked.append(mins)
+                if mins < 480:
+                    undertime.append(480 - mins)
+                    overtime.append("")
+                elif mins > 480:
+                    overtime.append(mins - 480)
+                    undertime.append("")
+                else:
+                    undertime.append("")
+                    overtime.append("")
+                total_hours+=mins
+                y+=1
+            else:
+                # emp_id.append("")
+                # emp_date.append("")
+                emp_in_am.append("")
+                emp_out_am.append("")
+                emp_in_pm.append("")
+                emp_out_pm.append("")
+                emp_remarks.append("")
+                undertime.append("")
+                overtime.append("")
+                minutes_worked.append("")
+        except:
+            # emp_id.append("")
+            # emp_date.append("")
+            emp_in_am.append("")
+            emp_out_am.append("")
+            emp_in_pm.append("")
+            emp_out_pm.append("")
+            emp_remarks.append("")
+            undertime.append("")
+            overtime.append("")
+            minutes_worked.append("")
+    
+
+    days_worked = [x for x in emp_remarks if x !=""]
+    lates = [x for x in emp_remarks if x =="L"]
+    absents = len(attendance_dates) - len(days_worked)
+    ut = [x for x in undertime if x != ""]
+    ot = [x for x in overtime if x != ""]
+
+    signatory = Signatory.objects.first()
+    sets = zip(dates, emp_in_am, emp_out_am, emp_in_pm, emp_out_pm, emp_remarks, undertime, overtime, minutes_worked, holidays, regulars)
+    
+    context = {'employee':emp_name, 'logs':sets, 'total':round(total_hours/60, 2), 'days_worked':len(days_worked), 'lates':len(lates), 'absents':absents, 'undertime':len(ut), 'overtime':len(ot), 'month':now, 'dt':dt.datetime.now(), 'signatory':signatory}
+
+
+
+    # data = Employee.objects.all()
+    open('templates/temp.html', "w").write(render_to_string('print.html',context))
+
+    pdf = html_to_pdf('temp.html')
+
+    return HttpResponse(pdf, content_type='application/pdf')
+
+def print_monthly(request, pk, date):
+    # pk = "400392-23-001"
+
+    ph_calendar = Philippines()
+    # emp_id = []
+    # emp_date = []
+    emp_in_am = []
+    emp_out_am = []
+    emp_in_pm = []
+    emp_out_pm = []
+    emp_remarks = []
+    minutes_worked = []
+    undertime = []
+    overtime = []
+    holidays = []
+    regulars = []
+
+    year_date = date.split("-")[0]
+    month_date = date.split("-")[1]
+
+    now = dt.date(year=int(year_date), month=int(month_date), day=1)
+    days_in_month = calendar.monthrange(int(year_date), int(month_date))[1]
+    dates = [dt.datetime(year=int(year_date), month=int(month_date), day=x).date() for x in range(1, days_in_month+1)]
+    total_hours = 0
+    attendance_dates = Attendance.objects.filter(date__month=int(month_date), date__year=int(year_date)).values_list('date', flat=True).distinct().order_by('date')
+    emp_name = Employee.objects.filter(id=pk)
+    emp_logs = Attendance.objects.filter(employee_id=pk, date__month=int(month_date), date__year=int(year_date)).order_by('date')
+    r = 0
+    y = 0
+    z = 0
+    for x in range(1, days_in_month+1):
+        try:
+            d = dt.datetime.strptime(str(attendance_dates[r]), "%Y-%m-%d").date().day
+        except IndexError:
+            regulars.append(False)
+        try:
+            # d = dt.datetime.strptime(str(attendance_dates[r]), "%Y-%m-%d").date().day
+            # print(d)
+            h = dt.datetime.strptime(str(dates[z]), "%Y-%m-%d").date()
+
+            if ph_calendar.is_holiday(h):
+                holidays.append(True)
+                z+=1
+            else:
+                holidays.append(False)
+                z+=1
+            
+            if d == x:
+                regulars.append(True)
+                r+=1
+            else:
+                regulars.append(False)
+            
+
+            if emp_logs[y].date.day == x:
+                # emp_id.append(emp_logs[y].employee_id)
+                # emp_date.append(emp_logs[y].date)
+                emp_in_am.append(emp_logs[y].in_am)
+                emp_out_am.append(emp_logs[y].out_am)
+                emp_in_pm.append(emp_logs[y].in_pm)
+                emp_out_pm.append(emp_logs[y].out_pm)
+                emp_remarks.append(emp_logs[y].remarks)
+                
+                calc = calc_minutes_worked(emp_logs[y].in_am, emp_logs[y].out_am, emp_logs[y].in_pm, emp_logs[y].out_pm)
+                mins = convert_time_to_minutes(calc)
+                minutes_worked.append(mins)
+                if mins < 480:
+                    undertime.append(480 - mins)
+                    overtime.append("")
+                elif mins > 480:
+                    overtime.append(mins - 480)
+                    undertime.append("")
+                else:
+                    undertime.append("")
+                    overtime.append("")
+                total_hours+=mins
+                y+=1
+            else:
+                # emp_id.append("")
+                # emp_date.append("")
+                emp_in_am.append("")
+                emp_out_am.append("")
+                emp_in_pm.append("")
+                emp_out_pm.append("")
+                emp_remarks.append("")
+                undertime.append("")
+                overtime.append("")
+                minutes_worked.append("")
+        except:
+            # emp_id.append("")
+            # emp_date.append("")
+            emp_in_am.append("")
+            emp_out_am.append("")
+            emp_in_pm.append("")
+            emp_out_pm.append("")
+            emp_remarks.append("")
+            undertime.append("")
+            overtime.append("")
+            minutes_worked.append("")
+
+    days_worked = [x for x in emp_remarks if x !=""]
+    lates = [x for x in emp_remarks if x =="L"]
+    absents = len(attendance_dates) - len(days_worked)
+    ut = [x for x in undertime if x != ""]
+    ot = [x for x in overtime if x != ""]
+
+    signatory = Signatory.objects.first()
+    position = Employee.objects.filter()
+    sets = zip(dates, emp_in_am, emp_out_am, emp_in_pm, emp_out_pm, emp_remarks, undertime, overtime, minutes_worked, holidays, regulars)
+    
+    context = {'employee':emp_name, 'logs':sets, 'total':round(total_hours/60, 2), 'days_worked':len(days_worked), 'lates':len(lates), 'absents':absents, 'undertime':len(ut), 'overtime':len(ot), 'month':now, 'dt':dt.datetime.now(), 'signatory':signatory}
 
 
 
@@ -205,24 +460,36 @@ def dashboard(request):
 #     template = "employees/pdf/print.html"
 #     return render(request, template, context)
 
+@login_required
 def dtr_by_date(request):
     context = {}
     template = 'employees/dtr/dtr_by_date.html'
 
     ph_calendar = Philippines()
-    # print(ehem)
-    # print(ph_calendar.is_holiday(dt.datetime(2023, 1, 1)))
-
     total = Employee.objects.count()
+
+    if request.method == "POST":
+        p = request.POST.get('month').split('-')
+        date_year = p[0]
+        date_month = p[1]
+        if date_month[0] == "0":
+            date_month = date_month.replace("0", "")
+        year_month = dt.date(year=int(date_year), month=int(date_month), day=1)
+    else:
+        date_year = dt.datetime.now().date().year
+        date_month = dt.datetime.now().date().month
+        year_month = dt.datetime.now().date()
+        
+
     # dates = Attendance.objects.values_list('date', flat=True).order_by('-date').distinct().filter(date__month=dt.datetime.now().date().month)
     # dates_list = Attendance.objects.values_list('date', flat=True).order_by('date').distinct()
     # p = Paginator(dates, per_page=5, orphans=1)
     # page_number = request.GET.get('page')
     # p_dates = p.get_page(page_number)
-    now = dt.datetime.now().date()
-    days_in_month = calendar.monthrange(now.year, now.month)[1]
-    attendance_dates = Attendance.objects.filter(date__month=now.month).values_list('date', flat=True).distinct().order_by('date')
-    dates = [dt.datetime(year=now.year, month=now.month, day=x).date() for x in range(1, days_in_month+1)]
+    # now = dt.datetime.now().date()
+    days_in_month = calendar.monthrange(int(date_year), int(date_month))[1]
+    attendance_dates = Attendance.objects.filter(date__month=int(date_month), date__year=int(date_year)).values_list('date', flat=True).distinct().order_by('date')
+    dates = [dt.datetime(year=int(date_year), month=int(date_month), day=x).date() for x in range(1, days_in_month+1)]
     presents = []
     absents = []
     holidays = []
@@ -272,22 +539,22 @@ def dtr_by_date(request):
     holidays.reverse()
     regulars.reverse()
     items = zip(dates,presents,absents,holidays, regulars)
+    # print(len(dates), len(presents), len(absents), len(holidays), len(regulars))
+    # print(pd.DataFrame(items, columns=['dates','presents','absents','holidays', 'regulars']))
     context = {'dates':items}
     # if request.htmx:
     #     return render(request, 'employees/partials/dtr_by_date.html', context)
     return render(request, template, context)
 
+@login_required
 def dtr_specific_date(request, date):
     context = {}
     template = 'employees/dtr/dtr_by_date_specific.html'
 
     d = date.split('-')
-    date = dt.date(year=int(d[0]),month=int(d[1]), day=int(d[2]))
+    n_date = dt.date(year=int(d[0]),month=int(d[1]), day=int(d[2]))
 
-    logs = Attendance.objects.filter(date=date).order_by('reference__lastname')
-    # absents_list = [Employee.objects.exclude(id=x) for x in logs.values_list('employee_id')]
-    # absents = Employee.objects.filter(id__in=absents_list)
-    # print(absents)
+    logs = Attendance.objects.filter(date=n_date).order_by('reference__lastname')
     minutes_worked = []
     undertime = []
     overtime = []
@@ -307,16 +574,36 @@ def dtr_specific_date(request, date):
     
     sets = zip(logs, undertime, overtime, minutes_worked)
     # print(int(convert_time_to_minutes(str(calc))))
-    context = {'logs':sets, 'date':date}
+    context = {'logs':sets, 'date':n_date}
 
     return render(request, template, context)
 
+@login_required
 def dtr_by_employee(request):
     context = {}
     template = 'employees/dtr/dtr_by_employee.html'
 
+    if request.method == "POST":
+        p = request.POST.get('month').split('-')
+        date_year = p[0]
+        date_month = p[1]
+        if date_month[0] == "0":
+            date_month = date_month.replace("0", "")
+        year_month = dt.date(year=int(date_year), month=int(date_month), day=1)
+    else:
+        date_year = dt.datetime.now().date().year
+        date_month = dt.datetime.now().date().month
+        year_month = dt.datetime.now().date()
+
+    
+    # year_now = dt.datetime.now().date().year
+    # year_earliest = Attendance.objects.earliest('date').date.year
+    # years_list = list(range(year_now, year_now-((year_now-year_earliest)+1), -1))
+    # print(str(years_list))
     # emp_id = Employee.objects.filter(attendance__id=90)
     # print(emp_id[1])
+
+
     employees = Employee.objects.all().order_by('lastname')
     daysWorked = []
     absents = []
@@ -326,7 +613,7 @@ def dtr_by_employee(request):
     # total_hours = 0
     
     for x in range(employees.count()):
-        attendance_list = Attendance.objects.all().filter(date__month=dt.datetime.now().date().month)
+        attendance_list = Attendance.objects.all().filter(date__month=int(date_month), date__year=int(date_year))
         days_worked = attendance_list.filter(employee_id=employees[x], remarks="P") | attendance_list.filter(employee_id=employees[x], remarks="L")
         absent = attendance_list.values_list('date').distinct().count() - days_worked.count()
         late = attendance_list.filter(employee_id=employees[x], remarks="L").count()
@@ -352,11 +639,12 @@ def dtr_by_employee(request):
     # print(round(total_hours/60, 2))
     # print(total_hours)
     sets = zip(employees,daysWorked,absents,lates,undertime,overtime)
-    context = {'employees':sets}
+    context = {'employees':sets, 'year_month':year_month}
 
     return render(request, template, context)
 
-def dtr_specific_employee(request, pk):
+@login_required
+def dtr_specific_employee(request, pk, date):
     context = {}
     template = 'employees/dtr/dtr_by_employee_specific.html'
 
@@ -373,20 +661,26 @@ def dtr_specific_employee(request, pk):
     overtime = []
     holidays = []
     regulars = []
-    now = dt.datetime.now().date()
-    days_in_month = calendar.monthrange(now.year, now.month)[1]
-    dates = [dt.datetime(year=now.year, month=now.month, day=x).date() for x in range(1, days_in_month+1)]
+    date_year = date.split("-")[0]
+    date_month = date.split("-")[1]
+    year_month = dt.date(year=int(date_year), month=int(date_month), day=1)
+    days_in_month = calendar.monthrange(int(date_year), int(date_month))[1]
+    dates = [dt.datetime(year=int(date_year), month=int(date_month), day=x).date() for x in range(1, days_in_month+1)]
     total_hours = 0
 
     emp_name = Employee.objects.filter(id=pk)
     emp_logs = Attendance.objects.filter(employee_id=pk, date__month=dt.datetime.now().date().month).order_by('date')
-    attendance_dates = Attendance.objects.filter(date__month=now.month).values_list('date', flat=True).distinct().order_by('date')
+    attendance_dates = Attendance.objects.filter(date__month=int(date_month), date__year=int(date_year)).values_list('date', flat=True).distinct().order_by('date')
     r = 0
     y = 0
     z = 0
     for x in range(1, len(dates)+1):
         try:
             d = dt.datetime.strptime(str(attendance_dates[r]), "%Y-%m-%d").date().day
+        except IndexError:
+            regulars.append(False)
+        try:
+            
             h = dt.datetime.strptime(str(dates[z]), "%Y-%m-%d").date()
 
             if ph_calendar.is_holiday(h):
@@ -447,81 +741,77 @@ def dtr_specific_employee(request, pk):
             undertime.append("")
             overtime.append("")
             minutes_worked.append("")
-
-        # calc = calc_minutes_worked(emp_logs[x].in_am, emp_logs[x].out_am, emp_logs[x].in_pm, emp_logs[x].out_pm)
-        # mins = convert_time_to_minutes(calc)
-        # minutes_worked.append(mins)
-        # if mins < 480:
-        #     undertime.append(480 - mins)
-        #     overtime.append("")
-        # elif mins > 480:
-        #     overtime.append(mins - 480)
-        #     undertime.append("")
-        # else:
-        #     undertime.append("")
-        #     overtime.append("")
-        # total_hours+=mins
+            
+    # print(len(emp_in_am), len(emp_out_am), len(emp_in_pm), len(emp_out_pm), len(emp_remarks), len(minutes_worked), len(undertime), len(overtime), len(holidays), len(regulars))
+    # print(regulars)
+    
     sets = zip(dates, emp_in_am, emp_out_am, emp_in_pm, emp_out_pm, emp_remarks, undertime, overtime, minutes_worked, holidays, regulars)
     
-    context = {'employee':emp_name, 'logs':sets, 'total':round(total_hours/60, 2)}
+    context = {'employee':emp_name, 'logs':sets, 'total':round(total_hours/60, 2), 'date':date, 'year_month':year_month}
     return render(request, template, context)
-# DEPARTMENT ################################################################
-# def department(request):
-#     departments = Department.objects.all()
-#     context = {'departments': departments}
-#     template = 'employees/department/department.html'
-#     return render(request, template, context)
-
-# def create_dept(request):
-    # context = {}
-    # form = DepartmentForm()
-    # template = 'employees/department/create_dept.html'
-
-    # if request.method == 'POST':
-    #     form = DepartmentForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         name = form.cleaned_data['name']
-    #         messages.success(request, f'{name} added successfully!')
-    #         return redirect('create_dept')
-
-    # context = {'form' : form}
-    # return render(request, template, context)
-
-# def update_dept(request, pk):
-    # context = {}
-    # department = Department.objects.get(id=pk)
-    # dept_name = department.name
-    # form = DepartmentForm(instance=department)
-    # template = 'employees/department/update_dept.html'
-    # if request.method == 'POST':
-    #     form = DepartmentForm(request.POST, instance=department)
-    #     if form.is_valid():
-    #         form.save()
-    #         messages.success(request, f'{dept_name} updated to {department.name} successfully!')
-    #         return redirect('department')
-    
-    # context = {'form': form}
-    # return render(request, template, context)
-
-# def delete_dept(request, pk):
-    # department = Department.objects.get(id=pk)
-    # template = 'employees/department/delete_dept.html'
-
-    # if request.method == 'POST':
-    #     department.delete()
-    #     messages.success(request, f'{department.name} deleted successfully!')
-    #     return redirect('department')
-    
-    # return render(request, template, {'department': department})
-
 # DESIGNATION ################################################################
+@login_required
+def designation(request):
+    designations = Designation.objects.all()
+    context = {'designations': designations}
+    template = 'employees/designation/designation.html'
+    return render(request, template, context)
+
+@login_required
+def create_desig(request):
+    context = {}
+    form = DesignationForm()
+    template = 'employees/designation/create_desig.html'
+
+    if request.method == 'POST':
+        form = DesignationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            name = form.cleaned_data['name']
+            messages.success(request, f'{name} added successfully!')
+            return redirect('create_desig')
+
+    context = {'form' : form}
+    return render(request, template, context)
+
+@login_required
+def update_desig(request, pk):
+    context = {}
+    designation = Designation.objects.get(id=pk)
+    desig_name = designation.name
+    form = DesignationForm(instance=designation)
+    template = 'employees/designation/update_desig.html'
+    if request.method == 'POST':
+        form = DesignationForm(request.POST, instance=designation)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'{desig_name} updated to {designation.name} successfully!')
+            return redirect('designation')
+    
+    context = {'form': form}
+    return render(request, template, context)
+
+@login_required
+def delete_desig(request, pk):
+    designation = Designation.objects.get(id=pk)
+    template = 'employees/designation/delete_desig.html'
+
+    if request.method == 'POST':
+        designation.delete()
+        messages.success(request, f'{designation.name} deleted successfully!')
+        return redirect('designation')
+    
+    return render(request, template, {'designation': designation})
+
+# POSITION ################################################################
+@login_required
 def position(request):
     positions = Position.objects.all()
     context = {'positions': positions}
     template = "employees/position/position.html"
     return render(request, template, context)
 
+@login_required
 def create_position(request):
     context = {}
     form = PositionForm()
@@ -538,6 +828,7 @@ def create_position(request):
     context = {'form' : form}
     return render(request, template, context)
 
+@login_required
 def update_position(request, pk):
     context = {}
     template = 'employees/position/update_position.html'
@@ -554,6 +845,7 @@ def update_position(request, pk):
     context = {'form': form}
     return render(request, template, context)
 
+@login_required
 def delete_position(request, pk):
     position = Position.objects.get(id=pk)
     template = 'employees/position/delete_position.html'
@@ -566,25 +858,47 @@ def delete_position(request, pk):
     return render(request, template, {'position': position})
 
 # SCHEDULE #####################################################################
+@login_required
 def activate(request, pk):
     Schedule.objects.filter(id=pk).update(is_active=True)
     Schedule.objects.filter(is_active=True).exclude(id=pk).update(is_active=False)
     messages.success(request, "activated successfully!")
     return redirect('schedule')
 
+@login_required
 def deactivate(request, pk):
     Schedule.objects.filter(id=pk).update(is_active=False)
     messages.success(request, "deactivated successfully!")
     return redirect('schedule')
 
+@login_required
 def schedule(request):
     # schedules = Schedule.objects.all()
+    context = {}
+    template = "employees/schedule/schedule.html"
+    admins = Employee.objects.filter(position__name="admin")
+
     active_sched = Schedule.objects.filter(is_active=True)
     inactive_sched = Schedule.objects.filter(is_active=False)
-    context = {'active_sched': active_sched, 'inactive_sched':inactive_sched}
-    template = "employees/schedule/schedule.html"
+    current_signatory = Signatory.objects.all()
+
+    if request.method == "POST":
+        signatory = request.POST.get('signatory')
+        name = signatory.split("_")[0]
+        position = signatory.split("_")[1]
+        s = Signatory.objects.all().count()
+        if s == 0:
+            Signatory.objects.create(signatory=name, position=position)
+        else:
+            Signatory.objects.update(signatory=name, position=position)
+        messages.success(request, "Signatory updated successfully!")
+        return redirect('schedule')
+
+    context = {'admins':admins, 'current':current_signatory, 'active_sched': active_sched, 'inactive_sched':inactive_sched}
+
     return render(request, template, context)
 
+@login_required
 def create_sched(request):
     context = {}
     template = 'employees/schedule/create_sched.html'
@@ -609,6 +923,7 @@ def create_sched(request):
 
     return render(request, template, context)
 
+@login_required
 def update_sched(request, pk):
     context = {}
     template = 'employees/schedule/update_sched.html'
@@ -630,6 +945,7 @@ def update_sched(request, pk):
     
     return render(request, template, context)
 
+@login_required
 def delete_sched(request, pk):
     schedule = Schedule.objects.get(id=pk)
     sched_name = schedule.name
@@ -643,22 +959,32 @@ def delete_sched(request, pk):
     return render(request, template, {'schedule': schedule})
 
 # EMPLOYEE ##################################################################
+@login_required
 def employee(request):
     employees = Employee.objects.all().order_by('id')
     p = Paginator(employees, 10)
     page_number = request.GET.get('page')
     p_employees = p.get_page(page_number)
-    context = {'employees': p_employees}
+    emp_count = employees.count()
+    context = {'employees': p_employees, 'count':emp_count}
     template = "employees/employee/employee.html"
     return render(request, template, context)
 
+@login_required
 def view_emp(request, pk):
     emp_details = Employee.objects.filter(id=pk)
     id = emp_details[0].id
-    context = {'emp_details': emp_details, 'emp_id':id}
+    try:
+        birthdate = emp_details[0].birth_date
+        age = get_age(birthdate)
+    except:
+        age = None
+
+    context = {'emp_details': emp_details, 'emp_id':id, 'age': age}
     template = 'employees/employee/view_emp.html'
     return render(request, template, context)
 
+@login_required
 def create_emp(request):
     context = {}
     form = EmployeeForm()
@@ -670,7 +996,10 @@ def create_emp(request):
         recent_id = Employee.objects.latest('id')
         emp_id = str(recent_id).split('-')[2]
 
-        numm = emp_id.replace("0", "")
+        if emp_id[2] == "0":
+            numm = emp_id.replace("0", "", 1)
+        else:
+            numm = emp_id.replace("0", "")
         int_num = int(numm) + 1
         if len(str(int_num)) == 1:
             id_num = "00" + str(int_num)
@@ -717,28 +1046,28 @@ def create_emp(request):
                 return render(request, template, {'form':form, 'id_num':id_num})
 
             shutil.move(image_path, path_to_unregistered)
-            test = checkIfExist(image_checking)
+            # test = checkIfExist(image_checking)
 
-            if test is True:
-                os.remove(image_checking)
-                messages.warning(request, "Employee already registered!")
-                return render(request, template, {'form':form, 'id_num':id_num})
-            elif test is False:
-                id_name = f'{id}_{lastname}, {firstname[0]}.'
-                user = User.objects.create_user(id, "", id)
-                register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
-                user.save()
-                register.save()
-                new_image_path = os.path.join(settings.MEDIA_ROOT, f'registered/{id_name}.jpg')
-                os.rename(image_checking, new_image_path)
-                messages.success(request, f'Employee {id} registered successfully!')
-                form = EmployeeForm()
-                # return render(request, template, {'form':form, 'id_num':id_num})
-                return redirect('create_emp')
-            else:
-                os.remove(image_checking)
-                messages.error(request, "No face detected!")
-                return render(request, template, {'form':form, 'id_num':id_num})
+            # if test is True:
+            #     os.remove(image_checking)
+            #     messages.warning(request, "Employee already registered!")
+            #     return render(request, template, {'form':form, 'id_num':id_num})
+            # elif test is False:
+            id_name = f'{id}_{lastname}, {firstname[0]}.'
+            user = User.objects.create_user(id, "", id)
+            register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
+            user.save()
+            register.save()
+            new_image_path = os.path.join(settings.MEDIA_ROOT, f'registered/{id_name}.jpg')
+            os.rename(image_checking, new_image_path)
+            messages.success(request, f'Employee {id} registered successfully!')
+            form = EmployeeForm()
+            # return render(request, template, {'form':form, 'id_num':id_num})
+            return redirect('create_emp')
+            # else:
+            #     os.remove(image_checking)
+            #     messages.error(request, "No face detected!")
+            #     return render(request, template, {'form':form, 'id_num':id_num})
 
             # form.save()
             # return redirect('employee')
@@ -746,6 +1075,7 @@ def create_emp(request):
     context = {'form' : form, 'id_num':id_num}
     return render(request, template, context)
 
+@login_required
 def update_emp(request, pk):
     emp_id = Employee.objects.get(id=pk)
     context = {'employee_id':emp_id}
@@ -770,6 +1100,7 @@ def update_emp(request, pk):
     context = {'form': form, 'employee_id':emp_id}
     return render(request, template, context)
 
+@login_required
 def update_photo(request, pk):
     emp_id = Employee.objects.get(id=pk)
     emp_details = Employee.objects.filter(id=pk)
@@ -823,6 +1154,7 @@ def update_photo(request, pk):
 
     return render(request, template, context)
 
+@login_required
 def delete_emp(request, pk):
     emp_id = Employee.objects.get(id=pk)
     emp_user = User.objects.get(username=emp_id)
@@ -839,12 +1171,14 @@ def delete_emp(request, pk):
     return render(request, template, {'employee': emp_id})
 
 # HOLIDAY ###############################################################
+@login_required
 def holiday(request):
     holidays = Holiday.objects.all()
     context = {'holidays': holidays}
     template = 'employees/holiday.html'
     return render(request, template, context)
 
+@login_required
 def import_holidays(request):
     ph_calendar = Philippines()
     year = dt.datetime.now().year
@@ -856,6 +1190,7 @@ def import_holidays(request):
     messages.success(request, "Holidays imported successfully!")
     return redirect('holiday')
 
+@login_required
 def create_holiday(request):
     context = {}
     # form = HolidayForm()
@@ -871,6 +1206,7 @@ def create_holiday(request):
     # context = {'form': form}
     return render(request, template, context)
 # ATTENDANCE #############################################################
+
 def attendance(request):
     context = {}
     in_am = Schedule.objects.filter(is_active=True).values()[0]['in_am']

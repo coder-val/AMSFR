@@ -4,6 +4,12 @@
 
 {% block content %}
 <div class="row right">
+    <form action="" method="post" class="col right">
+        {% csrf_token %}
+        <label for="month">MONTH: </label>
+        <input type="month" name="month" id="" required style="margin-right: 1rem">
+        <button class=" btn waves-effect waves-light green accent-3" type="submit" name="action">GO</button>
+    </form>
     <div class="col" style="display: flex; align-items:center; justify-content:center; gap:1rem">
         <span><b>restday</b></span>
         <span class="yellow lighten-4 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
@@ -47,8 +53,6 @@
             </tr>
             {% endfor %}
         </tbody>
-        
     </table>
 </div>
-
 {% endblock content %}

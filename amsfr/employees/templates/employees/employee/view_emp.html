@@ -28,12 +28,12 @@
                                             <td> {{employee.firstname}} {{employee.middlename}}  {{employee.lastname}} </td>
                                         </tr>
                                         <tr>
-                                            <td class="right"><b>Birth Date: </b></td>
-                                            <td> {{employee.birth_date}} </td>
+                                            <td class="right"><b>Age: </b></td>
+                                            <td> {{age}} </td>
                                         </tr>
                                         <tr>
-                                            <td class="right"><b>Mobile No.: </b></td>
-                                            <td> {{employee.mobile_number}} </td>
+                                            <td class="right"><b>Birth Date: </b></td>
+                                            <td> {{employee.birth_date}} </td>
                                         </tr>
                                         <tr>
                                             <td class="right"><b>Address: </b></td>
@@ -42,6 +42,10 @@
                                             {% else %}
                                             <td>None</td>
                                             {% endif %}
+                                        </tr>
+                                        <tr>
+                                            <td class="right"><b>Mobile No.: </b></td>
+                                            <td> {{employee.mobile_number}} </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -65,14 +69,9 @@
                                             <td> {{employee.id}} </td>
                                         </tr>
                                         <tr>
-                                            <td class="right"><b>Picture ID: </b></td>
-                                            {% comment %} <td> {{employee.id_picture|cut:"registered/400392-"|cut:".jpg"}} </td> {% endcomment %}
-                                            <td> <a href="{{employee.id_picture.url}}" target="_blank"> {{employee.id_picture|cut:"registered/400392-"}} </a></td>
+                                            <td class="right"><b>Designation: </b></td>
+                                            <td> {{employee.designation}} </td>
                                         </tr>
-                                        {% comment %} <tr>
-                                            <td class="right"><b>Department: </b></td>
-                                            <td> {{employee.department}} </td>
-                                        </tr> {% endcomment %}
                                         <tr>
                                             <td class="right"><b>Position: </b></td>
                                             <td> {{employee.position}} </td>
@@ -81,10 +80,6 @@
                                             <td class="right"><b>Date Employed: </b></td>
                                             <td> {{employee.date_employed}} </td>
                                         </tr>
-                                        {% comment %} <tr>
-                                            <td class="right"><b>Date Registered: </b></td>
-                                            <td> {{employee.created|date:"m-d-Y"}} </td>
-                                        </tr> {% endcomment %}
                                     </tbody>
                                 </table>
                             </div>
@@ -129,37 +124,8 @@
                         <li>
                             <div class="collapsible-header" style="font-size:1.5rem;"><b>Employee Logs</b></div>
                             <div class="collapsible-body">
-                                {% comment %} <table>
-                                    <tbody>
-                                        <tr>
-                                            <td class="right"><b>Date of Birth: </b></td>
-                                            <td> {% if employee.birth_date is Null %} None {% else %} {{employee.birth_date|date:"m-d-Y"}} {% endif %} </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="right"><b>Gender: </b></td>
-                                            <td> {% if employee.gender == 'F' %} Female {% elif employee.gender == 'M' %} Male {% else %} None {% endif %} </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="right"><b>Mobile Number: </b></td>
-                                            <td> {{employee.mobile_number}} </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="right"><b>Barangay: </b></td>
-                                            <td> {{employee.barangay}} </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="right"><b>Municipality: </b></td>
-                                            <td> {{employee.municipality}} </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="right"><b>Province: </b></td>
-                                            <td> {{employee.province}} </td>
-                                        </tr>
-                                    </tbody>
-                                </table> {% endcomment %}
                                 <p class="center">
-                                    <a href="{% url 'dtr_specific_employee' employee.id %}">ALL LOGS</a>
-                                    
+                                    <a href="#!">soon</a>
                                 </p>
                             </div>
                         </li>

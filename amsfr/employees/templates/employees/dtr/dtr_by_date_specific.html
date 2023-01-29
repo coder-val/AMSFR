@@ -17,7 +17,7 @@
                 <th>UNDERTIME</th>
                 <th>OVERTIME</th>
                 <th>MINUTES<br>WORKED</th>
-                <th>ACTIONS</th>
+                <th>MORE</th>
             </tr>
         </thead>
         <tbody>
@@ -33,7 +33,7 @@
                 <td> {% if min and ut %}{{ut}}{% else %}-{% endif %} </td>
                 <td> {% if min and ot %}{{ot}}{% else %}-{% endif %} </td>
                 <td> {% if min %}{{min}}{% else %}-{% endif %} </td>
-                <td>eme</td>
+                <td><a href="{% url 'dtr_specific_employee' log.employee_id log.date %}"><i class="material-icons">list</i></a></td>
             </tr>
             {% endfor %}
         </tbody>

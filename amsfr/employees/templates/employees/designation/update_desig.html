@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Update Department{% endblock title %}
-{% block heading %}Update Department{% endblock heading %}
+{% block title %}Update Designation{% endblock title %}
+{% block heading %}Update Designation{% endblock heading %}
 {% block content %}
 <form action="" method="post">
     {% csrf_token %}
@@ -16,7 +16,7 @@
             </div>
             <div class="row">
                 <div class="col s12 center">
-                    <a href="{% url 'department' %}" class=" btn waves-effect waves-light purple accent-3" style="margin-right: .5rem">Back</a>
+                    <a href="{% url 'designation' %}" class=" btn waves-effect waves-light purple accent-3" style="margin-right: .5rem">Back</a>
                     <button class=" btn waves-effect waves-light green accent-4" type="submit" name="action">Update</button>
                 </div>
             </div>

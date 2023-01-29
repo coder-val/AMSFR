@@ -1,10 +1,10 @@
 from django.forms import ModelForm
 from .models import *
 
-# class DepartmentForm(ModelForm):
-#     class Meta:
-#         model = Department
-#         fields = '__all__'
+class DesignationForm(ModelForm):
+    class Meta:
+        model = Designation
+        fields = '__all__'
 
 class PositionForm(ModelForm):
     class Meta:
@@ -17,11 +17,6 @@ class EmployeeForm(ModelForm):
         fields = '__all__'
         exclude = ['user']
 
-# class EmployeeImageForm(ModelForm):
-#     class Meta:
-#         model = Employee
-#         fields = ['biometric_id']
-
 class ScheduleForm(ModelForm):
     class Meta:
         model = Schedule
@@ -31,4 +26,9 @@ class ScheduleForm(ModelForm):
 class ThresholdForm(ModelForm):
     class Meta:
         model = Threshold
+        fields = '__all__'
+
+class SignatoryForm(ModelForm):
+    class Meta:
+        model = Signatory
         fields = '__all__'

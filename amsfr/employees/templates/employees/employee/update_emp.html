@@ -38,15 +38,14 @@
                     {{form.birth_date}}
                 </div>
                 <div class="input-field col s4">
-                    {{form.mobile_number.errors}}
-                    {{form.mobile_number.label_tag}}
-                    {{form.mobile_number}}
-                </div>
-                <div class="input-field col s4">
                     {{form.position.errors}}
                     <label style="position:absolute; top: -28px; font-size: 12px" for={{form.position.id_for_label}}>{{form.position.label}}:</label>
-                    {% comment %} {{form.position.label_tag}} {% endcomment %}
                     {{form.position}}
+                </div>
+                <div class="input-field col s4">
+                    {{form.designation.errors}}
+                    <label style="position:absolute; top: -28px; font-size: 12px" for={{form.designation.id_for_label}}>{{form.designation.label}}:</label>
+                    {{form.designation}}
                 </div>
             </div>
             <div class="row">
@@ -67,16 +66,11 @@
                 </div>
             </div>
             <div class="row">
-                {% comment %} <div class="file-field input-field col s8">
-                    {{form.id_picture.errors}}
-                    <div class="btn purple accent-3">
-                        <span>{{form.id_picture.label}}</span>
-                        {{form.id_picture}}
-                    </div>
-                    <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" required>
-                    </div>
-                </div> {% endcomment %}
+                <div class="input-field col s4">
+                    {{form.mobile_number.errors}}
+                    {{form.mobile_number.label_tag}}
+                    {{form.mobile_number}}
+                </div>
                 <div class="input-field col s4">
                     {{form.date_employed.errors}}
                     {{form.date_employed.label_tag}}

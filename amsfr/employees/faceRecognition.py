@@ -86,7 +86,7 @@ def checkIfExist(image):
             # cv2.putText(imgS, "GOOD!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0), 3)
             result = False
         
-        elif matches[np.argmin(faceDis)] and (faceDis[np.argmin(faceDis)] < 0.5):
+        elif matches[np.argmin(faceDis)] and (faceDis[np.argmin(faceDis)] < 0.4):
             # name = classNames[np.argmin(faceDis)].upper()
             # cv2.putText(imgS, "NO GOOD!", (10, 50), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0, 0, 255), 3)
             # print(name)

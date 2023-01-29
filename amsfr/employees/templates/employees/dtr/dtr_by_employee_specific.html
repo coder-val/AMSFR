@@ -3,23 +3,33 @@
 {% block heading %}{% for name in employee %}{{name.lastname|upper}}, {{name.firstname|upper}} {{name.middlename.0|upper|add:"."}}{% endfor %}<span style="font-size: 1.5rem; margin-left:1rem" class="purple lighten-5">{{total}} hours </span>{% endblock heading %}
 
 {% block content %}
-<div class="row right">
-    <div class="col" style="display: flex; align-items:center; justify-content:center; gap:1rem">
-        <span><b>restday</b></span>
+<div class="row">
+    <div class="col left">
+        <h5><b>{{year_month|date:"F Y"|upper}}</b></h5>
+    </div>
+    <div class="col right">
+        {% for emp in employee %}
+        {% comment %} <a style="margin-left: 1rem" href="{% url 'print_monthly' emp.id date %}" target="_blank" class="left btn waves-effect waves-light green accent-4"><i class="material-icons">print</i></a> {% endcomment %}
+        <a class='dropdown-trigger btn waves-effect waves-light green accent-4' data-target='dropdown1'><i class="material-icons">print</i></a>
+        <!-- Dropdown Structure -->
+        <ul id='dropdown1' class='dropdown-content'>
+            <li><a href="{% url 'print_first_half' emp.id date %}" target="_blank"><i class="material-icons">print</i>first half</a></li>
+            <li><a href="{% url 'print_second_half' emp.id date %}" target="_blank"><i class="material-icons">print</i>second half</a></li>
+            <li><a href="{% url 'print_monthly' emp.id date %}" target="_blank"><i class="material-icons">print</i>full month</a></li>
+        </ul>
+        {% endfor %}
+    </div>
+    <div class="col right" style="display: flex; align-items:center; justify-content:center; gap:1rem">
+        <span><b>weekends</b></span>
         <span class="yellow lighten-4 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
     </div>
-    <div class="col" style="display: flex; align-items:center; justify-content:center; gap:1rem">
+    <div class="col right" style="display: flex; align-items:center; justify-content:center; gap:1rem">
         <span style=""><b>holiday</b></span>
         <span class="green lighten-4 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
     </div>
-    <div class="col" style="display: flex; align-items:center; justify-content:center; gap:1rem">
+    <div class="col right" style="display: flex; align-items:center; justify-content:center; gap:1rem">
         <span style=""><b>absent</b></span>
         <span class="grey lighten-2 z-depth-2" style="display: inline-block;width: 2rem; height: 2rem; border-radius: 5px"></span>
-    </div>
-    <div class="col left">
-        {% for emp in employee %}
-        <a href="{% url 'print_monthly' emp.id %}" target="_blank" class="left btn waves-effect waves-light purple accent-3">PRINT</a>
-        {% endfor %}
     </div>
 </div>
 <div class="row">
@@ -43,7 +53,7 @@
             {% for date, in_am, out_am, in_pm, out_pm, remarks, ut, ot, min, holiday, regular in logs %}
             {% if holiday is True %}
             <tr class="green lighten-4">
-            {% elif date|date:"D" == "Sun" %}
+            {% elif date|date:"D" == "Sat" or date|date:"D" == "Sun" %}
             <tr class="yellow lighten-4">
             {% comment %} {% elif remarks == "P" %}
             <tr class="green lighten-4">

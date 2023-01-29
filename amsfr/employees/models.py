@@ -3,14 +3,14 @@ from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
 
 # Create your models here.
-# class Department(models.Model):
-#     name = models.CharField(max_length=50, unique=True, verbose_name="department name")
+class Designation(models.Model):
+    name = models.CharField(max_length=50, unique=True, verbose_name="designation name")
 
-#     class Meta:
-#         db_table = 'departments'
+    class Meta:
+        db_table = 'designations'
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 class Position(models.Model):
     name = models.CharField(max_length=150, unique=True, verbose_name="position name")
@@ -62,6 +62,7 @@ class Employee(models.Model):
     # primary info
     id_picture = models.ImageField(verbose_name="Picture ID")
     position = models.ForeignKey(Position, models.SET_NULL, blank=True, null=True)#
+    designation = models.ForeignKey(Designation,models.SET_NULL, blank=True, null=True)
     date_employed = models.DateField(blank=True, null=True)
     # reportsTo = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)# SETTINGS
     # department = models.ForeignKey(Department, models.SET_NULL, blank=True, null=True)#
@@ -96,6 +97,13 @@ class Threshold(models.Model):
 
     class Meta:
         db_table = 'threshold'
+
+class Signatory(models.Model):
+    signatory = models.CharField(max_length=100, blank=True, null=True)
+    position = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        db_table = 'signatory'
 
 class Holiday(models.Model):
     holiday = models.CharField(max_length=50)

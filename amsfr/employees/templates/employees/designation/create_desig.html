@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Create Department{% endblock title %}
-{% block heading %}Create Department{% endblock heading %}
+{% block title %}Create Designation{% endblock title %}
+{% block heading %}Create Designation{% endblock heading %}
     
 {% block content %}
 
@@ -17,10 +17,13 @@
         </div>
         <div class="row">
             <div class="col s12 center">
-                <a href="{% url 'department' %}" class=" btn waves-effect waves-light purple accent-3" style="margin-right: .5rem">Back</a>
+                <a href="{% url 'designation' %}" class=" btn waves-effect waves-light purple accent-3" style="margin-right: .5rem">Back</a>
                 <button class=" btn waves-effect waves-light green accent-4" type="submit" name="action">Create</button>
             </div>
         </div>
     </form>
 </div>
+<script>
+    document.getElementById('id_name').focus()
+</script>
 {% endblock content %}

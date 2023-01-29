@@ -35,16 +35,19 @@
             <h3 style="font-weight: bold">{% block heading %}{% endblock heading %}</h3>
             </blockquote>
         </div>
+        
     </header>
     <main>
         <div class="container">
             {% block content %}{% endblock content %}
         </div>
+        {% block signatory %}{% endblock signatory %}
+        {% block content2 %}{% endblock content2 %}
     </main>
     <footer class="page-footer white" style="">
         <div class="white">
             <div class="container center-align">
-                <p style="color: black">SAINT FRANCIS ACADEMY INC © 2023</p>
+                <p style="color: black">SFASTI © AMSFR 2023</p>
             </div>
         </div>
     </footer>
@@ -104,6 +107,12 @@
             var instances = M.Datepicker.init(id_regdate,{maxDate:date_now});
             var id_expdate = document.getElementById('id_expiration_date');
             var instances = M.Datepicker.init(id_expdate,{minDate:date_now});
+            var elems = document.querySelectorAll('.dropdown-trigger');
+            var instances = M.Dropdown.init(elems, {constrainWidth:false});
+
+            var dtr_by_employee = document.getElementById('dtr_by_employee');
+            var instances = M.Datepicker.init(dtr_by_employee,{yearRange:10, format:'yyyy-mm'});
+            
             var instances = M.Timepicker.init(in_am_elem, {defaultTime: '7:15 AM'});
             var instances = M.Timepicker.init(out_am_elem, {defaultTime: '11:45 AM'});
             var instances = M.Timepicker.init(in_pm_elem, {defaultTime: '1:00 PM'});

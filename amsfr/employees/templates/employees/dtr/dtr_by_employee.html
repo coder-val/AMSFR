@@ -4,6 +4,17 @@
 
 {% block content %}
 <div class="row">
+    <div class="col left">
+        <h5><b>{{year_month|date:"F Y"|upper}}</b></h5>
+    </div>
+    <form action="" method="post" class="col right">
+        {% csrf_token %}
+        <label for="month">MONTH: </label>
+        <input type="month" name="month" id="" required style="margin-right: 1rem">
+        <button class=" btn waves-effect waves-light green accent-3" type="submit" name="action">GO</button>
+    </form>
+</div>
+<div class="row">
     <table class="highlight centered hoverable responsive-table">
         <thead>
             <tr>
@@ -20,15 +31,24 @@
         <tbody>
             {% for employee, days, absents, lates, ut, ot in employees %}
             <tr>
-                <td> {{employee.id|cut:"400392-"}} </td>
+                <td> <a href="{% url 'dtr_specific_employee' employee.id year_month|date:"Y-n"|upper %}"> {{employee.id|cut:"400392-"}} </a></td>
                 <td> {{employee.lastname}}, {{employee.firstname}} {{employee.middlename.0|add:"."}} </td>
                 <td> {{days}} </td>
                 <td> {{lates}} </td>
                 <td> {{absents}} </td>
                 <td> {{ut}} </td>
                 <td> {{ot}} </td>
-                <td><a href="{% url 'dtr_specific_employee' employee.id %}"><i class="material-icons">list</i></a></td>
+                <td>
+                    <a href="{% url 'dtr_specific_employee' employee.id year_month|date:"Y-n"|upper %}"><i class="material-icons">list</i></a>
+                    <a class='dropdown-trigger' data-target='dropdown1'><i class="material-icons" style="margin-left:10px">print</i></a>
+                </td>
             </tr>
+            <!-- Dropdown Structure -->
+            <ul id='dropdown1' class='dropdown-content'>
+                <li><a href="{% url 'print_first_half' employee.id year_month|date:"Y-n" %}"><i class="material-icons">print</i>first half</a></li>
+                <li><a href="{% url 'print_second_half' employee.id year_month|date:"Y-n" %}"><i class="material-icons">print</i>second half</a></li>
+                <li><a href="{% url 'print_monthly' employee.id year_month|date:"Y-n" %}"><i class="material-icons">print</i>full month</a></li>
+            </ul>
             {% endfor %}
         </tbody>
     </table>

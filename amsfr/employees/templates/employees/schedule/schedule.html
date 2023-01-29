@@ -111,9 +111,42 @@
         </li>
     </ul>
 </div>
+{% endblock content %}
+{% block signatory %}
+<div class="row" style="padding-left: 90px;">
+    <blockquote style="margin-left: 2.5rem;">
+    <h3 style="font-weight: bold">Signatory</h3>
+    </blockquote>
+</div>
+{% endblock signatory %}
+{% block content2 %}
+<div class="row">
+    <div class="col s12 m6 l3 offset-m1 offset-l2">
+        <p><b>Current: {% if current %}{% for cur in current %}{{cur.signatory}}{% endfor %}{% else %}None{% endif %}</b></p>
+    </div>
+</div>
+<div class="row">
+    <form action="" method="post" class="col s12">
+        {% csrf_token %}
+        <div class="row">
+            <div class="input-field col s12 m6 l3 offset-m1 offset-l2">
+                <select name="signatory" required>
+                    <option value="" disabled selected>Choose your option</option>
+                    {% for admin in admins %}
+                    <option value="{{admin.firstname}} {{admin.middlename.0|add:"."}} {{admin.lastname}}_{{admin.position}} "> {{admin.firstname}} {{admin.middlename.0|add:"."}} {{admin.lastname}} </option>
+                    {% endfor %}
+                </select>
+            <label>Signatory</label>
+            </div>
+            <div class="col s12 m3 l3" style="padding-top: 20px">
+                <button class=" btn waves-effect waves-light green accent-4" type="submit" name="action">Select</button>
+            </div>
+        </div>
+    </form>
+</div>
 <div class="fixed-action-btn">
     <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'create_sched' %}" data-position="left" data-tooltip="add">
       <i class="large material-icons">add</i>
     </a>
 </div>
-{% endblock content %}
+{% endblock content2 %}

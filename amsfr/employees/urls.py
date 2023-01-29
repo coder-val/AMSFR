@@ -10,10 +10,10 @@ urlpatterns = [
 
     path('dashboard/', dashboard, name='dashboard'),
 
-    # path('department/', department, name='department'),
-    # path('department/create/', create_dept, name='create_dept'),
-    # path('department/update/<str:pk>/', update_dept, name='update_dept'),
-    # path('department/delete/<str:pk>/', delete_dept, name='delete_dept'),
+    path('designation/', designation, name='designation'),
+    path('designation/create/', create_desig, name='create_desig'),
+    path('designation/update/<str:pk>/', update_desig, name='update_desig'),
+    path('designation/delete/<str:pk>/', delete_desig, name='delete_desig'),
 
     path('position/', position, name='position'),
     path('position/create/', create_position, name='create_position'),
@@ -39,11 +39,13 @@ urlpatterns = [
     path('employee/delete/<str:pk>/', delete_emp, name='delete_emp'),
 
     path('dtr/dtr_by_date/', dtr_by_date, name="dtr_by_date"),
-    path('dtr/dtr_by_date/<str:date>/', dtr_specific_date, name="dtr_specific_date"),
     path('dtr/dtr_by_employee/', dtr_by_employee, name="dtr_by_employee"),
-    path('dtr/dtr_by_employee/<str:pk>/', dtr_specific_employee, name="dtr_specific_employee"),
+    path('dtr/dtr_by_date/<str:date>/', dtr_specific_date, name="dtr_specific_date"),
+    path('dtr/dtr_by_employee/<str:pk>/<str:date>/', dtr_specific_employee, name="dtr_specific_employee"),
 
-    path('dtr/dtr_by_employee/<str:pk>/print/', print_monthly, name="print_monthly"),
+    path('dtr/dtr_by_employee/<str:pk>/<str:date>/monthly/print/', print_monthly, name="print_monthly"),
+    path('dtr/dtr_by_employee/<str:pk>/<str:date>/first-half/print/', print_first_half, name="print_first_half"),
+    path('dtr/dtr_by_employee/<str:pk>/<str:date>/second-half/print/', print_second_half, name="print_second_half"),
     # path('dtr/print/pdf/', GeneratePdf.as_view()),
 
     path('attendance/', attendance, name='attendance'),
