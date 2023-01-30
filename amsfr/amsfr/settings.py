@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+import datetime as dt
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,8 +41,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'employees.apps.EmployeesConfig',
     'accounts.apps.AccountsConfig',
+
     'django_htmx',
+    'dbbackup',
+    'django_cron',
 ]
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR, 'backup')}
+
+CRON_CLASSES = [
+    "amsfr.cron.MyCronJob",
+]
+
+# def backup_filename(databasename, servername, datetime, extension, content_type):
+#     return f"{databasename}-{servername}-{datetime}.{extension}"
+
+# DBBACKUP_DATE_FORMAT = '%Y-%m-%d-%H%M%S'
+# DBBACKUP_FILENAME_TEMPLATE = backup_filename(databasename="amsfr_db", servername="", datetime=dt.datetime.now().strftime(DBBACKUP_DATE_FORMAT), extension="sql", content_type="")
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -88,6 +105,14 @@ DATABASES = {
         'PASSWORD': '',
         'HOST':'localhost',
         'PORT':'3306',
+    }
+}
+
+DBBACKUP_CONNECTORS = {
+    'default': {
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost'
     }
 }
 

@@ -30,7 +30,7 @@ class VideoCamera(object):
             encodesCurFrame = face_recognition.face_encodings(imgS, facesCurFrame)
 
             for encodeFace, faceLoc in zip(encodesCurFrame, facesCurFrame):
-                matches = face_recognition.compare_faces(encodeListKnown, encodeFace, 0.6)
+                matches = face_recognition.compare_faces(encodeListKnown, encodeFace, 0.7)
                 faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)
 
                 matchesIndex = np.argmin(faceDis)

@@ -45,9 +45,9 @@
             </tr>
             <!-- Dropdown Structure -->
             <ul id='dropdown1' class='dropdown-content'>
-                <li><a href="{% url 'print_first_half' employee.id year_month|date:"Y-n" %}"><i class="material-icons">print</i>first half</a></li>
-                <li><a href="{% url 'print_second_half' employee.id year_month|date:"Y-n" %}"><i class="material-icons">print</i>second half</a></li>
-                <li><a href="{% url 'print_monthly' employee.id year_month|date:"Y-n" %}"><i class="material-icons">print</i>full month</a></li>
+                <li><a href="{% url 'print_first_half' employee.id year_month|date:"Y-n" %}" target="_blank"><i class="material-icons">print</i>first half</a></li>
+                <li><a href="{% url 'print_second_half' employee.id year_month|date:"Y-n" %}" target="_blank"><i class="material-icons">print</i>second half</a></li>
+                <li><a href="{% url 'print_monthly' employee.id year_month|date:"Y-n" %}" target="_blank"><i class="material-icons">print</i>full month</a></li>
             </ul>
             {% endfor %}
         </tbody>
