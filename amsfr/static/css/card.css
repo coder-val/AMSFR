@@ -1,0 +1,8 @@
+.card-panel {
+    transition: all .5s ease;
+}
+.card-panel:hover {
+    transform: scale(1.2);
+    margin-right: 2rem;
+    transition: all .5s ease;
+}

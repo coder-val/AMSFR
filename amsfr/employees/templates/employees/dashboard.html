@@ -1,7 +1,41 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/bg.css' %}">
+<link rel="stylesheet" href="{% static 'css/card.css' %}">
+{% endblock styles %}
 {% block title %}Dashboard{% endblock title %}
-{% block heading %}Dashboard{% endblock heading %}
+{% block heading %} <span style="color:white">{{greetings}}</span> {% endblock heading %}
 
+{% block logo %}<img src="{% static 'utilities/sfa-logo.png' %}" alt="" width="400px" style="position:absolute;top:50%;left:50%;transform: translate(-50%,-50%);z-index: -2;">{% endblock logo %}
 {% block content %}
+<div class="row" style="font-size:2rem;position:absolute;right:0;top:50%; transform:translateY(-50%)">
+    <div class="col s12">
+        <div class="row">
+            <a href="{% url 'dtr_specific_date' date %}"><div class="card-panel green" style="text-align:center">
+                <span class="white-text" style="opacity: 0.5;">
+                    PRESENT: 
+                </span>
+                <span class="white-text">{{present}}</span>
+            </div>
+            </a>
+            <a href="{% url 'dtr_specific_date' date %}">
+                <div class="card-panel yellow darken-3" style="text-align:center">
+                    <span class="white-text" style="opacity: 0.5;">
+                        LATE: 
+                    </span>
+                    <span class="white-text">{{late}}</span>
+                </div>
+            </a>
+            <a href="{% url 'dtr_specific_date' date %}">
+                <div class="card-panel red" style="text-align:center">
+                    <span class="white-text" style="opacity: 0.5;">
+                        ABSENT: 
+                    </span>
+                    <span class="white-text">{{absent}}</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock content %}

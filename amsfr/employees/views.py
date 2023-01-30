@@ -24,6 +24,11 @@ from django.views.generic import View
 from .process import html_to_pdf
 from django.template.loader import render_to_string
 
+import os
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+
 def convert_time(time):
     if time >= dt.time(1,0,0) and time < dt.time(11,59,59):
         str_time = time.strftime("%H:%M:%S")
@@ -394,7 +399,6 @@ def print_monthly(request, pk, date):
     ot = [x for x in overtime if x != ""]
 
     signatory = Signatory.objects.first()
-    position = Employee.objects.filter()
     sets = zip(dates, emp_in_am, emp_out_am, emp_in_pm, emp_out_pm, emp_remarks, undertime, overtime, minutes_worked, holidays, regulars)
     
     context = {'employee':emp_name, 'logs':sets, 'total':round(total_hours/60, 2), 'days_worked':len(days_worked), 'lates':len(lates), 'absents':absents, 'undertime':len(ut), 'overtime':len(ot), 'month':now, 'dt':dt.datetime.now(), 'signatory':signatory}
@@ -429,12 +433,12 @@ def home(request):
         now_date = dt.datetime.now().date()
         cut_off = dt.timedelta(hours=23, minutes=59, seconds=59, microseconds=0)
 
-        if now_time >= dt.timedelta(hours=6) and now_time < in_pm:
+        if now_time >= dt.timedelta(hours=6) and now_time < dt.timedelta(hours=12):
             insides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=True, date=now_date).order_by('-in_am')
             outsides = Attendance.objects.filter(in_am__isnull=False, out_am__isnull=False, date=now_date).order_by('-out_am') | Attendance.objects.filter(in_am__isnull=True, out_am__isnull=False, date=now_date).order_by('-out_am')
             context = {'insides':insides, 'outsides':outsides}
 
-        elif now_time >= in_pm and now_time < cut_off:
+        elif now_time >= dt.timedelta(hours=12) and now_time < cut_off:
             insides = Attendance.objects.filter(in_pm__isnull=False, out_pm__isnull=True, date=now_date).order_by('-in_pm')
             outsides = Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=False, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=True, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=False, in_pm__isnull=True, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=False, out_pm__isnull=False, date=now_date).order_by('-out_pm') | Attendance.objects.filter(out_am__isnull=True, in_pm__isnull=True, out_pm__isnull=False, date=now_date).order_by('-out_pm')
             context = {'insides':insides, 'outsides':outsides}
@@ -453,6 +457,29 @@ def test(request):
 def dashboard(request):
     context = {}
     template = "employees/dashboard.html"
+
+    morning = "Good Morning!"
+    afternoon = "Good Afternoon!"
+    date_now = dt.datetime.now().date()
+
+    if convert_to_timedelta_2(dt.datetime.now().time()) >= dt.timedelta(hours=12) and convert_to_timedelta_2(dt.datetime.now().time()) <= dt.timedelta(hours=23, minutes=59, seconds=59):
+        greetings = afternoon
+    else:
+        greetings = morning
+
+    total = Employee.objects.all().count()
+    q = Attendance.objects.filter(date = dt.datetime.now().date())
+    # q = Attendance.objects.filter(date = dt.date(year=2023, month=1, day=3))
+    present = q.filter(remarks="P") | q.filter(remarks="L")
+    late = q.filter(remarks="L")
+    p = present.count()
+    l = late.count()
+    a = 0
+    if q.exists():
+        a = total - p
+
+    context = {'present': p, 'late':l, 'absent':a, 'greetings': greetings, 'date':date_now}
+
     return render(request, template, context)
 
 # def test_print(request):
@@ -548,6 +575,7 @@ def dtr_by_date(request):
 
 @login_required
 def dtr_specific_date(request, date):
+    absentees = []
     context = {}
     template = 'employees/dtr/dtr_by_date_specific.html'
 
@@ -555,6 +583,10 @@ def dtr_specific_date(request, date):
     n_date = dt.date(year=int(d[0]),month=int(d[1]), day=int(d[2]))
 
     logs = Attendance.objects.filter(date=n_date).order_by('reference__lastname')
+    if logs.exists():
+        absents = Employee.objects.exclude(id__in=[logs[x].employee_id for x in range(logs.count())])
+    else:
+        absents = None
     minutes_worked = []
     undertime = []
     overtime = []
@@ -574,7 +606,7 @@ def dtr_specific_date(request, date):
     
     sets = zip(logs, undertime, overtime, minutes_worked)
     # print(int(convert_time_to_minutes(str(calc))))
-    context = {'logs':sets, 'date':n_date}
+    context = {'logs':sets, 'date':n_date, 'absents':absents}
 
     return render(request, template, context)
 

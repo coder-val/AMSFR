@@ -99,15 +99,19 @@ def mark_attendance(name):
         if not checkID.exists():
             markAttendance.save()
     #OUT AM
-    elif td_time_now >= td_out_am and td_time_now < td_in_pm:
+    elif td_time_now >= td_out_am and td_time_now < datetime.timedelta(hours=12):
         remarks = 'L'
         checkID = Attendance.objects.filter(employee_id = name, date = date_now)
         if not checkID.exists():
             Attendance.objects.create(reference = Employee.objects.get(id=name), employee_id = name, out_am = time_now, date = date_now, remarks = remarks)
         else:
+            # if checkID.filter(in_am__isnull=False):
+            #     log = checkID[0].in_am
+            #     print(log)
+            #     if td_time_now > convert_to_timedelta_2(log) + datetime.timedelta(minutes=5):
             Attendance.objects.filter(employee_id = name, in_am__isnull=False, out_am__isnull=True, in_pm__isnull=True, out_pm__isnull=True, date = date_now).update(out_am=time_now)
     #IN PM
-    elif td_time_now >= td_in_pm and td_time_now < td_out_pm:
+    elif td_time_now >= datetime.timedelta(hours=12) and td_time_now < td_out_pm:
         if td_time_now <= td_in_pm + threshold:
             remarks = 'P'
         else:
@@ -116,6 +120,9 @@ def mark_attendance(name):
         if not checkID.exists():
             Attendance.objects.create(reference = Employee.objects.get(id=name), employee_id = name, in_pm = time_now, date = date_now, remarks = remarks)
         else:
+            # if checkID.filter(out_am__isnull=False).exists():
+            #     log = checkID[0].out_am
+            #     if td_time_now > convert_to_timedelta_2(log) + datetime.timedelta(minutes=5):
             Attendance.objects.filter(employee_id = name, in_pm__isnull = True, date = date_now).update(in_pm = time_now)
     #OUT PM
     elif td_time_now >= td_out_pm and td_time_now <= datetime.timedelta(hours=23, minutes=59, seconds=59):

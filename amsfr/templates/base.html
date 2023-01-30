@@ -9,6 +9,7 @@
     <link type="text/css" rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}" media="screen,projection">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block styles %}{% endblock styles %}
     <script defer src="https://kit.fontawesome.com/4db0e106e1.js" crossorigin="anonymous"></script>
     <title>{% block title %}{% endblock title %}</title>
 </head>
@@ -24,11 +25,10 @@
         <div class="modal-footer">
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="modal-close waves-effect waves-green btn purple accent-3" style="font-size: 1rem; color: white;" autofocus><i class="material-icons right">logout</i>LOGOUT</button>
+                <button type="submit" class="modal-close waves-effect waves-green btn brown" style="font-size: 1rem; color: white;" autofocus><i class="material-icons right">logout</i>LOGOUT</button>
             </form>
         </div>
     </div>
-
     <header>
         <div class="row" style="padding-left: 90px;">
             <blockquote style="margin-left: 2.5rem;">
@@ -38,16 +38,19 @@
         
     </header>
     <main>
+        {% block logo %}{% endblock logo %}
+        <div class="bgg2" style="height:100vh;width:100%;position:absolute;top:0;z-index:-2;"></div>
+        <div class="bgg" style="height:100vh;width:100%;position:absolute;top:0;z-index:-3;"></div>
         <div class="container">
             {% block content %}{% endblock content %}
         </div>
         {% block signatory %}{% endblock signatory %}
         {% block content2 %}{% endblock content2 %}
     </main>
-    <footer class="page-footer white" style="">
-        <div class="white">
+    <footer style="background-color:transparent">
+        <div class="">
             <div class="container center-align">
-                <p style="color: black">SFASTI © AMSFR 2023</p>
+                <p style="color: grey">SFASTI © AMSFR 2023</p>
             </div>
         </div>
     </footer>

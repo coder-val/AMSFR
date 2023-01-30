@@ -1,0 +1,21 @@
+.bgg {
+
+    background-image: url('/static/utilities/bg.jpg');
+    
+  /* Full height */
+  height: 100%; 
+  /* Center and scale the image nicely */
+  /* background-position: center; */
+  /* background-repeat: no-repeat; */
+  background-size: cover;
+}
+.bgg2{
+    background-color: rgb(35, 35, 35);
+    opacity: 0.90;
+}
+.bgg3{
+    background-image: url('/static/utilities/sfa-logo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}

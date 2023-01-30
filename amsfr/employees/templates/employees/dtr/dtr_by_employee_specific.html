@@ -46,7 +46,7 @@
                 <th>UNDERTIME</th>
                 <th>OVERTIME</th>
                 <th>MINUTES<br>WORKED</th>
-                <th>ACTIONS</th>
+                {% comment %} <th>ACTIONS</th> {% endcomment %}
             </tr>
         </thead>
         <tbody>
@@ -74,7 +74,7 @@
                 <td> {{ut}} </td>
                 <td> {{ot}} </td>
                 <td> {{min}} </td>
-                <td> {% if remarks %}soon{% endif %} </td>
+                {% comment %} <td> {% if remarks %}soon{% endif %} </td> {% endcomment %}
                 {% comment %} <td> {{log.date|date:"D"}} </td> {% endcomment %}
                 {% comment %} <td> {{log.date|date:"SHORT_DATE_FORMAT"}} </td> {% endcomment %}
                 {% comment %} <td> {% if log.date|date:"j" == date|slugify %}hakdog {% else %}{{log.date|date:"j"}}{% endif %} </td>
@@ -93,7 +93,7 @@
     </table>
 </div>
 <div class="fixed-action-btn">
-    <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'dtr_by_employee' %}" data-position="left" data-tooltip="back">
+    <a class="btn-floating btn-large pulse brown darken-4 waves-effect waves-light tooltipped-l" href="{% url 'dtr_by_employee' %}" data-position="left" data-tooltip="back">
       <i class="large material-icons">arrow_back</i>
     </a>
 </div>

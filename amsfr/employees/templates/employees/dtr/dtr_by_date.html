@@ -38,7 +38,7 @@
             {% for date, present, absent, holiday, regular in dates %}
             {% if holiday is True %}
             <tr class="green lighten-4">
-            {% elif date|date:"D" == "Sun" %}
+            {% elif date|date:"D" == "Sat" or date|date:"D" == "Sun" %}
             <tr class="yellow lighten-4">
             {% elif not regular %}
             <tr class="grey lighten-2">

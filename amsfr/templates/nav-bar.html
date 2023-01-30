@@ -2,7 +2,7 @@
 {% block navbar %}
 <div class="navbar-fixed">
   <nav>
-    <div class="nav-wrapper purple">
+    <div class="nav-wrapper brown">
       <ul class="left">
         <li><img style="margin-left: 1rem;" src="{% static 'utilities/icon.png' %}" alt=""></li>
         <li><a href="{% url 'dashboard' %}" style="font-size: 2rem">AMSFR</a></li>
@@ -13,10 +13,10 @@
       <ul class="right hide-on-med-and-down">
         {% if request.user.is_authenticated %}
         <li><a href="#!"> {{request.user}} </a></li>
-        <li><a href="#logout-modal" class="waves-effect waves-light btn modal-trigger purple accent-2 tooltipped-l" data-position="left" data-tooltip="logout" alt="logout"><span class="material-icons">logout</span></a></li>
+        <li><a href="#logout-modal" class="waves-effect waves-light btn modal-trigger brown lighten-1 tooltipped-l" data-position="left" data-tooltip="logout" alt="logout"><span class="material-icons">logout</span></a></li>
         {% else %}
         {% comment %} <li><a href="#">Anonymous</a></li> {% endcomment %}
-        <li><a href="{% url 'login' %}" class="waves-effect waves-light btn modal-trigger purple accent-2 tooltipped-l" data-position="left" data-tooltip="login" alt="login"><span class="material-icons">login</span></a></li>
+        <li><a href="{% url 'login' %}" class="waves-effect waves-light btn modal-trigger brown lighten-1 tooltipped-l" data-position="left" data-tooltip="login" alt="login"><span class="material-icons">login</span></a></li>
         {% endif %}
       </ul>
     </div>

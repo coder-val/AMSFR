@@ -36,11 +36,26 @@
                 <td><a href="{% url 'dtr_specific_employee' log.employee_id log.date %}"><i class="material-icons">list</i></a></td>
             </tr>
             {% endfor %}
+            {% for a in absents %}
+            <tr>
+                <td> {{a.id|cut:"400392-"}} </td>
+                <td> {{a.lastname|upper}}, {{a.firstname|upper}} {{a.middlename.0|upper|add:"."}} </td>
+                <td>--:--:--</td>
+                <td>--:--:--</td>
+                <td>--:--:--</td>
+                <td>--:--:--</td>
+                <td>A</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><a href="{% url 'dtr_specific_employee' a.id date %}"><i class="material-icons">list</i></a></td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
 <div class="fixed-action-btn">
-    <a class="btn-floating btn-large pulse purple accent-2 waves-effect waves-light tooltipped-l" href="{% url 'dtr_by_date' %}" data-position="left" data-tooltip="back">
+    <a class="btn-floating btn-large pulse brown darken-4 waves-effect waves-light tooltipped-l" href="{% url 'dtr_by_date' %}" data-position="left" data-tooltip="back">
       <i class="large material-icons">arrow_back</i>
     </a>
 </div>
