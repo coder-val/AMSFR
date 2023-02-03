@@ -44,15 +44,10 @@ INSTALLED_APPS = [
 
     'django_htmx',
     'dbbackup',
-    'django_cron',
 ]
 
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR, 'backup')}
-
-CRON_CLASSES = [
-    "amsfr.cron.MyCronJob",
-]
 
 # def backup_filename(databasename, servername, datetime, extension, content_type):
 #     return f"{databasename}-{servername}-{datetime}.{extension}"

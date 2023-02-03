@@ -43,16 +43,17 @@ class Employee(models.Model):
 
 
     # account info
-    user = models.ForeignKey(User, on_delete=models.CASCADE)#
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)#
     # email = models.EmailField(blank=True, null=True, unique=True)#
     # created = models.DateTimeField(auto_now_add=True)#
 
     # personal info
     id = models.CharField(primary_key=True, max_length=14, validators=[MinLengthValidator(13, message="ID must be at least 13 characters.")])
-    firstname = models.CharField(max_length=40)#
-    middlename = models.CharField(max_length=40)#
-    lastname = models.CharField(max_length=40)#
-    birth_date = models.DateField(blank=True, null=True)#
+    firstname = models.CharField(max_length=40, verbose_name="* Firstname")#
+    middlename = models.CharField(max_length=40, verbose_name="* Middlename")#
+    lastname = models.CharField(max_length=40, verbose_name="* Lastname")#
+    suffix = models.CharField(max_length=40, blank=True, null=True)
+    birth_date = models.DateField(verbose_name="* Birthdate")#
     mobile_number = models.CharField(max_length=11, blank=True, null=True)#
     barangay = models.CharField(max_length=30, blank=True, null=True)#
     municipality = models.CharField(max_length=30, blank=True, null=True)#

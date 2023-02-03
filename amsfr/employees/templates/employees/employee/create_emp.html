@@ -19,21 +19,31 @@
                     {{form.id}}
                 </div>
             </div>
+            <div class="">
+                <blockquote>
+                    <span><b>Required fields are marked with an asterisk.</b></span>
+                </blockquote>
+            </div>
             <div class="row">
-                <div class="input-field col s4">
+                <div class="input-field col s3">
                     {{form.lastname.errors}}
                     {{form.lastname.label_tag}}
                     {{form.lastname}}
                 </div>
-                <div class="input-field col s4">
+                <div class="input-field col s3">
                     {{form.firstname.errors}}
                     {{form.firstname.label_tag}}
                     {{form.firstname}}
                 </div>
-                <div class="input-field col s4">
+                <div class="input-field col s3">
                     {{form.middlename.errors}}
                     {{form.middlename.label_tag}}
                     {{form.middlename}}
+                </div>
+                <div class="input-field col s3">
+                    {{form.suffix.errors}}
+                    {{form.suffix.label_tag}}
+                    {{form.suffix}}
                 </div>
             </div>
             <div class="row">

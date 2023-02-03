@@ -1086,9 +1086,10 @@ def create_emp(request):
             #     return render(request, template, {'form':form, 'id_num':id_num})
             # elif test is False:
             id_name = f'{id}_{lastname}, {firstname[0]}.'
-            user = User.objects.create_user(id, "", id)
-            register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
-            user.save()
+            # user = User.objects.create_user(id, "", id)
+            # register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
+            register = Employee(id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
+            # user.save()
             register.save()
             new_image_path = os.path.join(settings.MEDIA_ROOT, f'registered/{id_name}.jpg')
             os.rename(image_checking, new_image_path)
