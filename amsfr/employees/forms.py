@@ -16,6 +16,7 @@ class EmployeeForm(ModelForm):
         model = Employee
         fields = '__all__'
         # exclude = ['user']
+        exclude = ['id']
 
 class ScheduleForm(ModelForm):
     class Meta:

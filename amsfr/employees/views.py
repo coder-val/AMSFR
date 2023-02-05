@@ -1021,6 +1021,8 @@ def create_emp(request):
     context = {}
     form = EmployeeForm()
     template = 'employees/employee/create_emp.html'
+    
+    id_prefix = "400392-23-"
 
     if Employee.objects.all().count() == 0:
         id_num = "001"
@@ -1043,7 +1045,8 @@ def create_emp(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST, request.FILES)
         if form.is_valid():
-            id = form.cleaned_data['id']
+            # id = form.cleaned_data['id']
+            id = id_prefix+id_num
             id_picture = request.FILES['id_picture']
             lastname = form.cleaned_data['lastname']
             firstname = form.cleaned_data['firstname']
@@ -1056,6 +1059,7 @@ def create_emp(request):
             municipality = form.cleaned_data['municipality']
             province = form.cleaned_data['province']
             position = form.cleaned_data['position']
+            designation = form.cleaned_data['designation']
             date_employed = form.cleaned_data['date_employed']
             license_no = form.cleaned_data['license_no']
             registration_date = form.cleaned_data['registration_date']
@@ -1075,7 +1079,7 @@ def create_emp(request):
             if os.path.isfile(image_checking):
                 os.remove(image_path)
                 messages.warning(request, "ID picture already used!")
-                return render(request, template, {'form':form, 'id_num':id_num})
+                return render(request, template, {'form':form})
 
             shutil.move(image_path, path_to_unregistered)
             # test = checkIfExist(image_checking)
@@ -1085,10 +1089,10 @@ def create_emp(request):
             #     messages.warning(request, "Employee already registered!")
             #     return render(request, template, {'form':form, 'id_num':id_num})
             # elif test is False:
-            id_name = f'{id}_{lastname}, {firstname[0]}.'
+            id_name = f'{lastname.title()}, {firstname[0].title()}.'
             # user = User.objects.create_user(id, "", id)
             # register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
-            register = Employee(id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
+            register = Employee(id = id, lastname = lastname.title(), firstname = firstname.title(), middlename = middlename.title(), birth_date = birth_date, mobile_number = mobile_number, barangay = barangay.title(), municipality = municipality.title(), province = province.title(), date_employed = date_employed, position = position, designation = designation, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
             # user.save()
             register.save()
             new_image_path = os.path.join(settings.MEDIA_ROOT, f'registered/{id_name}.jpg')
@@ -1190,15 +1194,16 @@ def update_photo(request, pk):
 @login_required
 def delete_emp(request, pk):
     emp_id = Employee.objects.get(id=pk)
-    emp_user = User.objects.get(username=emp_id)
+    # emp_user = User.objects.get(username=emp_id)
     template = 'employees/employee/delete_emp.html'
 
     if request.method == 'POST':
         if os.path.isfile(os.path.join(settings.MEDIA_ROOT, emp_id.id_picture.name)):
             os.remove(os.path.join(settings.MEDIA_ROOT, emp_id.id_picture.name))
         # employee.delete()
-        emp_user.delete()
+        # emp_user.delete()
         messages.success(request, f'Employee {emp_id} deleted successfully!')
+        emp_id.delete()
         return redirect('employee')
     
     return render(request, template, {'employee': emp_id})

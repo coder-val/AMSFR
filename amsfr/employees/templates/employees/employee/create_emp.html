@@ -8,7 +8,7 @@
     <div class="row">
         <form class="col s12" onsubmit="validateForm()" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="">
+            {% comment %} <div class="">
                 <blockquote>
                     <span><b>Note: ID is permanent and can not be changed in the future.</b></span>
                 </blockquote>
@@ -18,7 +18,7 @@
                     {{form.id.label_tag}}
                     {{form.id}}
                 </div>
-            </div>
+            </div> {% endcomment %}
             <div class="">
                 <blockquote>
                     <span><b>Required fields are marked with an asterisk.</b></span>
@@ -47,17 +47,22 @@
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s4">
+                <div class="input-field col s3">
                     {{form.birth_date.errors}}
                     {{form.birth_date.label_tag}}
                     {{form.birth_date}}
                 </div>
-                <div class="input-field col s4">
+                <div class="input-field col s3">
+                    {{form.mobile_number.errors}}
+                    {{form.mobile_number.label_tag}}
+                    {{form.mobile_number}}
+                </div>
+                <div class="input-field col s3">
                     {{form.position.errors}}
                     <label style="position:absolute; top: -28px;" for={{form.position.id_for_label}}>{{form.position.label}}:</label>
                     {{form.position}}
                 </div>
-                <div class="input-field col s4">
+                <div class="input-field col s3">
                     {{form.designation.errors}}
                     <label style="position:absolute; top: -28px;" for={{form.designation.id_for_label}}>{{form.designation.label}}:</label>
                     {{form.designation}}
@@ -78,13 +83,6 @@
                     {{form.province.errors}}
                     {{form.province.label_tag}}
                     {{form.province}}
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s4">
-                    {{form.mobile_number.errors}}
-                    {{form.mobile_number.label_tag}}
-                    {{form.mobile_number}}
                 </div>
             </div>
             <div class="">
