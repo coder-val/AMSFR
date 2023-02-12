@@ -10,10 +10,10 @@ urlpatterns = [
 
     path('dashboard/', dashboard, name='dashboard'),
 
-    path('designation/', designation, name='designation'),
-    path('designation/create/', create_desig, name='create_desig'),
-    path('designation/update/<str:pk>/', update_desig, name='update_desig'),
-    path('designation/delete/<str:pk>/', delete_desig, name='delete_desig'),
+    # path('designation/', designation, name='designation'),
+    # path('designation/create/', create_desig, name='create_desig'),
+    # path('designation/update/<str:pk>/', update_desig, name='update_desig'),
+    # path('designation/delete/<str:pk>/', delete_desig, name='delete_desig'),
 
     path('position/', position, name='position'),
     path('position/create/', create_position, name='create_position'),

@@ -25,7 +25,7 @@
             <tr>
                 <td><img class="circle" src="{% if employee.id_picture %}{{employee.id_picture.url}}{% endif %}" onerror="this.onerror=null; this.src='{% static 'unregistered/default.png' %}'" alt="" width='60'></td>
                 <td><a href="{% url 'view_emp' employee.id %}">{{employee.id|cut:"400392-"}}</a></td>
-                <td>{{employee.lastname}}, {{employee.firstname}} {{employee.middlename.0|add:"."}}</td>
+                <td>{{employee.lastname|upper}}, {{employee.firstname|upper}} {{employee.middlename.0|upper|add:"."}}</td>
                 {% if employee.mobile_number %}
                 <td>{{employee.mobile_number}}</td>{% else %}
                 <td>~</td>{% endif %}

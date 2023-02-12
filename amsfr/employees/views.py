@@ -14,7 +14,7 @@ import datetime as dt
 import shutil, os
 from workalendar.asia import Philippines
 import pandas as pd
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import StreamingHttpResponse, HttpResponse
 from .camera import *
@@ -782,49 +782,49 @@ def dtr_specific_employee(request, pk, date):
     context = {'employee':emp_name, 'logs':sets, 'total':round(total_hours/60, 2), 'date':date, 'year_month':year_month}
     return render(request, template, context)
 # DESIGNATION ################################################################
-@login_required
-def designation(request):
-    designations = Designation.objects.all()
-    context = {'designations': designations}
-    template = 'employees/designation/designation.html'
-    return render(request, template, context)
+# @login_required
+# def designation(request):
+#     designations = Designation.objects.all()
+#     context = {'designations': designations}
+#     template = 'employees/designation/designation.html'
+#     return render(request, template, context)
 
-@login_required
-def create_desig(request):
-    context = {}
-    form = DesignationForm()
-    template = 'employees/designation/create_desig.html'
+# @login_required
+# def create_desig(request):
+#     context = {}
+#     form = DesignationForm()
+#     template = 'employees/designation/create_desig.html'
 
-    if request.method == 'POST':
-        form = DesignationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            name = form.cleaned_data['name']
-            messages.success(request, f'{name} added successfully!')
-            return redirect('create_desig')
+#     if request.method == 'POST':
+#         form = DesignationForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             name = form.cleaned_data['name']
+#             messages.success(request, f'{name} added successfully!')
+#             return redirect('create_desig')
 
-    context = {'form' : form}
-    return render(request, template, context)
+#     context = {'form' : form}
+#     return render(request, template, context)
 
-@login_required
-def update_desig(request, pk):
-    context = {}
-    designation = Designation.objects.get(id=pk)
-    desig_name = designation.name
-    form = DesignationForm(instance=designation)
-    template = 'employees/designation/update_desig.html'
-    if request.method == 'POST':
-        form = DesignationForm(request.POST, instance=designation)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f'{desig_name} updated to {designation.name} successfully!')
-            return redirect('designation')
+# @login_required
+# def update_desig(request, pk):
+#     context = {}
+#     designation = Designation.objects.get(id=pk)
+#     desig_name = designation.name
+#     form = DesignationForm(instance=designation)
+#     template = 'employees/designation/update_desig.html'
+#     if request.method == 'POST':
+#         form = DesignationForm(request.POST, instance=designation)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, f'{desig_name} updated to {designation.name} successfully!')
+#             return redirect('designation')
     
-    context = {'form': form}
-    return render(request, template, context)
+#     context = {'form': form}
+#     return render(request, template, context)
 
-@login_required
-def delete_desig(request, pk):
+# @login_required
+# def delete_desig(request, pk):
     designation = Designation.objects.get(id=pk)
     template = 'employees/designation/delete_desig.html'
 
@@ -1051,6 +1051,7 @@ def create_emp(request):
             lastname = form.cleaned_data['lastname']
             firstname = form.cleaned_data['firstname']
             middlename = form.cleaned_data['middlename']
+            suffix = form.cleaned_data['suffix']
             # email = form.cleaned_data['email']
             birth_date = form.cleaned_data['birth_date']
             # gender = form.cleaned_data['gender']
@@ -1059,7 +1060,7 @@ def create_emp(request):
             municipality = form.cleaned_data['municipality']
             province = form.cleaned_data['province']
             position = form.cleaned_data['position']
-            designation = form.cleaned_data['designation']
+            # designation = form.cleaned_data['designation']
             date_employed = form.cleaned_data['date_employed']
             license_no = form.cleaned_data['license_no']
             registration_date = form.cleaned_data['registration_date']
@@ -1092,7 +1093,7 @@ def create_emp(request):
             id_name = f'{lastname.title()}, {firstname[0].title()}.'
             # user = User.objects.create_user(id, "", id)
             # register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
-            register = Employee(id = id, lastname = lastname.title(), firstname = firstname.title(), middlename = middlename.title(), birth_date = birth_date, mobile_number = mobile_number, barangay = barangay.title(), municipality = municipality.title(), province = province.title(), date_employed = date_employed, position = position, designation = designation, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
+            register = Employee(id = id, lastname = lastname.title(), firstname = firstname.title(), middlename = middlename.title(), suffix = suffix, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay.title(), municipality = municipality.title(), province = province.title(), date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
             # user.save()
             register.save()
             new_image_path = os.path.join(settings.MEDIA_ROOT, f'registered/{id_name}.jpg')

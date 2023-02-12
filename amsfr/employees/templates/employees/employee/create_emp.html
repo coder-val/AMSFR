@@ -47,26 +47,26 @@
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s3">
+                <div class="input-field col s4">
                     {{form.birth_date.errors}}
                     {{form.birth_date.label_tag}}
                     {{form.birth_date}}
                 </div>
-                <div class="input-field col s3">
+                <div class="input-field col s4">
                     {{form.mobile_number.errors}}
                     {{form.mobile_number.label_tag}}
                     {{form.mobile_number}}
                 </div>
-                <div class="input-field col s3">
-                    {{form.position.errors}}
+                <div class="input-field col s4">
                     <label style="position:absolute; top: -28px;" for={{form.position.id_for_label}}>{{form.position.label}}:</label>
                     {{form.position}}
+                    {{form.position.errors}}
                 </div>
-                <div class="input-field col s3">
+                {% comment %} <div class="input-field col s3">
                     {{form.designation.errors}}
                     <label style="position:absolute; top: -28px;" for={{form.designation.id_for_label}}>{{form.designation.label}}:</label>
                     {{form.designation}}
-                </div>
+                </div> {% endcomment %}
             </div>
             <div class="row">
                 <div class="input-field col s4">
@@ -145,20 +145,21 @@
     const datemp = document.getElementById('id_date_employed');
     const datereg = document.getElementById('id_registration_date');
     const dateexp = document.getElementById('id_expiration_date');
-    const id = document.getElementById('id_id');
+    {% comment %} const id = document.getElementById('id_id'); {% endcomment %}
     let date = new Date();
     let yyyy = date.getFullYear().toString().slice(2);
     
-    for (const input of inputs) {
+    {% comment %} for (const input of inputs) {
         input.classList.add('validate')
-    }
-    id.minLength = 13
-    id.setAttribute('value', `400392-${yyyy}-{{id_num}}`)
+    } {% endcomment %}
+    {% comment %} id.minLength = 13 {% endcomment %}
+    {% comment %} id.setAttribute('value', `400392-${yyyy}-{{id_num}}`) {% endcomment %}
     datepkr.classList.add('datepicker')
     datemp.classList.add('datepicker')
     datereg.classList.add('datepicker')
     dateexp.classList.add('datepicker')
 
     document.getElementById('id_lastname').focus()
+    document.getElementById('id_position').required = false
 </script>
 {% endblock content %}

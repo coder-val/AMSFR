@@ -1,10 +1,10 @@
 from django.forms import ModelForm
 from .models import *
 
-class DesignationForm(ModelForm):
-    class Meta:
-        model = Designation
-        fields = '__all__'
+# class DesignationForm(ModelForm):
+#     class Meta:
+#         model = Designation
+#         fields = '__all__'
 
 class PositionForm(ModelForm):
     class Meta:

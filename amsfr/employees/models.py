@@ -3,14 +3,14 @@ from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
 
 # Create your models here.
-class Designation(models.Model):
-    name = models.CharField(max_length=50, unique=True, verbose_name="designation name")
+# class Designation(models.Model):
+#     name = models.CharField(max_length=50, unique=True, verbose_name="designation name")
 
-    class Meta:
-        db_table = 'designations'
+#     class Meta:
+#         db_table = 'designations'
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 class Position(models.Model):
     name = models.CharField(max_length=150, unique=True, verbose_name="position name")
@@ -55,15 +55,15 @@ class Employee(models.Model):
     suffix = models.CharField(max_length=40, blank=True, null=True)
     birth_date = models.DateField(verbose_name="* Birthdate")#
     mobile_number = models.CharField(max_length=11, blank=True, null=True)#
-    barangay = models.CharField(max_length=30, blank=True, null=True)#
-    municipality = models.CharField(max_length=30, blank=True, null=True)#
-    province = models.CharField(max_length=30, blank=True, null=True)#
+    barangay = models.CharField(max_length=30, verbose_name="* Barangay")#
+    municipality = models.CharField(max_length=30, verbose_name="* Municipality")#
+    province = models.CharField(max_length=30, verbose_name="* Province")#
     # gender = models.CharField(choices=GENDER_CHOICES, max_length=6, blank=True, null=True)#
 
     # primary info
     id_picture = models.ImageField(verbose_name="Picture ID")
-    position = models.ForeignKey(Position, models.SET_NULL, blank=True, null=True)#
-    designation = models.ForeignKey(Designation,models.SET_NULL, blank=True, null=True)
+    position = models.ForeignKey(Position, models.SET_DEFAULT, default=None, null=True, verbose_name="* Position")#
+    # designation = models.ForeignKey(Designation,models.SET_NULL, blank=True, null=True)
     date_employed = models.DateField(blank=True, null=True)
     # reportsTo = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)# SETTINGS
     # department = models.ForeignKey(Department, models.SET_NULL, blank=True, null=True)#

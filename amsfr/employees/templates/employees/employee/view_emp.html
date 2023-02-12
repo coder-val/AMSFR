@@ -25,7 +25,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="right"><b>Name: </b></td>
-                                            <td> {{employee.firstname}} {{employee.middlename}}  {{employee.lastname}} </td>
+                                            <td> {{employee.firstname}} {{employee.middlename}}  {{employee.lastname}}{% if employee.suffix %}, {{employee.suffix}}{% endif %}</td>
                                         </tr>
                                         <tr>
                                             <td class="right"><b>Age: </b></td>
@@ -43,10 +43,10 @@
                                             <td>None</td>
                                             {% endif %}
                                         </tr>
-                                        <tr>
+                                        {% comment %} <tr>
                                             <td class="right"><b>Mobile No.: </b></td>
                                             <td> {{employee.mobile_number}} </td>
-                                        </tr>
+                                        </tr> {% endcomment %}
                                     </tbody>
                                 </table>
                             </div>
@@ -68,10 +68,10 @@
                                             <td class="right"><b>Employee ID: </b></td>
                                             <td> {{employee.id}} </td>
                                         </tr>
-                                        <tr>
+                                        {% comment %} <tr>
                                             <td class="right"><b>Designation: </b></td>
                                             <td> {{employee.designation}} </td>
-                                        </tr>
+                                        </tr> {% endcomment %}
                                         <tr>
                                             <td class="right"><b>Position: </b></td>
                                             <td> {{employee.position}} </td>
@@ -79,6 +79,10 @@
                                         <tr>
                                             <td class="right"><b>Date Employed: </b></td>
                                             <td> {{employee.date_employed}} </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="right"><b>Contact: </b></td>
+                                            <td> {{employee.mobile_number}} </td>
                                         </tr>
                                     </tbody>
                                 </table>

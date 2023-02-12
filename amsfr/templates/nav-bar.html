@@ -12,7 +12,7 @@
       </ul>
       <ul class="right hide-on-med-and-down">
         {% if request.user.is_authenticated %}
-        <li><a href="#!"> {{request.user}} </a></li>
+        <li><a href="#!"> {{request.user|upper}} </a></li>
         <li><a href="#logout-modal" class="waves-effect waves-light btn modal-trigger brown lighten-1 tooltipped-l" data-position="left" data-tooltip="logout" alt="logout"><span class="material-icons">logout</span></a></li>
         {% else %}
         {% comment %} <li><a href="#">Anonymous</a></li> {% endcomment %}
