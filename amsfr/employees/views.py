@@ -455,6 +455,7 @@ def test(request):
 
 @login_required
 def dashboard(request):
+    print(settings.BASE_DIR)
     context = {}
     template = "employees/dashboard.html"
 
@@ -474,9 +475,10 @@ def dashboard(request):
     late = q.filter(remarks="L")
     p = present.count()
     l = late.count()
-    a = 0
-    if q.exists():
+    if q.exists() and total >= q.count():
         a = total - p
+    else:
+        a = 0
 
     context = {'present': p, 'late':l, 'absent':a, 'greetings': greetings, 'date':date_now}
 
@@ -908,7 +910,8 @@ def schedule(request):
     # schedules = Schedule.objects.all()
     context = {}
     template = "employees/schedule/schedule.html"
-    admins = Employee.objects.filter(position__name="admin")
+    # admins = Employee.objects.filter(position__name="admin")
+    admins = Employee.objects.all()
 
     active_sched = Schedule.objects.filter(is_active=True)
     inactive_sched = Schedule.objects.filter(is_active=False)
@@ -1090,7 +1093,7 @@ def create_emp(request):
             #     messages.warning(request, "Employee already registered!")
             #     return render(request, template, {'form':form, 'id_num':id_num})
             # elif test is False:
-            id_name = f'{lastname.title()}, {firstname[0].title()}.'
+            id_name = f'{id}_{lastname.title()}, {firstname.title()}'
             # user = User.objects.create_user(id, "", id)
             # register = Employee(user = user, id = id, lastname = lastname, firstname = firstname, middlename = middlename, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay, municipality = municipality, province = province, date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)
             register = Employee(id = id, lastname = lastname.title(), firstname = firstname.title(), middlename = middlename.title(), suffix = suffix, birth_date = birth_date, mobile_number = mobile_number, barangay = barangay.title(), municipality = municipality.title(), province = province.title(), date_employed = date_employed, position = position, id_picture = f'registered/{id_name}.jpg', license_no=license_no, registration_date=registration_date, expiration_date=expiration_date)

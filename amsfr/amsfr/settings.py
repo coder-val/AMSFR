@@ -47,13 +47,7 @@ INSTALLED_APPS = [
 ]
 
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
-DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR, 'backup')}
-
-# def backup_filename(databasename, servername, datetime, extension, content_type):
-#     return f"{databasename}-{servername}-{datetime}.{extension}"
-
-# DBBACKUP_DATE_FORMAT = '%Y-%m-%d-%H%M%S'
-# DBBACKUP_FILENAME_TEMPLATE = backup_filename(databasename="amsfr_db", servername="", datetime=dt.datetime.now().strftime(DBBACKUP_DATE_FORMAT), extension="sql", content_type="")
+DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR, 'db_backup')}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -166,4 +160,4 @@ LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/"
 
 THRESHOLD = 5 #MINUTES
-CAMERA = 1
+CAMERA = 0

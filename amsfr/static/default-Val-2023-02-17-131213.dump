@@ -35,7 +35,7 @@ CREATE TABLE `attendance` (
   PRIMARY KEY (`id`),
   KEY `attendance_reference_id_0c15ba01_fk_employees_id` (`reference_id`),
   CONSTRAINT `attendance_reference_id_0c15ba01_fk_employees_id` FOREIGN KEY (`reference_id`) REFERENCES `employees` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,6 +44,7 @@ CREATE TABLE `attendance` (
 
 LOCK TABLES `attendance` WRITE;
 /*!40000 ALTER TABLE `attendance` DISABLE KEYS */;
+INSERT INTO `attendance` VALUES (1,'400392-23-001','10:42:36.386755',NULL,NULL,NULL,'2023-02-17','L',NULL),(2,'400392-23-002','10:42:52.548772',NULL,NULL,NULL,'2023-02-17','L','400392-23-002');
 /*!40000 ALTER TABLE `attendance` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,7 +115,7 @@ CREATE TABLE `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +124,7 @@ CREATE TABLE `auth_permission` (
 
 LOCK TABLES `auth_permission` WRITE;
 /*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
-INSERT INTO `auth_permission` VALUES (1,'Can add log entry',1,'add_logentry'),(2,'Can change log entry',1,'change_logentry'),(3,'Can delete log entry',1,'delete_logentry'),(4,'Can view log entry',1,'view_logentry'),(5,'Can add permission',2,'add_permission'),(6,'Can change permission',2,'change_permission'),(7,'Can delete permission',2,'delete_permission'),(8,'Can view permission',2,'view_permission'),(9,'Can add group',3,'add_group'),(10,'Can change group',3,'change_group'),(11,'Can delete group',3,'delete_group'),(12,'Can view group',3,'view_group'),(13,'Can add user',4,'add_user'),(14,'Can change user',4,'change_user'),(15,'Can delete user',4,'delete_user'),(16,'Can view user',4,'view_user'),(17,'Can add content type',5,'add_contenttype'),(18,'Can change content type',5,'change_contenttype'),(19,'Can delete content type',5,'delete_contenttype'),(20,'Can view content type',5,'view_contenttype'),(21,'Can add session',6,'add_session'),(22,'Can change session',6,'change_session'),(23,'Can delete session',6,'delete_session'),(24,'Can view session',6,'view_session'),(25,'Can add holiday',7,'add_holiday'),(26,'Can change holiday',7,'change_holiday'),(27,'Can delete holiday',7,'delete_holiday'),(28,'Can view holiday',7,'view_holiday'),(29,'Can add position',8,'add_position'),(30,'Can change position',8,'change_position'),(31,'Can delete position',8,'delete_position'),(32,'Can view position',8,'view_position'),(33,'Can add schedule',9,'add_schedule'),(34,'Can change schedule',9,'change_schedule'),(35,'Can delete schedule',9,'delete_schedule'),(36,'Can view schedule',9,'view_schedule'),(37,'Can add employee',10,'add_employee'),(38,'Can change employee',10,'change_employee'),(39,'Can delete employee',10,'delete_employee'),(40,'Can view employee',10,'view_employee'),(41,'Can add attendance',11,'add_attendance'),(42,'Can change attendance',11,'change_attendance'),(43,'Can delete attendance',11,'delete_attendance'),(44,'Can view attendance',11,'view_attendance'),(45,'Can add threshold',12,'add_threshold'),(46,'Can change threshold',12,'change_threshold'),(47,'Can delete threshold',12,'delete_threshold'),(48,'Can view threshold',12,'view_threshold'),(49,'Can add designation',13,'add_designation'),(50,'Can change designation',13,'change_designation'),(51,'Can delete designation',13,'delete_designation'),(52,'Can view designation',13,'view_designation'),(53,'Can add signatory',14,'add_signatory'),(54,'Can change signatory',14,'change_signatory'),(55,'Can delete signatory',14,'delete_signatory'),(56,'Can view signatory',14,'view_signatory'),(57,'Can add cron job log',15,'add_cronjoblog'),(58,'Can change cron job log',15,'change_cronjoblog'),(59,'Can delete cron job log',15,'delete_cronjoblog'),(60,'Can view cron job log',15,'view_cronjoblog'),(61,'Can add cron job lock',16,'add_cronjoblock'),(62,'Can change cron job lock',16,'change_cronjoblock'),(63,'Can delete cron job lock',16,'delete_cronjoblock'),(64,'Can view cron job lock',16,'view_cronjoblock');
+INSERT INTO `auth_permission` VALUES (1,'Can add log entry',1,'add_logentry'),(2,'Can change log entry',1,'change_logentry'),(3,'Can delete log entry',1,'delete_logentry'),(4,'Can view log entry',1,'view_logentry'),(5,'Can add permission',2,'add_permission'),(6,'Can change permission',2,'change_permission'),(7,'Can delete permission',2,'delete_permission'),(8,'Can view permission',2,'view_permission'),(9,'Can add group',3,'add_group'),(10,'Can change group',3,'change_group'),(11,'Can delete group',3,'delete_group'),(12,'Can view group',3,'view_group'),(13,'Can add user',4,'add_user'),(14,'Can change user',4,'change_user'),(15,'Can delete user',4,'delete_user'),(16,'Can view user',4,'view_user'),(17,'Can add content type',5,'add_contenttype'),(18,'Can change content type',5,'change_contenttype'),(19,'Can delete content type',5,'delete_contenttype'),(20,'Can view content type',5,'view_contenttype'),(21,'Can add session',6,'add_session'),(22,'Can change session',6,'change_session'),(23,'Can delete session',6,'delete_session'),(24,'Can view session',6,'view_session'),(25,'Can add holiday',7,'add_holiday'),(26,'Can change holiday',7,'change_holiday'),(27,'Can delete holiday',7,'delete_holiday'),(28,'Can view holiday',7,'view_holiday'),(29,'Can add schedule',8,'add_schedule'),(30,'Can change schedule',8,'change_schedule'),(31,'Can delete schedule',8,'delete_schedule'),(32,'Can view schedule',8,'view_schedule'),(33,'Can add signatory',9,'add_signatory'),(34,'Can change signatory',9,'change_signatory'),(35,'Can delete signatory',9,'delete_signatory'),(36,'Can view signatory',9,'view_signatory'),(37,'Can add threshold',10,'add_threshold'),(38,'Can change threshold',10,'change_threshold'),(39,'Can delete threshold',10,'delete_threshold'),(40,'Can view threshold',10,'view_threshold'),(41,'Can add employee',11,'add_employee'),(42,'Can change employee',11,'change_employee'),(43,'Can delete employee',11,'delete_employee'),(44,'Can view employee',11,'view_employee'),(45,'Can add position',12,'add_position'),(46,'Can change position',12,'change_position'),(47,'Can delete position',12,'delete_position'),(48,'Can view position',12,'view_position'),(49,'Can add attendance',13,'add_attendance'),(50,'Can change attendance',13,'change_attendance'),(51,'Can delete attendance',13,'delete_attendance'),(52,'Can view attendance',13,'view_attendance');
 /*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,7 +149,7 @@ CREATE TABLE `auth_user` (
   `date_joined` datetime(6) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +158,7 @@ CREATE TABLE `auth_user` (
 
 LOCK TABLES `auth_user` WRITE;
 /*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
-INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$260000$f8xrDGFo0Zvi8XKAjkbeL3$VPB97CgWxvjCxgScuDPnKhqx/SDMN6KgRCFFKmZhWRA=','2023-01-29 18:53:58.023927',1,'admin','','','',1,1,'2023-01-29 18:41:22.079839'),(6,'pbkdf2_sha256$260000$G8cW1cHtGSrDX3OV6UeNHL$nt5ZKFOnPUSbL+TcZIeG67aAC/g4beQDNR27CjiQaZA=',NULL,0,'400392-23-001','','','',0,1,'2023-01-29 18:55:57.937256'),(7,'pbkdf2_sha256$260000$QGiqdlxlDhfLqi3EIOaTKI$NE7lc+HmqJ65zzw9FWx3MucgDCff/ICLLj2z3CGeeCs=',NULL,0,'400392-23-002','','','',0,1,'2023-01-29 18:56:14.519924'),(8,'pbkdf2_sha256$260000$BF5ihCdAe5kXuSj7u9tAZN$jimANjiF0ipMQGmTNi19ESaprLAcUSpqhgIXW+iLqJA=',NULL,0,'400392-23-003','','','',0,1,'2023-01-29 18:56:25.888181');
+INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$260000$gbXAFMSmYROgIXdC03Patq$WCgBOkjfVIpThO2LkUPBlsCVVcPtiJ0ZprfOso5J44c=','2023-02-17 01:37:57.166697',1,'admin','','','',1,1,'2023-02-17 01:19:04.927394');
 /*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -218,30 +219,6 @@ LOCK TABLES `auth_user_user_permissions` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `designations`
---
-
-DROP TABLE IF EXISTS `designations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `designations` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `designations`
---
-
-LOCK TABLES `designations` WRITE;
-/*!40000 ALTER TABLE `designations` DISABLE KEYS */;
-/*!40000 ALTER TABLE `designations` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `django_admin_log`
 --
 
@@ -287,7 +264,7 @@ CREATE TABLE `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -296,69 +273,8 @@ CREATE TABLE `django_content_type` (
 
 LOCK TABLES `django_content_type` WRITE;
 /*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
-INSERT INTO `django_content_type` VALUES (1,'admin','logentry'),(3,'auth','group'),(2,'auth','permission'),(4,'auth','user'),(5,'contenttypes','contenttype'),(16,'django_cron','cronjoblock'),(15,'django_cron','cronjoblog'),(11,'employees','attendance'),(13,'employees','designation'),(10,'employees','employee'),(7,'employees','holiday'),(8,'employees','position'),(9,'employees','schedule'),(14,'employees','signatory'),(12,'employees','threshold'),(6,'sessions','session');
+INSERT INTO `django_content_type` VALUES (1,'admin','logentry'),(3,'auth','group'),(2,'auth','permission'),(4,'auth','user'),(5,'contenttypes','contenttype'),(13,'employees','attendance'),(11,'employees','employee'),(7,'employees','holiday'),(12,'employees','position'),(8,'employees','schedule'),(9,'employees','signatory'),(10,'employees','threshold'),(6,'sessions','session');
 /*!40000 ALTER TABLE `django_content_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `django_cron_cronjoblock`
---
-
-DROP TABLE IF EXISTS `django_cron_cronjoblock`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `django_cron_cronjoblock` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `job_name` varchar(200) NOT NULL,
-  `locked` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `job_name` (`job_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `django_cron_cronjoblock`
---
-
-LOCK TABLES `django_cron_cronjoblock` WRITE;
-/*!40000 ALTER TABLE `django_cron_cronjoblock` DISABLE KEYS */;
-/*!40000 ALTER TABLE `django_cron_cronjoblock` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `django_cron_cronjoblog`
---
-
-DROP TABLE IF EXISTS `django_cron_cronjoblog`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `django_cron_cronjoblog` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(64) NOT NULL,
-  `start_time` datetime(6) NOT NULL,
-  `end_time` datetime(6) NOT NULL,
-  `is_success` tinyint(1) NOT NULL,
-  `message` longtext NOT NULL,
-  `ran_at_time` time(6) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `django_cron_cronjoblog_code_start_time_ran_at_time_8b50b8fa_idx` (`code`,`start_time`,`ran_at_time`),
-  KEY `django_cron_cronjoblog_code_is_success_ran_at_time_84da9606_idx` (`code`,`is_success`,`ran_at_time`),
-  KEY `django_cron_cronjoblog_code_start_time_4fc78f9d_idx` (`code`,`start_time`),
-  KEY `django_cron_cronjoblog_code_48865653` (`code`),
-  KEY `django_cron_cronjoblog_start_time_d68c0dd9` (`start_time`),
-  KEY `django_cron_cronjoblog_end_time_7918602a` (`end_time`),
-  KEY `django_cron_cronjoblog_ran_at_time_7fed2751` (`ran_at_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `django_cron_cronjoblog`
---
-
-LOCK TABLES `django_cron_cronjoblog` WRITE;
-/*!40000 ALTER TABLE `django_cron_cronjoblog` DISABLE KEYS */;
-INSERT INTO `django_cron_cronjoblog` VALUES (1,'amsfr.cron.MyCronJob','2023-01-29 19:42:52.379619','2023-01-29 19:42:52.529371',1,'',NULL),(2,'amsfr.cron.MyCronJob','2023-01-29 19:45:56.498654','2023-01-29 19:45:56.631717',1,'',NULL),(3,'amsfr.cron.MyCronJob','2023-01-29 19:48:55.844647','2023-01-29 19:48:55.989108',1,'',NULL);
-/*!40000 ALTER TABLE `django_cron_cronjoblog` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -374,7 +290,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -383,7 +299,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2023-01-29 18:29:01.740298'),(2,'auth','0001_initial','2023-01-29 18:29:02.112437'),(3,'admin','0001_initial','2023-01-29 18:29:02.208147'),(4,'admin','0002_logentry_remove_auto_add','2023-01-29 18:29:02.220843'),(5,'admin','0003_logentry_add_action_flag_choices','2023-01-29 18:29:02.223871'),(6,'contenttypes','0002_remove_content_type_name','2023-01-29 18:29:02.276871'),(7,'auth','0002_alter_permission_name_max_length','2023-01-29 18:29:02.318102'),(8,'auth','0003_alter_user_email_max_length','2023-01-29 18:29:02.319115'),(9,'auth','0004_alter_user_username_opts','2023-01-29 18:29:02.333151'),(10,'auth','0005_alter_user_last_login_null','2023-01-29 18:29:02.370632'),(11,'auth','0006_require_contenttypes_0002','2023-01-29 18:29:02.370632'),(12,'auth','0007_alter_validators_add_error_messages','2023-01-29 18:29:02.380592'),(13,'auth','0008_alter_user_username_max_length','2023-01-29 18:29:02.383514'),(14,'auth','0009_alter_user_last_name_max_length','2023-01-29 18:29:02.398608'),(15,'auth','0010_alter_group_name_max_length','2023-01-29 18:29:02.412611'),(16,'auth','0011_update_proxy_permissions','2023-01-29 18:29:02.419058'),(17,'auth','0012_alter_user_first_name_max_length','2023-01-29 18:29:02.429686'),(18,'employees','0001_initial','2023-01-29 18:29:02.626156'),(19,'employees','0002_alter_employee_id_picture','2023-01-29 18:29:02.634200'),(20,'employees','0003_threshold','2023-01-29 18:29:02.652345'),(21,'employees','0004_designation','2023-01-29 18:29:02.670926'),(22,'employees','0005_employee_designation','2023-01-29 18:29:02.713246'),(23,'employees','0006_signatory','2023-01-29 18:29:02.783247'),(24,'employees','0007_alter_signatory_table','2023-01-29 18:29:02.793461'),(25,'employees','0008_alter_signatory_signatory','2023-01-29 18:29:02.855158'),(26,'employees','0009_signatory_position','2023-01-29 18:29:02.871184'),(27,'sessions','0001_initial','2023-01-29 18:29:02.888677'),(28,'django_cron','0001_initial','2023-01-29 19:09:45.444244'),(29,'django_cron','0002_remove_max_length_from_CronJobLog_message','2023-01-29 19:09:45.444244'),(30,'django_cron','0003_cronjoblock','2023-01-29 19:09:45.460077');
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2023-02-17 01:18:34.884838'),(2,'auth','0001_initial','2023-02-17 01:18:35.274471'),(3,'admin','0001_initial','2023-02-17 01:18:35.366872'),(4,'admin','0002_logentry_remove_auto_add','2023-02-17 01:18:35.373286'),(5,'admin','0003_logentry_add_action_flag_choices','2023-02-17 01:18:35.379163'),(6,'contenttypes','0002_remove_content_type_name','2023-02-17 01:18:35.429157'),(7,'auth','0002_alter_permission_name_max_length','2023-02-17 01:18:35.472143'),(8,'auth','0003_alter_user_email_max_length','2023-02-17 01:18:35.478933'),(9,'auth','0004_alter_user_username_opts','2023-02-17 01:18:35.489315'),(10,'auth','0005_alter_user_last_login_null','2023-02-17 01:18:35.525631'),(11,'auth','0006_require_contenttypes_0002','2023-02-17 01:18:35.528136'),(12,'auth','0007_alter_validators_add_error_messages','2023-02-17 01:18:35.529705'),(13,'auth','0008_alter_user_username_max_length','2023-02-17 01:18:35.545278'),(14,'auth','0009_alter_user_last_name_max_length','2023-02-17 01:18:35.560768'),(15,'auth','0010_alter_group_name_max_length','2023-02-17 01:18:35.573899'),(16,'auth','0011_update_proxy_permissions','2023-02-17 01:18:35.579937'),(17,'auth','0012_alter_user_first_name_max_length','2023-02-17 01:18:35.590263'),(18,'sessions','0001_initial','2023-02-17 01:18:35.610777'),(19,'employees','0001_initial','2023-02-17 01:23:45.054758');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -409,7 +325,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('qizgrjrafdz84kn59yt31478sgz73s3s','.eJxVjDsOwjAQRO_iGln-x6akzxms3bWNA8iR4qRC3J1ESgHNFPPezJtF2NYat56XOCV2ZZJdfjsEeuZ2gPSAdp85zW1dJuSHwk_a-Tin_Lqd7t9BhV73NVCQ3hnrUirBiYIEWnilhTCDHrRVQe9RiBIggpAmK6TgLWjljDPEPl_R4zdg:1pMCcN:lFdOOuTZK-DLDuQT4V48XEQDPYQjcs59dw0EVH2nJP4','2023-02-12 18:41:31.028616'),('ut8pouvv1t8qqqw05lr8u2pgtoktz341','.eJxVjDsOwjAQRO_iGln-x6akzxms3bWNA8iR4qRC3J1ESgHNFPPezJtF2NYat56XOCV2ZZJdfjsEeuZ2gPSAdp85zW1dJuSHwk_a-Tin_Lqd7t9BhV73NVCQ3hnrUirBiYIEWnilhTCDHrRVQe9RiBIggpAmK6TgLWjljDPEPl_R4zdg:1pMCoQ:6h4Z7S7LGqY3tfUfERupkeWKfL8TzIeJQn34KJl-SBA','2023-02-12 18:53:58.025365');
+INSERT INTO `django_session` VALUES ('fdqpwomfqc1a5yjv5e9atjwuyb530lrf','.eJxVjEEOwiAQRe_C2hAGaQGX7j0DGZhBqgaS0q6Md7dNutDte-__twi4LiWsnecwkbgIEKdfFjE9ue6CHljvTaZWl3mKck_kYbu8NeLX9Wj_Dgr2sq2jiqAS0OAMMrDPmcmRxyHpZK1W1kQc0xl89KjVyEAbMJkMklXgSHy-AmA4rA:1pSphF:KueBFGA9XXUTjSFeerIjBJo-Hnq3jAGsDGPC0yTml1w','2023-03-03 01:37:57.169784');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -425,26 +341,21 @@ CREATE TABLE `employees` (
   `firstname` varchar(40) NOT NULL,
   `middlename` varchar(40) NOT NULL,
   `lastname` varchar(40) NOT NULL,
-  `birth_date` date DEFAULT NULL,
+  `suffix` varchar(40) DEFAULT NULL,
+  `birth_date` date NOT NULL,
   `mobile_number` varchar(11) DEFAULT NULL,
-  `barangay` varchar(30) DEFAULT NULL,
-  `municipality` varchar(30) DEFAULT NULL,
-  `province` varchar(30) DEFAULT NULL,
+  `barangay` varchar(30) NOT NULL,
+  `municipality` varchar(30) NOT NULL,
+  `province` varchar(30) NOT NULL,
   `id_picture` varchar(100) NOT NULL,
   `date_employed` date DEFAULT NULL,
   `license_no` varchar(50) DEFAULT NULL,
   `registration_date` date DEFAULT NULL,
   `expiration_date` date DEFAULT NULL,
   `position_id` bigint(20) DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
-  `designation_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `employees_position_id_ae4fa2b1_fk_positions_id` (`position_id`),
-  KEY `employees_user_id_c7f7a3f4_fk_auth_user_id` (`user_id`),
-  KEY `employees_designation_id_a28644df_fk_designations_id` (`designation_id`),
-  CONSTRAINT `employees_designation_id_a28644df_fk_designations_id` FOREIGN KEY (`designation_id`) REFERENCES `designations` (`id`),
-  CONSTRAINT `employees_position_id_ae4fa2b1_fk_positions_id` FOREIGN KEY (`position_id`) REFERENCES `positions` (`id`),
-  CONSTRAINT `employees_user_id_c7f7a3f4_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+  CONSTRAINT `employees_position_id_ae4fa2b1_fk_positions_id` FOREIGN KEY (`position_id`) REFERENCES `positions` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -454,7 +365,7 @@ CREATE TABLE `employees` (
 
 LOCK TABLES `employees` WRITE;
 /*!40000 ALTER TABLE `employees` DISABLE KEYS */;
-INSERT INTO `employees` VALUES ('400392-23-001','Val Melbin','Caccam','Cabitac',NULL,'32423423423',NULL,NULL,NULL,'registered/400392-23-001_Cabitac, V..jpg',NULL,NULL,NULL,NULL,NULL,6,NULL),('400392-23-002','Darwin','Ramos','Agonoy',NULL,NULL,NULL,NULL,NULL,'registered/400392-23-002_Agonoy, D..jpg',NULL,NULL,NULL,NULL,NULL,7,NULL),('400392-23-003','Joe Ashlee','Hilario','Antonio',NULL,NULL,NULL,NULL,NULL,'registered/400392-23-003_Antonio, J..jpg',NULL,NULL,NULL,NULL,NULL,8,NULL);
+INSERT INTO `employees` VALUES ('400392-23-001','unlinked','Sdfa','Asdf','sfsdfas','2023-02-17','09614502534','Asdfdfd','Dfdf','Cagayan','registered/400392-23-001_Asdf, Sdfsadf.jpg',NULL,NULL,NULL,NULL,1),('400392-23-002','linked','Wer','Srwqre','werwer','2023-02-16','werwe','Sdfa','Sdfdf','Fdf','registered/400392-23-002_Srwqre, Wer.jpg',NULL,NULL,NULL,NULL,1),('400392-23-003','new','Fghfgh','Rtyghgf','ghfgh','2023-02-15','fghfg','Fghfh','Ghf','Hfghfgh','registered/400392-23-003_Rtyghgf, Hgfh.jpg',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `employees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -494,7 +405,7 @@ CREATE TABLE `positions` (
   `name` varchar(150) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -503,6 +414,7 @@ CREATE TABLE `positions` (
 
 LOCK TABLES `positions` WRITE;
 /*!40000 ALTER TABLE `positions` DISABLE KEYS */;
+INSERT INTO `positions` VALUES (1,'eme');
 /*!40000 ALTER TABLE `positions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -523,7 +435,7 @@ CREATE TABLE `schedules` (
   `is_active` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -532,6 +444,7 @@ CREATE TABLE `schedules` (
 
 LOCK TABLES `schedules` WRITE;
 /*!40000 ALTER TABLE `schedules` DISABLE KEYS */;
+INSERT INTO `schedules` VALUES (1,'regular','07:15:00.000000','11:45:00.000000','13:00:00.000000','16:30:00.000000',1);
 /*!40000 ALTER TABLE `schedules` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -547,7 +460,7 @@ CREATE TABLE `signatory` (
   `signatory` varchar(100) DEFAULT NULL,
   `position` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -556,6 +469,7 @@ CREATE TABLE `signatory` (
 
 LOCK TABLES `signatory` WRITE;
 /*!40000 ALTER TABLE `signatory` DISABLE KEYS */;
+INSERT INTO `signatory` VALUES (1,'Val Melbin C. Cabitac','eme ');
 /*!40000 ALTER TABLE `signatory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -591,4 +505,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-01-30  4:15:14
+-- Dump completed on 2023-02-17 13:12:13
