@@ -703,8 +703,11 @@ def dtr_specific_employee(request, pk, date):
     total_hours = 0
 
     emp_name = Employee.objects.filter(id=pk)
-    emp_logs = Attendance.objects.filter(employee_id=pk, date__month=dt.datetime.now().date().month).order_by('date')
+    print(emp_name)
+    emp_logs = Attendance.objects.filter(employee_id=pk, date__month=date_month).order_by('date')
+    print(emp_logs)
     attendance_dates = Attendance.objects.filter(date__month=int(date_month), date__year=int(date_year)).values_list('date', flat=True).distinct().order_by('date')
+    print(attendance_dates)
     r = 0
     y = 0
     z = 0
@@ -776,7 +779,7 @@ def dtr_specific_employee(request, pk, date):
             overtime.append("")
             minutes_worked.append("")
             
-    # print(len(emp_in_am), len(emp_out_am), len(emp_in_pm), len(emp_out_pm), len(emp_remarks), len(minutes_worked), len(undertime), len(overtime), len(holidays), len(regulars))
+    # print(emp_in_am, emp_out_am, emp_in_pm, emp_out_pm, emp_remarks, minutes_worked, undertime, overtime, holidays, regulars)
     # print(regulars)
     
     sets = zip(dates, emp_in_am, emp_out_am, emp_in_pm, emp_out_pm, emp_remarks, undertime, overtime, minutes_worked, holidays, regulars)
