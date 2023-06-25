@@ -3,13 +3,14 @@ import face_recognition
 from django.conf import settings
 from .faceRecognition import findEncodings
 import os, numpy as np
-from .attendance import mark_attendance
+from .attendance import mark_attendance, get_Remarks
 from .models import Schedule
 import time
 
 class VideoCamera(object):
+    t = Schedule.objects.get(is_active=True)
     def __init__(self):
-        time.sleep(5)
+        time.sleep(1)
         self.video = cv2.VideoCapture(settings.CAMERA, cv2.CAP_DSHOW)
         # self.video.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         # self.video.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -24,6 +25,10 @@ class VideoCamera(object):
         # print(encodeListKnown)
 
         if not len(encodeListKnown) == 0 and not Schedule.objects.filter(is_active=True).count() == 0:
+            height, width, _ = image.shape
+            (text_width, text_height), _ = cv2.getTextSize(str(get_Remarks()), cv2.FONT_HERSHEY_COMPLEX, fontScale=2, thickness=3)
+            fontColor = (0,255,0) if get_Remarks() == "EARLY" else (0, 0, 255)
+
             imgS = cv2.resize(image,(0,0), None, 0.25,0.25)
             imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
             facesCurFrame = face_recognition.face_locations(imgS)
@@ -37,16 +42,15 @@ class VideoCamera(object):
                 y1, x2, y2, x1 = faceLoc
                 # print(faceLoc)
                 y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
-
                 if matches[matchesIndex] and (faceDis[matchesIndex] < 0.4):
                     # name = classNames[matchesIndex].upper()
                     name = classNames[matchesIndex]
                     # print(name)
-                    # cv2.rectangle(image,(x1, y1), (x2, y2+50), (0, 255, 0), 2)
+                    cv2.rectangle(image,(x1, y1), (x2, y2), (0, 255, 0), 2)
                     # cv2.rectangle(image,(x1, y2), (x2, y2+50), (0, 255, 0), cv2.FILLED)
-                    # cv2.putText(image, name[7:len(name)], (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0,255,0), 3)
                     #cv2.putText(image, name.split('-')[2].upper(), (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.2, (0,255,0), 3)
                     cv2.putText(image, name.split('_')[1].upper(), (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0), 3)
+                    cv2.putText(image, str(get_Remarks()), ((width - text_width) // 2, text_height + 20), cv2.FONT_HERSHEY_COMPLEX, 2, fontColor, 3)
                     # mark_attendance(option, name)
                     mark_attendance(name.split('_')[0])
 

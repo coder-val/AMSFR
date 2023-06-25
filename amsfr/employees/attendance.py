@@ -133,6 +133,38 @@ def mark_attendance(name):
         else:
             Attendance.objects.filter(employee_id = name, out_pm__isnull=True, date = date_now).update(out_pm=time_now)
 
+def get_Remarks():
+    time_now = datetime.datetime.now().time()
+    td_time_now = datetime.timedelta(hours=time_now.hour, minutes=time_now.minute, seconds=time_now.second)
+    threshold = datetime.timedelta(minutes=settings.THRESHOLD)
+
+    sched = Schedule.objects.filter(is_active=True).values()
+
+    td_in_am = convert_to_timedelta(sched[0]['in_am'])
+    td_out_am = convert_to_timedelta(sched[0]['out_am'])
+    td_in_pm = convert_to_timedelta(sched[0]['in_pm'])
+    td_out_pm = convert_to_timedelta(sched[0]['out_pm'])
+
+    #IN AM
+    if td_time_now >= datetime.timedelta(hours=6) and td_time_now < td_out_am:
+        if td_time_now <= td_in_am + threshold:
+            remarks = 'EARLY'
+        else:
+            remarks = 'LATE'
+    #OUT AM
+    elif td_time_now >= td_out_am and td_time_now < datetime.timedelta(hours=12):
+        remarks = 'LATE'
+    #IN PM
+    elif td_time_now >= datetime.timedelta(hours=12) and td_time_now < td_out_pm:
+        if td_time_now <= td_in_pm + threshold:
+            remarks = 'EARLY'
+        else:
+            remarks = 'LATE'
+    #OUT PM
+    elif td_time_now >= td_out_pm and td_time_now <= datetime.timedelta(hours=23, minutes=59, seconds=59):
+        remarks = 'LATE'
+
+    return remarks
         
 def mark_attendance_old(option, name):
     time_now = datetime.datetime.now().time()
