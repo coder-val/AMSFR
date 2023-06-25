@@ -1,0 +1,25 @@
+{% load static %}
+{% block navbar %}
+<div class="navbar-fixed">
+  <nav>
+    <div class="nav-wrapper brown">
+      <ul class="left">
+        <li><img style="margin-left: 1rem;" src="{% static 'utilities/icon.png' %}" alt=""></li>
+        <li><a href="{% url 'dashboard' %}" style="font-size: 2rem">AMSFR</a></li>
+      </ul>
+      <ul style="position: absolute; top: 0; left: 50%; transform: translateX(-50%)">
+        <li id="clock" onload="currentTime()" style="font-size: 2rem"></li>
+      </ul>
+      <ul class="right hide-on-med-and-down">
+        {% comment %} {% if request.user.is_authenticated %} {% endcomment %}
+        {% comment %} <li><a href="#!"> {{request.user|upper}} </a></li> {% endcomment %}
+        {% comment %} <li><a href="#logout-modal" class="waves-effect waves-light btn modal-trigger brown lighten-1 tooltipped-l" data-position="left" data-tooltip="logout" alt="logout"><span class="material-icons">logout</span></a></li> {% endcomment %}
+        {% comment %} {% else %} {% endcomment %}
+        {% comment %} <li><a href="#">Anonymous</a></li> {% endcomment %}
+        {% comment %} <li><a href="{% url 'login' %}" class="waves-effect waves-light btn modal-trigger brown lighten-1 tooltipped-l" data-position="left" data-tooltip="login" alt="login"><span class="material-icons">login</span></a></li> {% endcomment %}
+        {% comment %} {% endif %} {% endcomment %}
+      </ul>
+    </div>
+  </nav>
+</div>
+{% endblock navbar %}

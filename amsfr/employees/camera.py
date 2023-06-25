@@ -35,7 +35,7 @@ class VideoCamera(object):
 
                 matchesIndex = np.argmin(faceDis)
                 y1, x2, y2, x1 = faceLoc
-                print(faceLoc)
+                # print(faceLoc)
                 y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
 
                 if matches[matchesIndex] and (faceDis[matchesIndex] < 0.4):
@@ -46,7 +46,7 @@ class VideoCamera(object):
                     # cv2.rectangle(image,(x1, y2), (x2, y2+50), (0, 255, 0), cv2.FILLED)
                     # cv2.putText(image, name[7:len(name)], (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.5, (0,255,0), 3)
                     #cv2.putText(image, name.split('-')[2].upper(), (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.2, (0,255,0), 3)
-                    cv2.putText(image, name.split('_')[1].upper(), (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1.2, (0,255,0), 3)
+                    cv2.putText(image, name.split('_')[1].upper(), (x1+6, y2+60), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0), 3)
                     # mark_attendance(option, name)
                     mark_attendance(name.split('_')[0])
 

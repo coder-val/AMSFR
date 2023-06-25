@@ -162,3 +162,5 @@ cython_debug/
 source_code/
 dlib/
 SFASTI/
+.vscode/
+amsfr/static/registered/

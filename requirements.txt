@@ -1,7 +1,7 @@
 Django==3.2.18
 django-htmx==1.13.0
 django-shortcuts==1.6
-django-dbbackup-4.0.2
+django-dbbackup==4.0.2
 mysqlclient==2.1.1
 cmake==3.25.2
 opencv-python==4.7.0.68

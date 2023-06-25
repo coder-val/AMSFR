@@ -19,6 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import StreamingHttpResponse, HttpResponse
 from .camera import *
 import calendar
+from django.conf import settings
 
 from django.views.generic import View
 from .process import html_to_pdf
@@ -167,7 +168,7 @@ def print_first_half(request, pk, date):
 
 
     # data = Employee.objects.all()
-    open('templates/temp.html', "w").write(render_to_string('print.html',context))
+    open(os.path.join(settings.BASE_DIR, 'templates/temp.html'), "w").write(render_to_string(os.path.join(settings.BASE_DIR, 'templates/print.html'),context))
 
     pdf = html_to_pdf('temp.html')
 
@@ -286,7 +287,7 @@ def print_second_half(request, pk, date):
 
 
     # data = Employee.objects.all()
-    open('templates/temp.html', "w").write(render_to_string('print.html',context))
+    open(os.path.join(settings.BASE_DIR, 'templates/temp.html'), "w").write(render_to_string(os.path.join(settings.BASE_DIR, 'templates/print.html'),context))
 
     pdf = html_to_pdf('temp.html')
 
@@ -406,7 +407,7 @@ def print_monthly(request, pk, date):
 
 
     # data = Employee.objects.all()
-    open('templates/temp.html', "w").write(render_to_string('print.html',context))
+    open(os.path.join(settings.BASE_DIR, 'templates/temp.html'), "w").write(render_to_string(os.path.join(settings.BASE_DIR, 'templates/print.html'),context))
 
     pdf = html_to_pdf('temp.html')
 
@@ -556,7 +557,11 @@ def dtr_by_date(request):
         except:
             presents.append("")
             absents.append("")
+            holidays.append(False)
+            regulars.append(False)
         z+=1
+        # print(dates[x-1],presents[x-1],absents[x-1])
+        print(len(dates), len(presents), len(absents), len(holidays), len(regulars))
     # for x in dates_list:
     #     p = Attendance.objects.filter(date=x).count()
     #     a = total - p

@@ -32,7 +32,7 @@
             {% for employee, days, absents, lates, ut, ot in employees %}
             <tr>
                 <td> <a href="{% url 'dtr_specific_employee' employee.id year_month|date:"Y-n"|upper %}"> {{employee.id|cut:"400392-"}} </a></td>
-                <td> {{employee.lastname}}, {{employee.firstname}} {{employee.middlename.0|add:"."}} </td>
+                <td style="text-align:left;"> {{employee.lastname}}, {{employee.firstname}} {{employee.middlename.0|add:"."}} </td>
                 <td> {{days}} </td>
                 <td> {{lates}} </td>
                 <td> {{absents}} </td>

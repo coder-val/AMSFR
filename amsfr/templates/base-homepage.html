@@ -14,7 +14,7 @@
     <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
-    {% include "nav-bar.html" %}
+    {% include "nav-bar-homepage.html" %}
 
     <!-- Modal Structure -->
     <div id="logout-modal" class="modal" style="max-width: 500px">
@@ -30,7 +30,7 @@
     </div>
 
     <header>
-        <div class="row">
+        {% comment %} <div class="row">
             <div class="col l6">
                 <blockquote style="margin-left: 2.5rem;">
                     <h3 style="font-weight: bold">{% block heading %}{% endblock heading %}</h3>
@@ -43,7 +43,7 @@
             </blockquote>
             {% endfor %}
             </div>
-        </div>
+        </div> {% endcomment %}
     </header>
     <main>
         {% comment %} <div class="container"> {% endcomment %}
