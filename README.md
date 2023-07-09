@@ -3,6 +3,5 @@ Attendance Management System with Facial Recognition for Saint Francis Academy S
 
 I used Python 3.11.2 and Django 3.2.18
 
-For more info, contact me via:
-Email: valcabitac011@gmail.com
-fb: @valmcxiv
+For more info, contact me via Email: valcabitac011@gmail.com; fb: @valmcxiv.
+You may also refer to my Github: @coder-val.
